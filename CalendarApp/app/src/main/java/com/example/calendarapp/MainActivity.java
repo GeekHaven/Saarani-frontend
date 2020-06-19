@@ -41,6 +41,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseMessaging.getInstance().subscribeToTopic("Event")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = getString(R.string.msg_subscribed);
+                        if (!task.isSuccessful()) {
+                            msg = getString(R.string.msg_subscribe_failed);
+                        }
+                        Log.d("VARUN", msg);
+                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
         mAuth=FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("271594298370-jmsnpsmnhm1ahm6viiag2gi2dnpqn0lg.apps.googleusercontent.com")
@@ -78,18 +90,21 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("User Activity");
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
-        FirebaseMessaging.getInstance().subscribeToTopic("Event")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String msg = getString(R.string.msg_subscribed);
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
                         if (!task.isSuccessful()) {
-                            msg = getString(R.string.msg_subscribe_failed);
+                            Log.w("VARUN", "getInstanceId failed", task.getException());
+                            return;
                         }
-                        Log.d("VARUN", msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        Log.e("My Token",token);
                     }
                 });
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
