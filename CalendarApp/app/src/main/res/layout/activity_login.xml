@@ -74,7 +74,7 @@
             android:layout_marginLeft="100dp"
             android:layout_marginRight="45dp"
             android:background="@drawable/btn_rounded"
-            android:fontFamily="@font/fredoka_one"
+            android:fontFamily="@font/bebas_neue_regular"
             android:text="@string/btnLoginActivitySignIn"
             android:textColor="#FFFFFF"
             android:textSize="30sp"
