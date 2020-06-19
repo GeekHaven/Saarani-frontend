@@ -36,9 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         studentSignIn=findViewById(R.id.studentSignIn);
-        memberSignIn=findViewById(R.id.memberSignIn);
         setGooglePlusButtonText(studentSignIn,"Student Sign In");
-        setGooglePlusButtonText(memberSignIn,"Member Sign In");
         mAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
