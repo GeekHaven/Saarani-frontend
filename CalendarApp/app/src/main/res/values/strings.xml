@@ -22,4 +22,9 @@
     <string name="reject">Interested</string>
     <string name="accept">Mark as Going</string>
     <string name="xxx">Ignore</string>
+    <string name="LoginActivitySignInHeading">SIGN IN</string>
+    <string name="radioLoginActivityStudent">Student</string>
+    <string name="radioLoginActivitySociety">Society</string>
+    <string name="LoginActivitySubHeading">SIGN IN TO CONTINUE</string>
+    <string name="btnLoginActivitySignIn">Sign In</string>
 </resources>
