@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +29,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
-    SignInButton studentSignIn ,memberSignIn;
+    Button studentSignIn;
+    RadioGroup RadioUserType;
+    RadioButton radioTypeStudent, radioTypeSociety;
     private static final int RC_SIGN_IN = 234;
     private static final String TAG = "simplifiedcoding";
     GoogleSignInClient mGoogleSignInClient;
@@ -36,10 +41,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         studentSignIn=findViewById(R.id.studentSignIn);
-        memberSignIn=findViewById(R.id.memberSignIn);
-        setGooglePlusButtonText(studentSignIn,"Student Sign In");
-        setGooglePlusButtonText(memberSignIn,"Member Sign In");
         mAuth = FirebaseAuth.getInstance();
+        RadioUserType=findViewById(R.id.radioGroupUserType);
+        radioTypeStudent=findViewById(R.id.radioUserStudent);
+        radioTypeSociety=findViewById(R.id.radioUserSociety);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("271594298370-jmsnpsmnhm1ahm6viiag2gi2dnpqn0lg.apps.googleusercontent.com")
@@ -48,12 +53,18 @@ public class LoginActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        findViewById(R.id.studentSignIn).setOnClickListener(new View.OnClickListener() {
+        studentSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                signIn();
+            public void onClick(View v) {
+                if(!(radioTypeStudent.isChecked() || radioTypeSociety.isChecked()))
+                    Toast.makeText(LoginActivity.this,"Please Select the User Type",Toast.LENGTH_SHORT).show();
+                else {
+                    if(radioTypeStudent.isChecked())
+                        signInAsStudent();
+                }
             }
         });
+
     }
     @Override
     protected void onStart() {
@@ -87,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
+
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -109,19 +121,9 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void signIn() {
+    private void signInAsStudent() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    protected void setGooglePlusButtonText(SignInButton signInButton, String buttonText) {
-        for (int i = 0; i < signInButton.getChildCount(); i++) {
-            View v = signInButton.getChildAt(i);
-            if (v instanceof TextView) {
-                TextView tv = (TextView) v;
-                tv.setText(buttonText);
-                return;
-            }
-        }
-    }
 }
