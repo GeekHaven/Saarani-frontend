@@ -30,8 +30,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
     Button studentSignIn;
-    RadioGroup RadioUserType;
-    RadioButton radioTypeStudent, radioTypeSociety;
     private static final int RC_SIGN_IN = 234;
     private static final String TAG = "simplifiedcoding";
     GoogleSignInClient mGoogleSignInClient;
@@ -42,9 +40,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         studentSignIn=findViewById(R.id.studentSignIn);
         mAuth = FirebaseAuth.getInstance();
-        RadioUserType=findViewById(R.id.radioGroupUserType);
-        radioTypeStudent=findViewById(R.id.radioUserStudent);
-        radioTypeSociety=findViewById(R.id.radioUserSociety);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("271594298370-jmsnpsmnhm1ahm6viiag2gi2dnpqn0lg.apps.googleusercontent.com")
@@ -56,12 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         studentSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!(radioTypeStudent.isChecked() || radioTypeSociety.isChecked()))
-                    Toast.makeText(LoginActivity.this,"Please Select the User Type",Toast.LENGTH_SHORT).show();
-                else {
-                    if(radioTypeStudent.isChecked())
-                        signInAsStudent();
-                }
+                signIn();
             }
         });
 
@@ -121,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void signInAsStudent() {
+    private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
