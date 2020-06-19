@@ -22,7 +22,7 @@
     <ImageView
         android:id="@+id/imgLoginActivityAnonymousUser"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="135dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +51,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.2" />
+            app:layout_constraintVertical_bias="0.25" />
 
         <TextView
             android:id="@+id/tvLoginActivitySubHeading"
@@ -67,60 +67,33 @@
             app:layout_constraintTop_toBottomOf="@+id/tvLoginActivityHeading"
             app:layout_constraintVertical_bias="0.15" />
 
-        <RadioGroup
-            android:id="@+id/radioGroupUserType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:orientation="horizontal"
-            app:layout_constrainedHeight="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvLoginActivitySubHeading"
-            app:layout_constraintVertical_bias="0.04">
-
-            <RadioButton
-                android:id="@+id/radioUserStudent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginRight="30dp"
-                android:fontFamily="@font/baloo"
-                android:text="@string/radioLoginActivityStudent"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
-
-            <RadioButton
-                android:id="@+id/radioUserSociety"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_marginLeft="30dp"
-                android:fontFamily="@font/baloo"
-                android:text="@string/radioLoginActivitySociety"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
-        </RadioGroup>
-
         <Button
             android:id="@+id/studentSignIn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="45dp"
+            android:layout_marginLeft="100dp"
             android:layout_marginRight="45dp"
-            android:background="#e94544"
+            android:background="@drawable/btn_rounded"
             android:fontFamily="@font/fredoka_one"
             android:text="@string/btnLoginActivitySignIn"
             android:textColor="#FFFFFF"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radioGroupUserType"
-            app:layout_constraintVertical_bias="0.3" />
+            app:layout_constraintTop_toBottomOf="@+id/tvLoginActivitySubHeading"
+            app:layout_constraintVertical_bias="0.2" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="@+id/studentSignIn"
+            app:layout_constraintEnd_toStartOf="@+id/studentSignIn"
+            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/studentSignIn"
+            app:srcCompat="@drawable/google_logo" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
