@@ -146,21 +146,38 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Bitmap bitmap = getBitmapfromUrl(data.get("image"));
         bitmap=getCircleBitmap(bitmap);
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.geekhaven_transparent)
-                        .setContentTitle(data.get("title"))
-                        .setSubText(data.get("subtext"))
-                        .setContentText(data.get("body"))
-                        .setAutoCancel(true)
-                        .setSound(defaultSoundUri)
-                        .addAction(R.string.reject,getString(R.string.reject), pendingIntent)
-                        .addAction(R.string.accept,getString(R.string.accept), pendingIntent)
-                        .addAction(R.string.xxx,getString(R.string.xxx), ignorePIntent)
-                        .setContentIntent(pendingIntent)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(data.get("body")))
-                        .setLargeIcon(bitmap)
-                        .setCategory(NotificationCompat.CATEGORY_EVENT);
+        NotificationCompat.Builder notificationBuilder;
+        if(data.get("del").equals("0")) {
+                    notificationBuilder =
+                    new NotificationCompat.Builder(this, channelId)
+                            .setSmallIcon(R.drawable.geekhaven_transparent)
+                            .setContentTitle(data.get("title"))
+                            .setSubText(data.get("subtext"))
+                            .setContentText(data.get("body"))
+                            .setAutoCancel(true)
+                            .setSound(defaultSoundUri)
+                            .setContentIntent(pendingIntent)
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(data.get("body")))
+                            .setLargeIcon(bitmap)
+                            .setCategory(NotificationCompat.CATEGORY_EVENT)
+                            .addAction(R.string.reject, getString(R.string.reject), pendingIntent)
+                            .addAction(R.string.accept, getString(R.string.accept), pendingIntent)
+                            .addAction(R.string.xxx, getString(R.string.xxx), ignorePIntent);
+        }
+        else{
+                    notificationBuilder =
+                    new NotificationCompat.Builder(this, channelId)
+                            .setSmallIcon(R.drawable.geekhaven_transparent)
+                            .setContentTitle(data.get("title"))
+                            .setSubText(data.get("subtext"))
+                            .setContentText(data.get("body"))
+                            .setAutoCancel(true)
+                            .setSound(defaultSoundUri)
+                            .setContentIntent(pendingIntent)
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(data.get("body")))
+                            .setLargeIcon(bitmap)
+                            .setCategory(NotificationCompat.CATEGORY_EVENT);
+        }
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
