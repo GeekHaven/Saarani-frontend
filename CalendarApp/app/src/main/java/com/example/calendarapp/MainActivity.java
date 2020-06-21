@@ -1,6 +1,7 @@
 package com.example.calendarapp;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -16,7 +17,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -29,13 +39,24 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    TextView username;
     String idTocken;
     FirebaseAuth mAuth;
     GoogleSignInClient mGoogleSignInClient;
+    private RecyclerView recyclerView;
+    private CardView cardView;
+    private RecyclerView.Adapter adapter;
+    private List<ListItems> listItems;
+    private static String URL_DATA="https://socupdate.herokuapp.com/events";
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,18 +79,14 @@ public class MainActivity extends AppCompatActivity {
                 .requestIdToken("271594298370-jmsnpsmnhm1ahm6viiag2gi2dnpqn0lg.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
-        username=findViewById(R.id.username);
-        username.setText(idTocken);
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         final FirebaseUser user= mAuth.getCurrentUser();
-        Log.d("XXX","HELLO FRANDS");
         if(user!=null) {
             user.getIdToken(true)
                     .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                         @Override
                         public void onComplete(@NonNull Task<GetTokenResult> task) {
                             if (task.isSuccessful()) {
-                                username.setText(Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getToken()));
                                 Log.d("VARUN BHARDWAJ IDTOKEN",Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getToken()));
                             } else
                                 idTocken = "333";
@@ -90,22 +107,58 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("User Activity");
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("VARUN", "getInstanceId failed", task.getException());
-                            return;
-                        }
 
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-                        Log.e("My Token",token);
-                    }
-                });
+        recyclerView=findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        listItems=new ArrayList<>();
+        loadRecyclerViewData();
 
     }
+    public void loadRecyclerViewData(){
+        final ProgressDialog progressDialog = new ProgressDialog(this,R.style.Theme_AppCompat);
+        progressDialog.setMessage("Loading data....");
+        progressDialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL_DATA, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                try {
+                    JSONObject jsonObject =new JSONObject(response);
+                    Iterator<String> iter = jsonObject.keys();
+                    while (iter.hasNext()){
+                        String key =iter.next();
+                        JSONObject event=jsonObject.getJSONObject(key);
+                        ListItems items=new ListItems(
+                            event.getString("name"),
+                            event.getString("byName"),
+                            event.getString("desc"),
+                            event.getString("venue"),
+                            event.getString("time"),
+                            event.getString("date")
+                        );
+                        listItems.add(items);
+                    }
+                    adapter = new AdaptorActivity(listItems, getApplicationContext());
+                    recyclerView.setAdapter(adapter);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        );
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -132,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if (mAuth.getCurrentUser() == null) {
             finish();
-            username.setText("");
             startActivity(new Intent(this, LoginActivity.class));
         }
     }
