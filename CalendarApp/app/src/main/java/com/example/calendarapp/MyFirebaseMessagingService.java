@@ -20,6 +20,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -139,8 +140,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(RemoteMessage remoteMessage) {
         int m = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
         Map<String, String> data = remoteMessage.getData();
-        mAuth=FirebaseAuth.getInstance();
-        final FirebaseUser user= mAuth.getCurrentUser();
 
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, m, intent,PendingIntent.FLAG_ONE_SHOT);
@@ -150,34 +149,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         ignoreIntent.putExtra("notifid",m);
         PendingIntent ignorePIntent = PendingIntent.getBroadcast(this, m+1, ignoreIntent,0);
 
-        final Intent goingIntent= new Intent(this,ButtonReceiver.class);
+        Intent goingIntent =new Intent(this,ButtonReceiver.class);
         goingIntent.putExtra("action","going");
         goingIntent.putExtra("eventId",data.get("eventID"));
-        if(user!=null){
-            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                @Override
-                public void onComplete(@NonNull Task<GetTokenResult> task) {
-                    if(task.isSuccessful()){
-                        goingIntent.putExtra("idToken",task.getResult().getToken());
-                    }
-                }
-            });
-        }
         PendingIntent goingPIntent= PendingIntent.getBroadcast(this,m+2,goingIntent,0);
 
         final Intent interestedIntent= new Intent(this,ButtonReceiver.class);
         interestedIntent.putExtra("action","interested");
         interestedIntent.putExtra("eventId",data.get("eventID"));
-        if(user!=null){
-            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                @Override
-                public void onComplete(@NonNull Task<GetTokenResult> task) {
-                    if(task.isSuccessful()){
-                        interestedIntent.putExtra("idToken",task.getResult().getToken());
-                    }
-                }
-            });
-        }
         PendingIntent interPIntent= PendingIntent.getBroadcast(this,m+3,interestedIntent,0);
 
 
