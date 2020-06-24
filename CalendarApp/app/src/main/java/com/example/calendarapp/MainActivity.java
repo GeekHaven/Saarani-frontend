@@ -2,6 +2,9 @@ package com.example.calendarapp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -57,7 +60,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    String idTocken;
     MenuItem addEvent;
     FirebaseAuth mAuth;
     GoogleSignInClient mGoogleSignInClient;
@@ -78,16 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        final FirebaseUser user= mAuth.getCurrentUser();
-        assert user != null;
-        if(user.getEmail()!=null&&user.getEmail().length()!=22) {
-            LogoutWrong();
-        }
-        else if(user.getEmail()!=null&&user.getEmail().length()==22){
-            if(!user.getEmail().toLowerCase().contains("iiita.ac.in"))
-                LogoutWrong();
-        }
         subscribeToTopic();
         sendIdToken();
         Toolbar toolbar=findViewById(R.id.toolbar);
@@ -131,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Log.d("VARUN BHARDWAJ IDTOKEN", Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getToken()));
                                 token[0] =task.getResult().getToken();
+                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newPlainText("idtoken", token[0]);
+                                clipboard.setPrimaryClip(clip);
                                 HashMap<String,String> map=new HashMap<String, String>();
                                 map.put("token",token[0]);
                                 final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this,R.style.Theme_AppCompat);
@@ -250,18 +245,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Toast.makeText(MainActivity.this,"LogOut Successful",Toast.LENGTH_SHORT).show();
-                        mAuth.signOut();
-                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-
-                    }
-                });
-    }
-    private void LogoutWrong(){
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(MainActivity.this,"Please Login with College ID",Toast.LENGTH_SHORT).show();
                         mAuth.signOut();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
 
