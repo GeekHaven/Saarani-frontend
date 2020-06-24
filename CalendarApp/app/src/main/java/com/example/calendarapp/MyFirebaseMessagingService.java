@@ -27,6 +27,11 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -38,6 +43,7 @@ import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
+    FirebaseAuth mAuth;
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -132,17 +138,51 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void sendNotification(RemoteMessage remoteMessage) {
         int m = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+        Map<String, String> data = remoteMessage.getData();
+        mAuth=FirebaseAuth.getInstance();
+        final FirebaseUser user= mAuth.getCurrentUser();
+
         Intent intent = new Intent(this, MainActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, m, intent,PendingIntent.FLAG_ONE_SHOT);
 
         Intent ignoreIntent = new Intent(this,ButtonReceiver.class);
-        ignoreIntent.putExtra("not",m);
-        PendingIntent ignorePIntent = PendingIntent.getBroadcast(this, m, ignoreIntent,0);
+        ignoreIntent.putExtra("action","ignore");
+        ignoreIntent.putExtra("notifid",m);
+        PendingIntent ignorePIntent = PendingIntent.getBroadcast(this, m+1, ignoreIntent,0);
 
-        Map<String, String> data = remoteMessage.getData();
+        final Intent goingIntent= new Intent(this,ButtonReceiver.class);
+        goingIntent.putExtra("action","going");
+        goingIntent.putExtra("eventId",data.get("eventID"));
+        if(user!=null){
+            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                    if(task.isSuccessful()){
+                        goingIntent.putExtra("idToken",task.getResult().getToken());
+                    }
+                }
+            });
+        }
+        PendingIntent goingPIntent= PendingIntent.getBroadcast(this,m+2,goingIntent,0);
+
+        final Intent interestedIntent= new Intent(this,ButtonReceiver.class);
+        interestedIntent.putExtra("action","interested");
+        interestedIntent.putExtra("eventId",data.get("eventID"));
+        if(user!=null){
+            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                    if(task.isSuccessful()){
+                        interestedIntent.putExtra("idToken",task.getResult().getToken());
+                    }
+                }
+            });
+        }
+        PendingIntent interPIntent= PendingIntent.getBroadcast(this,m+3,interestedIntent,0);
+
+
+
         String channelId = getString(R.string.default_notification_channel_id);
-//        String body=data.get("venue")+data.get("date")+" "+data.get("time");
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Bitmap bitmap = getBitmapfromUrl(data.get("image"));
         bitmap=getCircleBitmap(bitmap);
@@ -160,8 +200,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(data.get("body")))
                             .setLargeIcon(bitmap)
                             .setCategory(NotificationCompat.CATEGORY_EVENT)
-                            .addAction(R.string.reject, getString(R.string.reject), pendingIntent)
-                            .addAction(R.string.accept, getString(R.string.accept), pendingIntent)
+                            .addAction(R.string.reject, getString(R.string.reject), interPIntent)
+                            .addAction(R.string.accept, getString(R.string.accept), goingPIntent)
                             .addAction(R.string.xxx, getString(R.string.xxx), ignorePIntent);
         }
         else{
