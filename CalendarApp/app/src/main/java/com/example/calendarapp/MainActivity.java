@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,10 +22,15 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -43,13 +49,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     String idTocken;
+    MenuItem addEvent;
     FirebaseAuth mAuth;
     GoogleSignInClient mGoogleSignInClient;
     private RecyclerView recyclerView;
@@ -57,42 +66,20 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private List<ListItems> listItems;
     private static String URL_DATA="https://socupdate.herokuapp.com/events";
+    private static String url ="https://socupdate.herokuapp.com/societies/check";
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FirebaseMessaging.getInstance().subscribeToTopic("Event")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String msg = getString(R.string.msg_subscribed);
-                        if (!task.isSuccessful()) {
-                            msg = getString(R.string.msg_subscribe_failed);
-                        }
-                        Log.d("VARUN", msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
         mAuth=FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("271594298370-jmsnpsmnhm1ahm6viiag2gi2dnpqn0lg.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
         final FirebaseUser user= mAuth.getCurrentUser();
-        if(user!=null) {
-            user.getIdToken(true)
-                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<GetTokenResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.d("VARUN BHARDWAJ IDTOKEN",Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getToken()));
-                            } else
-                                idTocken = "333";
-                        }
-                    });
-        }
         assert user != null;
         if(user.getEmail()!=null&&user.getEmail().length()!=22) {
             LogoutWrong();
@@ -101,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
             if(!user.getEmail().toLowerCase().contains("iiita.ac.in"))
                 LogoutWrong();
         }
-
-
+        subscribeToTopic();
+        sendIdToken();
         Toolbar toolbar=findViewById(R.id.toolbar);
         toolbar.setTitle("User Activity");
         toolbar.setTitleTextColor(Color.WHITE);
@@ -115,6 +102,71 @@ public class MainActivity extends AppCompatActivity {
         listItems=new ArrayList<>();
         loadRecyclerViewData();
 
+    }
+    public void subscribeToTopic(){
+        FirebaseMessaging.getInstance().subscribeToTopic("Event")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "Subscribed to Event";
+                        if (!task.isSuccessful()) {
+                            msg = getString(R.string.msg_subscribe_failed);
+                        }
+                        Log.d("VARUN", msg);
+                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    public void sendIdToken(){
+        final TextView textView = findViewById(R.id.check);
+        final String[] token = new String[1];
+        mAuth=FirebaseAuth.getInstance();
+        final FirebaseUser user= mAuth.getCurrentUser();
+        if(user!=null) {
+            user.getIdToken(true)
+                    .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                        @Override
+                        public void onComplete(@NonNull Task<GetTokenResult> task) {
+                            if (task.isSuccessful()) {
+                                Log.d("VARUN BHARDWAJ IDTOKEN", Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getToken()));
+                                token[0] =task.getResult().getToken();
+                                HashMap<String,String> map=new HashMap<String, String>();
+                                map.put("token",token[0]);
+                                final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this,R.style.Theme_AppCompat);
+                                progressDialog.setMessage("Loading data....");
+                                progressDialog.show();
+                                RequestQueue requstQueue = Volley.newRequestQueue(MainActivity.this);
+
+                                JsonObjectRequest jsonobj = new JsonObjectRequest(Request.Method.POST, url,new JSONObject(map),
+                                        new Response.Listener<JSONObject>() {
+                                            @Override
+                                            public void onResponse(JSONObject response) {
+                                                try {
+                                                    textView.setText(response.getString("society"));
+                                                    if(response.getString("society").equals("true")){
+                                                        addEvent.setVisible(true);
+                                                    }
+                                                    progressDialog.dismiss();
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+
+                                            }
+                                        }
+                                );
+                                requstQueue.add(jsonobj);
+
+                            } else
+                                token[0] = "0";
+                        }
+                    });
+        }
     }
     public void loadRecyclerViewData(){
         final ProgressDialog progressDialog = new ProgressDialog(this,R.style.Theme_AppCompat);
@@ -163,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu, menu);
+        addEvent=menu.findItem(R.id.add_event);
         return true;
     }
     @Override
@@ -177,6 +230,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.log_out) {
             Logout();
+        }
+        else if(item.getItemId()==R.id.add_event){
+            startActivity(new Intent(MainActivity.this,SubscribeActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

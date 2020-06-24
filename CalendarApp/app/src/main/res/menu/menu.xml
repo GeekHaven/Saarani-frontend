@@ -4,4 +4,9 @@
     <item android:id="@+id/log_out"
         android:title="Log Out"
         app:showAsAction="never"/>
+    <item android:id="@+id/add_event"
+        android:icon="@drawable/plus"
+        android:visible="false"
+        app:showAsAction="always"
+        android:title="AddEvent" />
 </menu>
