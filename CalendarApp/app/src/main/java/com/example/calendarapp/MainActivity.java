@@ -47,6 +47,7 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AndroidThreeTen.init(this);
         mAuth=FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("271594298370-jmsnpsmnhm1ahm6viiag2gi2dnpqn0lg.apps.googleusercontent.com")
@@ -87,12 +89,12 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-        recyclerView=findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView=findViewById(R.id.recycler_view);
+//        recyclerView.setHasFixedSize(true);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         listItems=new ArrayList<>();
-        loadRecyclerViewData();
+//        loadRecyclerViewData();
 
     }
     public void subscribeToTopic(){
@@ -108,9 +110,21 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
+        FirebaseMessaging.getInstance().subscribeToTopic("iit2019091")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "Subscribed to Event";
+                        if (!task.isSuccessful()) {
+                            msg = getString(R.string.msg_subscribe_failed);
+                        }
+                        Log.d("VARUN", msg);
+                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
     public void sendIdToken(){
-        final TextView textView = findViewById(R.id.check);
+//        final TextView textView = findViewById(R.id.check);
         final String[] token = new String[1];
         mAuth=FirebaseAuth.getInstance();
         final FirebaseUser user= mAuth.getCurrentUser();
@@ -138,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                                             @Override
                                             public void onResponse(JSONObject response) {
                                                 try {
-                                                    textView.setText(response.getString("society"));
+//                                                    textView.setText(response.getString("society"));
                                                     if(response.getString("society").equals("true")){
                                                         addEvent.setVisible(true);
                                                     }
@@ -227,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
             Logout();
         }
         else if(item.getItemId()==R.id.add_event){
-            startActivity(new Intent(MainActivity.this,SubscribeActivity.class));
+            startActivity(new Intent(MainActivity.this,AddEventActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

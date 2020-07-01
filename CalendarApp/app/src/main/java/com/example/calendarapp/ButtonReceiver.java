@@ -41,6 +41,8 @@ public class ButtonReceiver extends BroadcastReceiver {
             final String mark=intent.getExtras().getString("action");
             String temp="https://socupdate.herokuapp.com/events/";
             url=temp+intent.getExtras().getString("eventId")+"/mark";
+            String msg="Marked as " + intent.getExtras().getString("action");
+            Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
             mAuth=FirebaseAuth.getInstance();
             final FirebaseUser user= mAuth.getCurrentUser();
             if(user!=null){
@@ -49,7 +51,6 @@ public class ButtonReceiver extends BroadcastReceiver {
                     public void onComplete(@NonNull Task<GetTokenResult> task) {
                         if(task.isSuccessful()){
                             if(task.getResult().getToken()!=null) {
-                                Toast.makeText(context, task.getResult().getToken().substring(0,6), Toast.LENGTH_SHORT).show();
                                 HashMap<String,String> map=new HashMap<String, String>();
                                 map.put("token",task.getResult().getToken());
                                 map.put("mark",mark);
@@ -74,6 +75,13 @@ public class ButtonReceiver extends BroadcastReceiver {
                     }
                 });
             }
+            int id = Objects.requireNonNull(intent.getExtras()).getInt("notifid", 0);
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancel(id);
+
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, new Intent(), 0);
+            NotificationCompat.Builder mb = new NotificationCompat.Builder(context);
+            mb.setContentIntent(resultPendingIntent);
         }
         else {
             int id = Objects.requireNonNull(intent.getExtras()).getInt("notifid", 0);

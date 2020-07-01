@@ -152,11 +152,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Intent goingIntent =new Intent(this,ButtonReceiver.class);
         goingIntent.putExtra("action","going");
         goingIntent.putExtra("eventId",data.get("eventID"));
+        goingIntent.putExtra("notifid",m);
         PendingIntent goingPIntent= PendingIntent.getBroadcast(this,m+2,goingIntent,0);
 
         final Intent interestedIntent= new Intent(this,ButtonReceiver.class);
         interestedIntent.putExtra("action","interested");
         interestedIntent.putExtra("eventId",data.get("eventID"));
+        interestedIntent.putExtra("notifid",m);
         PendingIntent interPIntent= PendingIntent.getBroadcast(this,m+3,interestedIntent,0);
 
 
@@ -178,6 +180,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setContentIntent(pendingIntent)
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(data.get("body")))
                             .setLargeIcon(bitmap)
+                            .setDefaults(NotificationCompat.DEFAULT_ALL)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
                             .setCategory(NotificationCompat.CATEGORY_EVENT)
                             .addAction(R.string.reject, getString(R.string.reject), interPIntent)
                             .addAction(R.string.accept, getString(R.string.accept), goingPIntent)
@@ -192,6 +196,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setContentText(data.get("body"))
                             .setAutoCancel(true)
                             .setSound(defaultSoundUri)
+                            .setDefaults(NotificationCompat.DEFAULT_ALL)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
                             .setContentIntent(pendingIntent)
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(data.get("body")))
                             .setLargeIcon(bitmap)
@@ -205,7 +211,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(channelId,
                     "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager.IMPORTANCE_HIGH);
             notificationManager.createNotificationChannel(channel);
         }
         notificationManager.notify(m, notificationBuilder.build());
