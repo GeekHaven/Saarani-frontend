@@ -22,9 +22,9 @@
     <string name="reject">Interested</string>
     <string name="accept">Mark as Going</string>
     <string name="xxx">Ignore</string>
-    <string name="LoginActivitySignInHeading">SIGN IN</string>
-    <string name="radioLoginActivityStudent">Student</string>
-    <string name="radioLoginActivitySociety">Society</string>
-    <string name="LoginActivitySubHeading">SIGN IN TO CONTINUE</string>
-    <string name="btnLoginActivitySignIn">Sign In</string>
+
+    <string name="btnLoginActivitySignIn">Sign in With Google</string>
+    <string name="loginActivityWelcome">Welcome</string>
+    <string name="loginActivitySubHeading">Sign In with your college ID to continue</string>
+    <string name="loginActivityGoogleImgDescription">GoogleSignIn</string>
 </resources>
