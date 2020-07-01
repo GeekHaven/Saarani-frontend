@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_main">
+
+    <group android:id="@+id/menu_top">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/nav_home_icon"
+            android:title="Home"/>
+
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/nav_profile_icon"
+            android:title="My Profile"/>
+
+        <item
+            android:id="@+id/nav_subscription"
+            android:icon="@drawable/nav_subscription_icon"
+            android:title="Subscription"/>
+
+        <item
+            android:id="@+id/nav_societies"
+            android:icon="@drawable/nav_societies_icon"
+            android:title="Societies"/>
+    </group>
+    <group android:id="@+id/menu_bottom">
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/nav_settings_icon"
+            android:title="Settings" />
+
+        <item
+            android:id="@+id/nav_log_out"
+            android:icon="@drawable/nav_logout_icon"
+            android:title="Logout" />
+    </group>
+</menu>

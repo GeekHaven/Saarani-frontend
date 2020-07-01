@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/navigation_nav_main"
+    android:id="@+id/mobile_navigation">
+
+    <fragment
+        android:id="@+id/navigation_nav_main"
+        android:name="com.example.calendarapp.MainFragment"
+        android:label="Main Fragment"
+        tools:layout="@layout/main_fragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_nav_profile"
+        android:name="com.example.calendarapp.ProfileFragment"
+        android:label="Profile Fragment"
+        tools:layout="@layout/profile_fragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_nav_subscription"
+        android:name="com.example.calendarapp.SubscriptionFragment"
+        android:label="Subscription Fragment"
+        tools:layout="@layout/subscription_fragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_nav_society"
+        android:name="com.example.calendarapp.SocietyFragment"
+        android:label="Society Fragment"
+        tools:layout="@layout/society_fragment">
+    </fragment>
+
+</navigation>
