@@ -5,8 +5,25 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/drawerArrowStyle</item>
+        <item name="listPreferredItemHeightSmall">64dp</item>
+        <item name="android:listDivider">@color/colorListDivider</item>
     </style>
+
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/background</item>
     </style>
+
+    <style name="NavigationMenuItemTheme" parent="Theme.AppCompat">
+        <item name="android:fontFamily">@font/montserratmedium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">5dp</item>
+    </style>
+    
+    <style name="drawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/colorPrimaryText</item>
+    </style>
+
 </resources>
