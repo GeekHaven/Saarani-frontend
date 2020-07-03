@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
-    tools:context=".MainActivity2">
+    tools:context=".MainActivity2"
+    >
 
     <include
         layout="@layout/app_bar_main"/>
@@ -24,8 +25,8 @@
         app:itemHorizontalPadding="15dp"
         app:itemTextAppearance="@style/NavigationMenuItemTheme"
         app:itemTextColor="@color/colorPrimaryText"
-        app:elevation="10dp"
-        app:itemIconSize="48dp"
+        app:elevation="16dp"
+        app:itemIconSize="35dp"
         app:itemIconPadding="15dp"
         app:itemIconTint="#757575"
         android:fitsSystemWindows="true"/>

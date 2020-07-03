@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHolder> {
-
     private List<ListItems> listItems;
     private Context context;
 
@@ -28,7 +27,6 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                 .inflate(R.layout.single_event, parent, false);
         return new ViewHolder(v);
     }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ListItems listItem = listItems.get(position);
