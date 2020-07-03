@@ -5,41 +5,141 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/menu_item_card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:background="#2C2B2B"
+    android:layout_height="110dp"
     android:orientation="vertical"
     android:layout_marginBottom="6dp"
-    card_view:cardCornerRadius="20dp"
+    card_view:cardCornerRadius="8dp"
     card_view:cardElevation="8dp">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="10dp"
-        >
+        android:background="#2C2B2B"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
     <TextView
+        android:layout_width="6dp"
+        android:layout_height="110dp"
+        android:background="@drawable/round_left_strip"
+        />
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#2C2B2B"
+        android:paddingLeft="16dp"
+        android:paddingTop="8dp"
+        >
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="horizontal"
+         android:background="#2C2B2B"
+     >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:text="Music Event"
+        android:textColor="#FFFFFF"
+        android:fontFamily="@font/montserratmedium"
+        android:textSize="28sp"
         android:id="@+id/eventName"
         />
+     <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="12dp"
+         android:text="Upcoming"
+         android:textColor="#2C2B2B"
+         android:layout_gravity="center"
+         android:padding="1dp"
+         android:fontFamily="@font/montserratmedium"
+         android:textSize="8sp"
+         android:background="@drawable/upcoming_background"
+         />
+     </LinearLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:id="@+id/eventBy"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:id="@+id/desc"/>
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal"
+        android:layout_gravity="top"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time: 10:00 am"
+            android:layout_gravity="top"
+            android:gravity="top"
+            android:textStyle="bold"
+            android:fontFamily="@font/montserratmedium"
+            android:textColor="#9D9D9D"
+            android:textSize="12sp"
+            android:id="@+id/time"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Venue: Auditorium"
+        android:layout_gravity="top"
+        android:gravity="top"
+        android:layout_marginLeft="36dp"
+        android:textStyle="bold"
+        android:fontFamily="@font/montserratmedium"
+        android:textColor="#9D9D9D"
+        android:textSize="12sp"
         android:id="@+id/venue"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:id="@+id/date"/>
-    <TextView
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/time"/>
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        >
+    <ImageButton
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginRight="6dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="INTERESTED"
+        android:textColor="#7C7C7C"
+        android:layout_marginRight="25dp"
+        android:fontFamily="@font/montserratmedium"
+        android:textStyle="bold"
+        android:textSize="13sp"
+    />
+        <ImageButton
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginRight="6dp"
+            />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GOING"
+        android:textColor="#7C7C7C"
+        android:fontFamily="@font/montserratmedium"
+        android:textStyle="bold"
+        android:textSize="13sp"
+    />
+    </LinearLayout>
+    </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -1,20 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainFragment">
-
+    android:background="#232323"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:background="#232323"
+    android:layout_marginBottom="30dp"
+    android:layout_height="wrap_content"
+    >
 
     <TextView
-        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Home Fragment"
-        android:textSize="36sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/montserratmedium"
+        android:id="@+id/month"
+        android:textColor="#F0D453"
+        android:textSize="42sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/montserratmedium"
+        android:id="@+id/year"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.github.sundeepk.compactcalendarview.CompactCalendarView
+        android:id="@+id/compactcalendar_view"
+        android:layout_width="fill_parent"
+        android:layout_height="350dp"
+        android:layout_marginHorizontal="21dp"
+        android:layout_marginTop="116dp"
+        android:elevation="16dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="16dp"
+        android:paddingRight="10dp"
+        app:compactCalendarBackgroundColor="#2C2B2B"
+        app:compactCalendarCurrentDayBackgroundColor="#FFFFFF"
+        app:compactCalendarCurrentDayTextColor="#000000"
+        app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="false"
+        app:compactCalendarCurrentSelectedDayBackgroundColor="#FFFFFF"
+        app:compactCalendarCurrentSelectedDayTextColor="#000000"
+        app:compactCalendarMultiEventIndicatorColor="#fff"
+        app:compactCalendarTargetHeight="400dp"
+        app:compactCalendarTextColor="#fff"
+        app:compactCalendarTextSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/today"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="500dp"
+        android:fontFamily="@font/montserratmedium"
+        android:text="Today"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/textLay"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
+        android:gravity="right"
+        android:layout_marginTop="500dp"
+        android:fontFamily="@font/montserratmedium"
+        android:text=""
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/today"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/default_text"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="25dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="540dp"
+        android:fontFamily="@font/montserratmedium"
+        android:text="No Event Found"
+        android:textColor="#9D9D9D"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
+        android:background="#232323"
+        android:elevation="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textLay" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

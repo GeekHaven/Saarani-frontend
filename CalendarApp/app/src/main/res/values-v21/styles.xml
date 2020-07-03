@@ -4,4 +4,15 @@
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="colorControlNormal">#F0D453</item>
     </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/drawerArrowStyle</item>
+        <item name="listPreferredItemHeightSmall">64dp</item>
+        <item name="android:listDivider">@color/colorListDivider</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
 </resources>
