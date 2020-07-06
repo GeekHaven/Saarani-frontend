@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/add_event"
-        android:icon="@drawable/plus_gray"
+        android:icon="@drawable/ic_plus"
         android:visible="false"
         app:showAsAction="always"
         android:title="AddEvent" />
