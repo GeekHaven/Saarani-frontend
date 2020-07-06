@@ -1,22 +1,59 @@
 package com.example.calendarapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
 
-public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHolder> {
-    private List<ListItems> listItems;
-    private Context context;
+import static com.example.calendarapp.R.drawable.star_img;
+import static com.example.calendarapp.R.drawable.star_yellow;
+import static com.example.calendarapp.R.drawable.tick;
+import static com.example.calendarapp.R.drawable.tick_yellow;
 
-    AdaptorActivity(List<ListItems> listItems, Context context) {
+interface ClickListener {
+
+    void onPositionClicked(int position);
+
+    void onLongClicked(int position);
+}
+
+public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHolder> {
+    private List<ListItems> listItems,listUpdated;
+    private final ClickListener listener;
+    private Context context;
+    private String eventId;
+    private HashMap<Integer, String> map= new HashMap<Integer, String>();
+
+
+    AdaptorActivity(List<ListItems> listItems, ClickListener listener, Context context) {
         this.listItems = listItems;
+        this.listener = listener;
         this.context = context;
     }
 
@@ -30,20 +67,108 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ListItems listItem = listItems.get(position);
-        holder.name.setText(listItem.getName());
+        String name=listItem.getName();
+        if(listItem.getName().length()>16){
+            name=name.substring(0,16)+"...";
+        }
+        holder.name.setText(name);
         holder.desc.setText(listItem.getDesc());
         holder.byName.setText(listItem.getByName());
         holder.venue.setText(listItem.getVenue());
         holder.date.setText(listItem.getDate());
         holder.time.setText(listItem.getTime());
+        eventId=listItem.getEventId();
+        map.put(position,eventId);
+        Log.d("mark",listItem.getMarker());
+        if(listItem.getMarker().equals("interested")){
+            holder.star.setImageResource(star_yellow);
+            holder.star.setTag(star_yellow);
+        }
+        else if(listItem.getMarker().equals("going")){
+            holder.going.setImageResource(R.drawable.tick_yellow);
+            holder.going.setTag(tick_yellow);
+            Log.d("set","true");
+        }
+        else{
+            holder.star.setTag(star_img);
+            holder.going.setTag(tick);
+        }
     }
-
+    public void addMarker(int position, final String marker){
+        FirebaseAuth mAuth= FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        final String url="https://socupdate.herokuapp.com/events/"+map.get(position)+"/mark";
+        if(user!=null){
+            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                    if(task.getResult().getToken()!=null){
+                        HashMap<String,String> mapToken=new HashMap<String, String>();
+                        mapToken.put("token",task.getResult().getToken());
+                        mapToken.put("mark",marker);
+                        Log.d("deleteToken", String.valueOf(new JSONObject(mapToken)));
+                        final RequestQueue requstQueue = Volley.newRequestQueue(context);
+                        JsonObjectRequest jsonobj = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(mapToken),
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Log.d("respone",String.valueOf(response));
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Log.d("error",error.toString());
+                                    }
+                                }
+                        );
+                        requstQueue.add(jsonobj);
+                    }
+                }
+            });
+        }
+    }
+    public void deleteRequest(int position){
+        FirebaseAuth mAuth= FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        final String url="https://socupdate.herokuapp.com/events/"+map.get(position)+"/mark/delete";
+        if(user!=null){
+            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                    if(task.getResult().getToken()!=null){
+                        HashMap<String,String> mapToken=new HashMap<String, String>();
+                        mapToken.put("token",task.getResult().getToken());
+                        Log.d("deleteToken", String.valueOf(new JSONObject(mapToken)));
+                        final RequestQueue requstQueue = Volley.newRequestQueue(context);
+                        JsonObjectRequest jsonobj = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(mapToken),
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Log.d("respone",String.valueOf(response));
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Log.d("error",error.toString());
+                                    }
+                                }
+                        );
+                        requstQueue.add(jsonobj);
+                    }
+                }
+            });
+        }
+    }
     @Override
     public int getItemCount() {
         return listItems.size();
     }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public List<ListItems> getModifyList() {
+        return listUpdated;
+    }
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         TextView name;
         TextView desc;
@@ -51,6 +176,10 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         TextView venue;
         TextView date;
         TextView time;
+        ImageView star;
+        ImageView going;
+        TextView interested;
+        TextView markAsGoing;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,8 +189,71 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             date = itemView.findViewById(R.id.date);
             time = itemView.findViewById(R.id.time);
             venue = itemView.findViewById(R.id.venue);
+            star=itemView.findViewById(R.id.mark);
+            going=itemView.findViewById(R.id.going);
+            interested=itemView.findViewById(R.id.text_interested);
+            markAsGoing=itemView.findViewById(R.id.text_going);
+            interested.setOnClickListener(this);
+            markAsGoing.setOnClickListener(this);
+            star.setOnClickListener(this);
+            going.setOnClickListener(this);
+        }
+        public void sendBroadcast(String msg,int position){
+            Intent intent = new Intent("custom-message");
+            intent.putExtra("eventId",map.get(position));
+            intent.putExtra("markedAs",msg);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        }
+        @Override
+        public void onClick(View v) {
+            if(v.getId()==star.getId()||v.getId()==interested.getId()){
+                Object tag = star.getTag();
+                if(tag != null && (Integer) tag == star_yellow){
+                    Toast.makeText(context,"Unmarked",Toast.LENGTH_SHORT).show();
+                    star.setTag(R.drawable.star_img);
+                    star.setImageResource(R.drawable.star_img);
+                    deleteRequest(this.getAdapterPosition());
+                    sendBroadcast("none",this.getAdapterPosition());
+                }
+                else{
+                    Toast.makeText(context,"Marked",Toast.LENGTH_SHORT).show();
+                    star.setTag(star_yellow);
+                    star.setImageResource(star_yellow);
+                    if((Integer) going.getTag()==tick_yellow){
+                        going.setTag(tick);
+                        going.setImageResource(R.drawable.tick);
+                    }
+                    sendBroadcast("interested",this.getAdapterPosition());
+                    addMarker(this.getAdapterPosition(),"interested");
+                }
+            }
+            else if(v.getId()==going.getId()||v.getId()==markAsGoing.getId()){
+                Object tag=going.getTag();
+                if(tag!=null &&(Integer) tag== tick_yellow){
+                    Toast.makeText(context,"Unmarked",Toast.LENGTH_SHORT).show();
+                    going.setTag(tick);
+                    going.setImageResource(R.drawable.tick);
+                    deleteRequest(this.getAdapterPosition());
+                    sendBroadcast("none",this.getAdapterPosition());
+                }
+                else{
+                    Toast.makeText(context,"Marked",Toast.LENGTH_SHORT).show();
+                    going.setTag(tick_yellow);
+                    going.setImageResource(R.drawable.tick_yellow);
+                    if((Integer)star.getTag()==star_yellow){
+                        star.setTag(R.drawable.star_img);
+                        star.setImageResource(R.drawable.star_img);
+                    }
+                    sendBroadcast("going",this.getAdapterPosition());
+                    addMarker(this.getAdapterPosition(),"going");
+                }
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            return false;
         }
     }
-
 }
 

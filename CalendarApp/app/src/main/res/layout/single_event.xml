@@ -6,7 +6,7 @@
     android:id="@+id/menu_item_card_view"
     android:layout_width="match_parent"
     android:background="#2C2B2B"
-    android:layout_height="110dp"
+    android:layout_height="114dp"
     android:orientation="vertical"
     android:layout_marginBottom="6dp"
     card_view:cardCornerRadius="8dp"
@@ -18,7 +18,7 @@
         android:orientation="horizontal">
     <TextView
         android:layout_width="6dp"
-        android:layout_height="110dp"
+        android:layout_height="114dp"
         android:background="@drawable/round_left_strip"
         />
     <LinearLayout
@@ -33,6 +33,7 @@
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:orientation="horizontal"
+         android:paddingRight="8dp"
          android:background="#2C2B2B"
      >
     <TextView
@@ -42,7 +43,7 @@
         android:text="Music Event"
         android:textColor="#FFFFFF"
         android:fontFamily="@font/montserratmedium"
-        android:textSize="28sp"
+        android:textSize="25sp"
         android:id="@+id/eventName"
         />
      <TextView
@@ -52,7 +53,8 @@
          android:text="Upcoming"
          android:textColor="#2C2B2B"
          android:layout_gravity="center"
-         android:padding="1dp"
+         android:paddingVertical="1dp"
+         android:paddingHorizontal="2dp"
          android:fontFamily="@font/montserratmedium"
          android:textSize="8sp"
          android:background="@drawable/upcoming_background"
@@ -108,14 +110,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         >
-    <ImageButton
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/mark"
+        android:src="@drawable/star_img"
+        android:scaleType="fitXY"
         android:layout_marginRight="6dp"
         />
     <TextView
+        android:id="@+id/text_interested"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="INTERESTED"
@@ -125,15 +132,19 @@
         android:textStyle="bold"
         android:textSize="13sp"
     />
-        <ImageButton
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/tick"
+            android:id="@+id/going"
+            android:scaleType="fitXY"
             android:layout_marginRight="6dp"
             />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="GOING"
+        android:id="@+id/text_going"
         android:textColor="#7C7C7C"
         android:fontFamily="@font/montserratmedium"
         android:textStyle="bold"
