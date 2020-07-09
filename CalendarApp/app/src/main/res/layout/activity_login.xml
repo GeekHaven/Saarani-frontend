@@ -80,7 +80,7 @@
 
         <View
             android:id="@+id/view"
-            android:layout_width="2.5dp"
+            android:layout_width="3.5dp"
             android:layout_height="match_parent"
             android:background="@drawable/line_sign_in_button" />
 

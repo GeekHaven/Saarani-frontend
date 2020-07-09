@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/montserratmedium"
+        android:gravity="center_horizontal|center_vertical"
         android:text="Student Name"
         android:textColor="@color/colorPrimaryText"
         android:textSize="21sp"

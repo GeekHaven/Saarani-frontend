@@ -185,6 +185,9 @@ public class MainFragment extends Fragment {
         final String urlPost = "https://socupdate.herokuapp.com/events/marked";
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Loading data....");
+        progressDialog.show();
         if (user != null) {
             user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                 @Override
@@ -193,9 +196,6 @@ public class MainFragment extends Fragment {
                         final HashMap<String,String> mapToken=new HashMap<String, String>();
                         mapToken.put("token",task.getResult().getToken());
                         Log.d("PostToken",task.getResult().getToken());
-                        final ProgressDialog progressDialog = new ProgressDialog(getContext(),R.style.Theme_AppCompat);
-                        progressDialog.setMessage("Loading data....");
-                        progressDialog.show();
                         RequestQueue requstQueue = Volley.newRequestQueue(requireContext());
                         progressDialog.dismiss();
                         Log.d("PostObject", String.valueOf(new JSONObject(mapToken)));
