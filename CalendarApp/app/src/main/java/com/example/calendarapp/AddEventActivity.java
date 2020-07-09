@@ -59,12 +59,16 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import java.io.File;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -72,6 +76,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class AddEventActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
     public static final int PICKFILE_RESULT_CODE = 1;
+    final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     EditText eventName, eventDesc, eventVenue, sendTo, sendCC;
     public Button addEvent;
     TextView spinnerTime, spinnerMinute;
@@ -110,6 +115,9 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
 //        String[] minuteArray = new String[]{
 //                 "00", "10", "20", "30", "40", "50"
 //        };
+        final Date dateToday = new Date();
+        date=dateFormat.format(dateToday);
+        Log.d("date",date);
         addEmailLayout=findViewById(R.id.addEmailLayout);
         attachmentParent=findViewById(R.id.attachmentLayout);
         addAttachment=findViewById(R.id.attachment);
@@ -138,7 +146,14 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 if(month+1<10){
                     months="0"+(month+1);
                 }
-                date = dayOfMonth + "/" + months + "/" + year;
+                else
+                    months=""+month+1;
+                String dateSelected;
+                if(dayOfMonth<10)
+                    dateSelected= "0" +dayOfMonth;
+                else
+                    dateSelected=""+dayOfMonth;
+                date = dateSelected + "/" + months + "/" + year;
                 Log.d("date", date);
             }
         });
@@ -195,6 +210,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
 //        Log.d("eventTime", hour + ":" + minute);
         
         addEvent.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
                 if(eventName.getText().toString().isEmpty()){
@@ -207,13 +223,16 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 else if(hourSelect.equals("00")&&minuteSelect.equals("00"))
                     Toast.makeText(AddEventActivity.this,"Please enter event time",Toast.LENGTH_SHORT).show();
                 else {
-                    Toast.makeText(AddEventActivity.this,"Uploading....",Toast.LENGTH_SHORT).show();
-                    Iterator iterator = uriMap.entrySet().iterator();
-                    int x=0;
-                    while(iterator.hasNext()){
-                        Map.Entry mapElement = (Map.Entry)iterator.next();
-                        uploadFile((Uri)mapElement.getValue());
+                    if(!uriMap.isEmpty()) {
+                        Toast.makeText(AddEventActivity.this,"Uploading....",Toast.LENGTH_SHORT).show();
+                        Iterator iterator = uriMap.entrySet().iterator();
+                        int x = 0;
+                        while (iterator.hasNext()) {
+                            Map.Entry mapElement = (Map.Entry) iterator.next();
+                            uploadFile((Uri) mapElement.getValue());
+                        }
                     }
+                    sendEvent(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
                 }
             }
         });
@@ -322,16 +341,17 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 if (!EasyPermissions.hasPermissions(AddEventActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     EasyPermissions.requestPermissions(this, "Read External data", 2, Manifest.permission.READ_EXTERNAL_STORAGE);
                 }
-
-                Intent chooseFile = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                    chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                else {
+                    Intent chooseFile = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                        chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    }
+                    assert chooseFile != null;
+                    chooseFile.setType("*/*");
+                    chooseFile.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                    chooseFile = Intent.createChooser(chooseFile, "Choose a file");
+                    startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
                 }
-                assert chooseFile != null;
-                chooseFile.setType("*/*");
-                chooseFile.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                chooseFile = Intent.createChooser(chooseFile, "Choose a file");
-                startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
             }
         });
     }
@@ -737,50 +757,54 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
 //            if(!mailList[i].isEmpty())
 //                size++;
 //        }
-        String[] subarray = new String[to.size()];
-        int z=0;
-        for (int i = 0; i < to.size(); i++) {
-            subarray[i]=to.get(i);
-        }
-        try {
-            Intent emailSelectorIntent = new Intent(Intent.ACTION_SENDTO);
-            emailSelectorIntent.setData(Uri.parse("mailto:"));
-            Log.d("mailList", Arrays.toString(subarray));
-            final Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, subarray);
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, eventName.getText().toString());
-            ArrayList<String> bodyList = new ArrayList<>();
-            String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
-            bodyList.add(body);
-            ArrayList<Uri> uris = new ArrayList<Uri>();
-            emailIntent.putExtra(Intent.EXTRA_TEXT, bodyList);
-            emailIntent.setSelector(emailSelectorIntent);
-            emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            emailIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-            emailIntent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
-            emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            Iterator iterator = fileMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry mapElement = (Map.Entry) iterator.next();
-                File f =(File) mapElement.getValue();
-                f.setReadable(true,false);
-                uris.add(Uri.fromFile(f));
+        if(to.size()!=0) {
+            String[] subarray = new String[to.size()];
+            int z = 0;
+            for (int i = 0; i < to.size(); i++) {
+                subarray[i] = to.get(i);
             }
+            try {
+                Intent emailSelectorIntent = new Intent(Intent.ACTION_SENDTO);
+                emailSelectorIntent.setData(Uri.parse("mailto:"));
+                Log.d("mailList", Arrays.toString(subarray));
+                final Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, subarray);
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, eventName.getText().toString());
+                ArrayList<String> bodyList = new ArrayList<>();
+                String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
+                bodyList.add(body);
+                ArrayList<Uri> uris = new ArrayList<Uri>();
+                emailIntent.putExtra(Intent.EXTRA_TEXT, bodyList);
+                emailIntent.setSelector(emailSelectorIntent);
+                emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                emailIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                emailIntent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
+                emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                Iterator iterator = fileMap.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry mapElement = (Map.Entry) iterator.next();
+                    File f = (File) mapElement.getValue();
+                    f.setReadable(true, false);
+                    uris.add(Uri.fromFile(f));
+                }
 //            emailIntent.setType("text/html");
 //            emailIntent.setType("application/pdf");
 //            emailIntent.setType("message/rfc822");
 //            emailIntent.setType("text/plain");
-            emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-            Log.d("URI", String.valueOf(uris));
-            startActivity(Intent.createChooser(emailIntent, "Choose an email application..."));
+                if (uris.size() != 0)
+                    emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                Log.d("URI", String.valueOf(uris));
+                startActivity(Intent.createChooser(emailIntent, "Choose an email application..."));
+            } catch (Throwable t) {
+                Toast.makeText(this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
+            }
         }
-        catch (Throwable t)
-        {
-            Toast.makeText(this, "Request failed try again: " + t.toString(),Toast.LENGTH_LONG).show();
-        }
-
     }
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
