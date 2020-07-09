@@ -12,6 +12,8 @@ public class ListItems {
     private String marker;
     private String eventId;
     private ArrayList<String> arrayList;
+    private String photoUrl;
+    private boolean showMenu;
 
     public ListItems( String name,String desc,String byName,String date,String time,String venue,String marker,String eventId,ArrayList<String> arrayList){
         this.name=name;
@@ -23,7 +25,25 @@ public class ListItems {
         this.marker=marker;
         this.eventId=eventId;
         this.arrayList=arrayList;
+        this.showMenu=false;
+
     }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public void setShowMenu(boolean showMenu) {
+        this.showMenu = showMenu;
+    }
+    public boolean isShowMenu() {
+        return showMenu;
+    }
+
     public String getName(){
         return name;
     }
