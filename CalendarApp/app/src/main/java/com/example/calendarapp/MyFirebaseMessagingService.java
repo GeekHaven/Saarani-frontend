@@ -140,8 +140,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(RemoteMessage remoteMessage) {
         int m = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
         Map<String, String> data = remoteMessage.getData();
-
-        Intent intent = new Intent(this, MainActivity.class);
+        Log.d("dataPayload",data.toString());
+        Intent intent = new Intent(this, EventActivity.class);
+        intent.putExtra("eventId",data.get("eventId"));
+        intent.putExtra("type","notif");
         PendingIntent pendingIntent = PendingIntent.getActivity(this, m, intent,PendingIntent.FLAG_ONE_SHOT);
 
         Intent ignoreIntent = new Intent(this,ButtonReceiver.class);
@@ -198,7 +200,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setSound(defaultSoundUri)
                             .setDefaults(NotificationCompat.DEFAULT_ALL)
                             .setPriority(NotificationCompat.PRIORITY_HIGH)
-                            .setContentIntent(pendingIntent)
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(data.get("body")))
                             .setLargeIcon(bitmap)
                             .setCategory(NotificationCompat.CATEGORY_EVENT);

@@ -1,5 +1,6 @@
 package com.example.calendarapp;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -47,7 +48,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     private List<ListItems> listItems,listUpdated;
     private final ClickListener listener;
     private Context context;
-    private String eventId;
+    private String eventId,marker;
     private HashMap<Integer, String> map= new HashMap<Integer, String>();
 
 
@@ -79,6 +80,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         holder.time.setText(listItem.getTime());
         eventId=listItem.getEventId();
         map.put(position,eventId);
+        marker=listItem.getMarker();
         Log.d("mark",listItem.getMarker());
         if(listItem.getMarker().equals("interested")){
             holder.star.setImageResource(star_yellow);
@@ -94,9 +96,10 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             holder.going.setTag(tick);
         }
     }
-    public void addMarker(int position, final String marker){
+    public void addMarker(int position, final String mark){
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        marker=mark;
         final String url="https://socupdate.herokuapp.com/events/"+map.get(position)+"/mark";
         if(user!=null){
             user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
@@ -105,7 +108,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                     if(task.getResult().getToken()!=null){
                         HashMap<String,String> mapToken=new HashMap<String, String>();
                         mapToken.put("token",task.getResult().getToken());
-                        mapToken.put("mark",marker);
+                        mapToken.put("mark",mark);
                         Log.d("deleteToken", String.valueOf(new JSONObject(mapToken)));
                         final RequestQueue requstQueue = Volley.newRequestQueue(context);
                         JsonObjectRequest jsonobj = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(mapToken),
@@ -128,9 +131,24 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             });
         }
     }
+    public void startIntent(int position){
+        Intent intent =new Intent(context,EventActivity.class);
+        ListItems items = listItems.get(position);
+        intent.putExtra("name",items.getName());
+        intent.putExtra("byName",items.getByName());
+        intent.putExtra("desc",items.getDesc());
+        intent.putExtra("time",items.getTime());
+        intent.putExtra("venue",items.getVenue());
+        intent.putExtra("date",items.getDate());
+        intent.putExtra("marker",marker);
+        intent.putExtra("eventId",map.get(position));
+        intent.putStringArrayListExtra("attachments", items.getArrayList());
+        context.startActivity(intent);
+    }
     public void deleteRequest(int position){
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        marker="none";
         final String url="https://socupdate.herokuapp.com/events/"+map.get(position)+"/mark/delete";
         if(user!=null){
             user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
@@ -165,9 +183,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     public int getItemCount() {
         return listItems.size();
     }
-    public List<ListItems> getModifyList() {
-        return listUpdated;
-    }
+
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         TextView name;
@@ -197,7 +213,18 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             markAsGoing.setOnClickListener(this);
             star.setOnClickListener(this);
             going.setOnClickListener(this);
+            itemView.setClickable(true);
+            itemView.setOnClickListener(this);
         }
+//        public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                String eventId = intent.getStringExtra("eventId");
+//                String markedAs = intent.getStringExtra("markedAs");
+////            Toast.makeText(getContext(),ItemName +" "+qty ,Toast.LENGTH_SHORT).show();
+//
+//            }
+//        };
         public void sendBroadcast(String msg,int position){
             Intent intent = new Intent("custom-message");
             intent.putExtra("eventId",map.get(position));
@@ -247,6 +274,9 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                     sendBroadcast("going",this.getAdapterPosition());
                     addMarker(this.getAdapterPosition(),"going");
                 }
+            }
+            else{
+                startIntent(this.getAdapterPosition());
             }
         }
 

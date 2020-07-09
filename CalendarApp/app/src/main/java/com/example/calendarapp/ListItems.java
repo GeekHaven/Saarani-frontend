@@ -1,5 +1,7 @@
 package com.example.calendarapp;
 
+import java.util.ArrayList;
+
 public class ListItems {
     private String name;
     private String desc;
@@ -9,10 +11,11 @@ public class ListItems {
     private String venue;
     private String marker;
     private String eventId;
+    private ArrayList<String> arrayList;
     private String photoUrl;
     private boolean showMenu;
 
-    public ListItems( String name,String desc,String byName,String date,String time,String venue,String marker,String eventId){
+    public ListItems( String name,String desc,String byName,String date,String time,String venue,String marker,String eventId,ArrayList<String> arrayList){
         this.name=name;
         this.desc=desc;
         this.byName=byName;
@@ -21,7 +24,9 @@ public class ListItems {
         this.venue=venue;
         this.marker=marker;
         this.eventId=eventId;
+        this.arrayList=arrayList;
         this.showMenu=false;
+
     }
 
     public String getPhotoUrl() {
@@ -57,4 +62,5 @@ public class ListItems {
     }
     public String getMarker(){return marker;}
     public String getEventId(){return eventId;}
+    public ArrayList<String> getArrayList(){return arrayList;}
 }

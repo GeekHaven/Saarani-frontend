@@ -40,6 +40,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,6 +62,7 @@ public class MainFragment extends Fragment {
     private RecyclerView recyclerView;
     private CardView cardView;
     private RecyclerView.Adapter adapter;
+    final Date date = new Date();
     private List<ListItems> listItems,recylerViewList;
     private static String URL_DATA="https://socupdate.herokuapp.com/events";
     HashMap<String, Integer> map
@@ -78,20 +80,17 @@ public class MainFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.main_fragment, container, false);
         listItems=new ArrayList<>();
-        loadRecyclerViewData();
         final DateFormat dateFormat = new SimpleDateFormat("MM",Locale.getDefault());
         final SimpleDateFormat sdf = new SimpleDateFormat("EEEE",Locale.getDefault());
         final DateFormat dateFormat1= new SimpleDateFormat("dd",Locale.getDefault());
         final DateFormat yearFormat= new SimpleDateFormat("YYYY",Locale.getDefault());
         final String[] Selected = new String[]{"January", "February", "March", "April",
                 "May", "June", "July", "August", "September", "October", "November", "December"};
-        final Date date = new Date();
         default_text=view.findViewById(R.id.default_text);
         recyclerView=view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        showRecyclerView(date);
         textLay=view.findViewById(R.id.textLay);
         today=view.findViewById(R.id.today);
         month =view.findViewById(R.id.month);
@@ -101,7 +100,8 @@ public class MainFragment extends Fragment {
         textLay.setText(sdf.format(date)+", "+dateFormat1.format(date)+" "+Selected[Integer.parseInt(dateFormat.format(date))-1]);
         compactCalendar = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
         compactCalendar.setUseThreeLetterAbbreviation(true);
-
+        Log.d("date",date.toString());
+        loadRecyclerViewData();
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
@@ -114,7 +114,6 @@ public class MainFragment extends Fragment {
                 textLay.setText(sdf.format(dateClicked).substring(0,3)+", "+dateFormat1.format(dateClicked)+" "+Selected[Integer.parseInt(dateFormat.format(dateClicked))-1]);
                 showRecyclerView(dateClicked);
             }
-
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 month.setText(dateFormatMonth.format(firstDayOfNewMonth));
@@ -139,16 +138,18 @@ public class MainFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             String eventId = intent.getStringExtra("eventId");
             String markedAs = intent.getStringExtra("markedAs");
-            ListItems item =new ListItems(listItems.get(mapPosition.get(eventId)).getName(),listItems.get(mapPosition.get(eventId)).getDesc(),listItems.get(mapPosition.get(eventId)).getByName(),listItems.get(mapPosition.get(eventId)).getDate(),listItems.get(mapPosition.get(eventId)).getTime(),listItems.get(mapPosition.get(eventId)).getVenue(),markedAs,eventId);
+            ListItems item =new ListItems(listItems.get(mapPosition.get(eventId)).getName(),listItems.get(mapPosition.get(eventId)).getDesc(),listItems.get(mapPosition.get(eventId)).getByName(),listItems.get(mapPosition.get(eventId)).getDate(),listItems.get(mapPosition.get(eventId)).getTime(),listItems.get(mapPosition.get(eventId)).getVenue(),markedAs,eventId,listItems.get(mapPosition.get(eventId)).getArrayList());
             listItems.set(mapPosition.get(eventId),item);
 //            Toast.makeText(getContext(),ItemName +" "+qty ,Toast.LENGTH_SHORT).show();
 
         }
     };
     public void showRecyclerView(Date dateClicked){
+        Log.d("called","yes");
         default_text.setVisibility(View.GONE);
         recylerViewList=new ArrayList<>();
         int flag=0;
+        Log.d("listitem", String.valueOf(listItems.size()));
         for(int i=0;i<listItems.size();i++){
             ListItems item= listItems.get(i);
             Log.d("eventDate",item.getDate());
@@ -213,14 +214,20 @@ public class MainFragment extends Fragment {
                                                 if(jsonObject.has("markedAs")){
                                                     marker=jsonObject.getString("markedAs");
                                                 }
-
+                                                ArrayList<String> attachmentsList= new ArrayList<>();
+                                                if(jsonObject.has("attachments")) {
+                                                    JSONArray jsonArray = jsonObject.getJSONArray("attachments");
+                                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                                        attachmentsList.add(jsonArray.getString(i));
+                                                    }
+                                                }
                                                 ListItems item =new ListItems(
                                                         jsonObject.getString("name"),
                                                         jsonObject.getString("desc"),
                                                         jsonObject.getString("byName"),
                                                         jsonObject.getString("date"),
                                                         "Time: "+jsonObject.getString("time"),
-                                                        "Venue: "+jsonObject.getString("venue"),marker,eventId
+                                                        "Venue: "+jsonObject.getString("venue"),marker,eventId,attachmentsList
                                                 );
                                                 listItems.add(item);
                                                 mapPosition.put(eventId,position);
@@ -247,6 +254,7 @@ public class MainFragment extends Fragment {
                                             }
                                         }
 
+
                                     }
                                 },
                                 new Response.ErrorListener() {
@@ -261,6 +269,41 @@ public class MainFragment extends Fragment {
                 }
             });
         }
+        Log.d("called","yes");
+        default_text.setVisibility(View.GONE);
+        recylerViewList=new ArrayList<>();
+        int flag=0;
+        Log.d("listitem", String.valueOf(listItems.size()));
+        for(int i=0;i<listItems.size();i++){
+            ListItems item= listItems.get(i);
+            Log.d("eventDate",item.getDate());
+            Log.d("eventDate1",f.format(date));
+            if(item.getDate().equals(f.format(date))){
+                Log.d("match","yes");
+                recylerViewList.add(item);
+                Log.d("length",String.valueOf(recylerViewList.size()));
+                flag=0;
+            }
+        }
+        if(recylerViewList.size()!=0) {
+            Log.d("what","do");
+            recyclerView.setVisibility(View.VISIBLE);
+            adapter = new AdaptorActivity(recylerViewList, new ClickListener() {
+                @Override
+                public void onPositionClicked(int position) {
 
+                }
+
+                @Override
+                public void onLongClicked(int position) {
+
+                }
+            }, getContext());
+            recyclerView.setAdapter(adapter);
+        }
+        else{
+            recyclerView.setVisibility(View.GONE);
+            default_text.setVisibility(View.VISIBLE);
+        }
     }
 }

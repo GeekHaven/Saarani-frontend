@@ -179,13 +179,14 @@ public class MainActivity extends AppCompatActivity {
                     while (iter.hasNext()){
                         String key =iter.next();
                         JSONObject event=jsonObject.getJSONObject(key);
+                        ArrayList<String> arr=new ArrayList<>();
                         ListItems items=new ListItems(
                             event.getString("name"),
                             event.getString("byName"),
                             event.getString("desc"),
                             event.getString("venue"),
                             event.getString("time"),
-                            event.getString("date"),"none",""
+                            event.getString("date"),"none","",arr
                         );
                         listItems.add(items);
                     }

@@ -24,6 +24,7 @@
         </activity>
         <activity android:name=".MainActivity" android:theme="@style/MainTheme"/>
         <activity android:name=".LoginActivity"/>
+        <activity android:name=".EventActivity" android:parentActivityName=".MainActivity2"/>
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
