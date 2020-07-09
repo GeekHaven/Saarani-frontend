@@ -9,4 +9,5 @@
     <color name="roboto_calendar_circle_1">#12ca25</color>
     <color name="colorSecondaryText">#4e4c4c</color>
     <color name="colorListDivider">#4E4E4E</color>
+    <color name="colorTabLayoutBackground">#757575</color>
 </resources>

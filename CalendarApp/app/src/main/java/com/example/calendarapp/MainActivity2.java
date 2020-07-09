@@ -117,6 +117,8 @@ public class MainActivity2 extends AppCompatActivity {
         Toolbar toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
         mAppBarConfiguration=new AppBarConfiguration.
                 Builder(R.id.navigation_nav_main, R.id.navigation_nav_profile, R.id.navigation_nav_subscription, R.id.navigation_nav_society)
                 .setDrawerLayout(drawerLayout).build();
@@ -128,45 +130,45 @@ public class MainActivity2 extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.nav_log_out: {
-                        signOut();
-                        break;
-                    }
-                    case R.id.nav_home:{
-                        navController.navigate(R.id.navigation_nav_main);
-                        break;
-                    }
-                    case R.id.nav_subscription:{
-//                        navController.navigate(R.id.navigation_nav_main);
+                    switch (item.getItemId()) {
+                        case R.id.nav_log_out: {
+                            signOut();
+                            break;
+                        }
+                        case R.id.nav_home: {
+                            if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_main)
+                                navController.navigate(R.id.navigation_nav_main);
+                            break;
+                        }
+                        case R.id.nav_subscription: {
 //                        navController.navigate(R.id.navigation_nav_subscription);
 //                        addEvent.setVisible(false);
 //                        Intent intent =new Intent(getApplicationContext(),SubscribeActivity.class);
 //                        intent.putExtra("val",2);
 //                        startActivity(intent);
-                        Intent i = new Intent(getApplicationContext(),SubscribeActivity.class);
-                        i.putExtra("val",2);
-                        if(Build.VERSION.SDK_INT>20){
+                            Intent i = new Intent(getApplicationContext(), SubscribeActivity.class);
+                            i.putExtra("val", 2);
+                            if (Build.VERSION.SDK_INT > 20) {
 //                            ActivityOptions options =
 //                                    ActivityOptions.makeSceneTransitionAnimation(MainActivity2.this);
 //                            startActivity(i,options.toBundle());
-                            startActivity(i);
-                        }else {
-                            startActivity(i);
+                                startActivity(i);
+                            } else {
+                                startActivity(i);
+                            }
+                            break;
                         }
-                        break;
+                        case R.id.nav_profile: {
+                            if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_profile)
+                                navController.navigate(R.id.navigation_nav_profile);
+                            break;
+                        }
+                        case R.id.nav_societies: {
+                            if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_society)
+                                navController.navigate(R.id.navigation_nav_society);
+                            break;
+                        }
                     }
-                    case R.id.nav_profile:{
-                        navController.navigate(R.id.navigation_nav_main);
-                        navController.navigate(R.id.navigation_nav_profile);
-                        break;
-                    }
-                    case R.id.nav_societies:{
-                        navController.navigate(R.id.navigation_nav_main);
-                        navController.navigate(R.id.navigation_nav_society);
-                        break;
-                    }
-                }
                 drawerLayout.close();
                 return false;
             }
@@ -217,7 +219,7 @@ public class MainActivity2 extends AppCompatActivity {
                                 clipboard.setPrimaryClip(clip);
                                 HashMap<String,String> map=new HashMap<String, String>();
                                 map.put("token",token[0]);
-                                final ProgressDialog progressDialog = new ProgressDialog(MainActivity2.this,R.style.Theme_AppCompat);
+                                final ProgressDialog progressDialog = new ProgressDialog(MainActivity2.this);
                                 progressDialog.setMessage("Loading data....");
                                 progressDialog.show();
                                 RequestQueue requstQueue = Volley.newRequestQueue(MainActivity2.this);

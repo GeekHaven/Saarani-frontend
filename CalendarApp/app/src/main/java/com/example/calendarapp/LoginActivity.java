@@ -1,6 +1,7 @@
 package com.example.calendarapp;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 234;
     private static final String TAG = "simplifiedcoding";
     GoogleSignInClient mGoogleSignInClient;
+    ProgressDialog progressDialog;
     FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         studentSignIn=findViewById(R.id.studentSignIn);
         mAuth = FirebaseAuth.getInstance();
+        progressDialog=new ProgressDialog(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("271594298370-jmsnpsmnhm1ahm6viiag2gi2dnpqn0lg.apps.googleusercontent.com")
@@ -81,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
+            progressDialog.dismiss();
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
@@ -97,6 +101,9 @@ public class LoginActivity extends AppCompatActivity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        progressDialog.setTitle("Loading...");
+        progressDialog.setMessage("Signing In Using Google");
+        progressDialog.show();
 
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -117,10 +124,14 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
 
                         }
+                        progressDialog.dismiss();
                     }
                 });
     }
     private void signIn() {
+        progressDialog.setTitle("Loading...");
+        progressDialog.setMessage("Opening Google Sign-In Options");
+        progressDialog.show();
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }

@@ -9,6 +9,8 @@ public class ListItems {
     private String venue;
     private String marker;
     private String eventId;
+    private String photoUrl;
+    private boolean showMenu;
 
     public ListItems( String name,String desc,String byName,String date,String time,String venue,String marker,String eventId){
         this.name=name;
@@ -19,7 +21,24 @@ public class ListItems {
         this.venue=venue;
         this.marker=marker;
         this.eventId=eventId;
+        this.showMenu=false;
     }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public void setShowMenu(boolean showMenu) {
+        this.showMenu = showMenu;
+    }
+    public boolean isShowMenu() {
+        return showMenu;
+    }
+
     public String getName(){
         return name;
     }
