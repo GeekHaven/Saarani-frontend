@@ -9,6 +9,7 @@
     <ImageView
         android:id="@+id/imgNavHeaderUser"
         android:layout_width="92dp"
+        android:elevation="16dp"
         android:layout_height="92dp"
         android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"

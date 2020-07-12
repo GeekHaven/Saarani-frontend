@@ -43,6 +43,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -59,7 +61,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
     private ProfileViewModel mViewModel;
 
     final int EVENT_INTERESTED=1, EVENT_GOING=2;
-
+    int posIn=0,posGo=0;
     private int eventType=1;
     ImageView imgProfileUserPhoto;
     TextView tvUserName,tvUserEmailID;
@@ -88,8 +90,27 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
         rcvInterestedEvents.setHasFixedSize(true);
         rcvGoingEvents=view.findViewById(R.id.rcvProfileFragmentGoingEvents);
         rcvGoingEvents.setHasFixedSize(true);
-
-        tvUserName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        String name =FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        if(name.contains(" ")){
+            String[] sep= name.split(" ");
+            String nameNew="";
+            for(int i=0;i<sep.length;i++) {
+                if(i!=0)
+                    sep[i] = sep[i].trim();
+                sep[i] = sep[i].toLowerCase();
+                sep[i] = sep[i].substring(0, 1).toUpperCase() + sep[i].substring(1);
+                if(i==sep.length-1)
+                    nameNew=nameNew+sep[i];
+                else
+                    nameNew=nameNew+sep[i]+" ";
+            }
+            tvUserName.setText(nameNew);
+        }
+        else{
+            name=name.toLowerCase();
+            name=name.substring(0, 1).toUpperCase() + name.substring(1);
+            tvUserName.setText(name);
+        }
         tvUserEmailID.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
         if(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()!=null){
@@ -152,12 +173,12 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
     ItemTouchHelper.SimpleCallback touchHelperCallback1,touchHelperCallback2;
 
     private void loadRecyclerView(){
-        interestedEventsAdapter=new EventListAdaptor(this.getActivity(),listInterestedEvents);
+        interestedEventsAdapter=new EventListAdaptor(this.getActivity(), listInterestedEvents);
         rcvInterestedEvents.setAdapter(interestedEventsAdapter);
         rcvInterestedEvents.setVisibility(View.VISIBLE);
         interestedEventsAdapter.notifyDataSetChanged();
 
-        goingEventsAdapter=new EventListAdaptor(this.getActivity(),listGoingEvents);
+        goingEventsAdapter=new EventListAdaptor(this.getActivity(), listGoingEvents);
         rcvGoingEvents.setAdapter(goingEventsAdapter);
         rcvGoingEvents.setVisibility(View.GONE);
         goingEventsAdapter.notifyDataSetChanged();
@@ -198,18 +219,23 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                                                 String marker = "none";
                                                 if (jsonObject.has("markedAs")) {
                                                     marker = jsonObject.getString("markedAs");
-
+                                                    ArrayList<String> list= new ArrayList<>();
+                                                    if(jsonObject.has("attachments")) {
+                                                        JSONArray jsonArray = jsonObject.getJSONArray("attachments");
+                                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                                            list.add(jsonArray.getString(i));
+                                                        }
+                                                    }
                                                     ListItems item = new ListItems(
                                                             jsonObject.getString("name"),
                                                             jsonObject.getString("desc"),
                                                             jsonObject.getString("byName"),
                                                             jsonObject.getString("date"),
                                                             "Time: " + jsonObject.getString("time"),
-                                                            "Venue: " + jsonObject.getString("venue"), marker, eventId
+                                                            "Venue: " + jsonObject.getString("venue"), marker, eventId,list
                                                     );
 
                                                     item.setPhotoUrl(jsonObject.getString("photoURL"));
-
                                                     if(marker.equals("interested")) {
                                                         listInterestedEvents.add(item);
                                                     }
@@ -241,7 +267,39 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
 
         }
     }
-
+    public void deleteRequest(String id){
+        FirebaseAuth mAuth= FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        final String url="https://socupdate.herokuapp.com/events/"+id+"/mark/delete";
+        if(user!=null){
+            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                    if(task.getResult().getToken()!=null){
+                        HashMap<String,String> mapToken=new HashMap<String, String>();
+                        mapToken.put("token",task.getResult().getToken());
+                        Log.d("deleteToken", String.valueOf(new JSONObject(mapToken)));
+                        final RequestQueue requstQueue = Volley.newRequestQueue(requireContext());
+                        JsonObjectRequest jsonobj = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(mapToken),
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Log.d("respone",String.valueOf(response));
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Log.d("error",error.toString());
+                                    }
+                                }
+                        );
+                        requstQueue.add(jsonobj);
+                    }
+                }
+            });
+        }
+    }
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, final int position) {
         if(eventType==EVENT_INTERESTED){
@@ -253,6 +311,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                     .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            deleteRequest(listInterestedEvents.get(position).getEventId());
                             listInterestedEvents.remove(position);
                             interestedEventsAdapter.notifyDataSetChanged();
                             tabLayout.getTabAt(0).setText("Interested ("+listInterestedEvents.size()+")");
@@ -279,6 +338,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                     .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            deleteRequest(listGoingEvents.get(position).getEventId());
                             listGoingEvents.remove(position);
                             goingEventsAdapter.notifyDataSetChanged();
                             tabLayout.getTabAt(1).setText("Going ("+listGoingEvents.size()+")");

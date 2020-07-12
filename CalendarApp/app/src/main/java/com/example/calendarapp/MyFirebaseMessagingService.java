@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -142,8 +143,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         Log.d("dataPayload",data.toString());
         Intent intent = new Intent(this, EventActivity.class);
-        intent.putExtra("eventId",data.get("eventId"));
+        intent.putExtra("eventId",data.get("eventID"));
         intent.putExtra("type","notif");
+        intent.putExtra("screen","home");
         PendingIntent pendingIntent = PendingIntent.getActivity(this, m, intent,PendingIntent.FLAG_ONE_SHOT);
 
         Intent ignoreIntent = new Intent(this,ButtonReceiver.class);
@@ -184,10 +186,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setLargeIcon(bitmap)
                             .setDefaults(NotificationCompat.DEFAULT_ALL)
                             .setPriority(NotificationCompat.PRIORITY_HIGH)
-                            .setCategory(NotificationCompat.CATEGORY_EVENT)
-                            .addAction(R.string.reject, getString(R.string.reject), interPIntent)
-                            .addAction(R.string.accept, getString(R.string.accept), goingPIntent)
-                            .addAction(R.string.xxx, getString(R.string.xxx), ignorePIntent);
+                            .setCategory(NotificationCompat.CATEGORY_EVENT);
+            SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+            if(prefs.getString("society", "false").equals("false")) {
+                notificationBuilder.addAction(R.string.reject, getString(R.string.reject), interPIntent)
+                        .addAction(R.string.accept, getString(R.string.accept), goingPIntent)
+                        .addAction(R.string.xxx, getString(R.string.xxx), ignorePIntent);
+            }
         }
         else{
                     notificationBuilder =

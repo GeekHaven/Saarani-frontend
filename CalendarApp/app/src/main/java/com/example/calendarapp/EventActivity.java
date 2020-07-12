@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
@@ -72,10 +73,11 @@ import static com.example.calendarapp.R.drawable.tick_yellow;
 public class EventActivity extends AppCompatActivity {
     TextView eventName,desc,date,time,venue,byName;
     String eventId;
-    ImageView download_url;
+    ImageView download_url,button_back;
+    String screen;
     String marker="";
     ArrayList<String> arrayList=new ArrayList<>();
-    ImageView star,tick;
+    ImageView star,tick_mark;
     TextView interested,going;
     private ProgressDialog pDialog;
     private int i=0;
@@ -97,13 +99,21 @@ public class EventActivity extends AppCompatActivity {
         byName=findViewById(R.id.society);
         download_url=findViewById(R.id.download);
         star=findViewById(R.id.star);
-        tick=findViewById(R.id.tick);
+        tick_mark=findViewById(R.id.tick);
         interested=findViewById(R.id.text_interested);
         going=findViewById(R.id.text_going);
+        button_back=findViewById(R.id.button);
+        button_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         Intent intent =getIntent();
         eventId=intent.getExtras().getString("eventId");
-        if(intent.getExtras().getString("eventId").equals("notif")){
-            setItems();
+        screen=intent.getExtras().getString("screen");
+        if(intent.getExtras().getString("type").equals("notif")){
+              setItems();
         }
         else {
             marker=intent.getExtras().getString("marker");
@@ -124,105 +134,93 @@ public class EventActivity extends AppCompatActivity {
             date.setText(sdf.format(date_event).substring(0, 3) + ", " + d.format(date_event) + " " + format.format(date_event) + " " + y.format(date_event));
             time.setText(time_event.substring(6));
         }
-        if(marker.equals("interested")){
-            star.setImageResource(star_yellow);
-            star.setTag(star_yellow);
-        }
-        else if(marker.equals("going")){
-            tick.setImageResource(R.drawable.tick_yellow);
-            tick.setTag(tick_yellow);
-            Log.d("set","true");
-        }
-        else{
-            star.setTag(star_img);
-            tick.setTag(tick);
-        }
-        star.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Object tag = star.getTag();
-                if (tag != null && (Integer) tag == star_yellow) {
-                    Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
-                    star.setTag(R.drawable.star_img);
-                    star.setImageResource(R.drawable.star_img);
-                    deleteRequest();
-                } else {
-                    Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
-                    star.setTag(star_yellow);
-                    star.setImageResource(star_yellow);
-                    if ((Integer) tick.getTag() == tick_yellow) {
-                        tick.setTag(tick);
-                        tick.setImageResource(R.drawable.tick);
-                    }
-                    addMarker("interested");
-                }
-            }
-        });
-        interested.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Object tag = star.getTag();
-                if (tag != null && (Integer) tag == star_yellow) {
-                    Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
-                    star.setTag(R.drawable.star_img);
-                    star.setImageResource(R.drawable.star_img);
-                    deleteRequest();
-                } else {
-                    Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
-                    star.setTag(star_yellow);
-                    star.setImageResource(star_yellow);
-                    if ((Integer) tick.getTag() == tick_yellow) {
-                        tick.setTag(tick);
-                        tick.setImageResource(R.drawable.tick);
-                    }
-                    addMarker("interested");
-                }
-            }
-        });
-        tick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Object tag=tick.getTag();
-                if(tag!=null &&(Integer) tag== tick_yellow){
-                    Toast.makeText(EventActivity.this,"Unmarked",Toast.LENGTH_SHORT).show();
-                    tick.setTag(tick);
-                    tick.setImageResource(R.drawable.tick);
-                    deleteRequest();
-                }
-                else{
-                    Toast.makeText(EventActivity.this,"Marked",Toast.LENGTH_SHORT).show();
-                    tick.setTag(tick_yellow);
-                    tick.setImageResource(R.drawable.tick_yellow);
-                    if((Integer)star.getTag()==star_yellow){
+        SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+        if(prefs.getString("society", "false").equals("false")) {
+            star.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Object tag = star.getTag();
+                    if (tag != null && (Integer) tag == star_yellow) {
+                        Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
                         star.setTag(R.drawable.star_img);
                         star.setImageResource(R.drawable.star_img);
+                        deleteRequest();
+                    } else {
+                        Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
+                        star.setTag(star_yellow);
+                        star.setImageResource(star_yellow);
+                        if ((Integer) tick_mark.getTag() == tick_yellow) {
+                            tick_mark.setTag(tick);
+                            tick_mark.setImageResource(R.drawable.tick);
+                        }
+                        addMarker("interested");
                     }
-                    addMarker("going");
                 }
-            }
-        });
-        going.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Object tag=tick.getTag();
-                if(tag!=null &&(Integer) tag== tick_yellow){
-                    Toast.makeText(EventActivity.this,"Unmarked",Toast.LENGTH_SHORT).show();
-                    tick.setTag(tick);
-                    tick.setImageResource(R.drawable.tick);
-                    deleteRequest();
-                }
-                else{
-                    Toast.makeText(EventActivity.this,"Marked",Toast.LENGTH_SHORT).show();
-                    tick.setTag(tick_yellow);
-                    tick.setImageResource(R.drawable.tick_yellow);
-                    if((Integer)star.getTag()==star_yellow){
+            });
+            interested.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Object tag = star.getTag();
+                    if (tag != null && (Integer) tag == star_yellow) {
+                        Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
                         star.setTag(R.drawable.star_img);
                         star.setImageResource(R.drawable.star_img);
+                        deleteRequest();
+                    } else {
+                        Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
+                        star.setTag(star_yellow);
+                        star.setImageResource(star_yellow);
+                        if ((Integer) tick_mark.getTag() == tick_yellow) {
+                            tick_mark.setTag(tick);
+                            tick_mark.setImageResource(R.drawable.tick);
+                        }
+                        addMarker("interested");
                     }
-                    addMarker("going");
                 }
-            }
-        });
+            });
+            tick_mark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Object tag = tick_mark.getTag();
+                    if (tag != null && (Integer) tag == tick_yellow) {
+                        Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
+                        tick_mark.setTag(tick);
+                        tick_mark.setImageResource(R.drawable.tick);
+                        deleteRequest();
+                    } else {
+                        Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
+                        tick_mark.setTag(tick_yellow);
+                        tick_mark.setImageResource(R.drawable.tick_yellow);
+                        if ((Integer) star.getTag() == star_yellow) {
+                            star.setTag(R.drawable.star_img);
+                            star.setImageResource(R.drawable.star_img);
+                        }
+                        addMarker("going");
+                    }
+                }
+            });
+            going.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Object tag = tick_mark.getTag();
+                    if (tag != null && (Integer) tag == tick_yellow) {
+                        Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
+                        tick_mark.setTag(tick);
+                        tick_mark.setImageResource(R.drawable.tick);
+                        deleteRequest();
+                    } else {
+                        Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
+                        tick_mark.setTag(tick_yellow);
+                        tick_mark.setImageResource(R.drawable.tick_yellow);
+                        if ((Integer) star.getTag() == star_yellow) {
+                            star.setTag(R.drawable.star_img);
+                            star.setImageResource(R.drawable.star_img);
+                        }
+                        addMarker("going");
+                    }
+                }
+            });
+        }
         download_url.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -240,9 +238,32 @@ public class EventActivity extends AppCompatActivity {
 //        intent.putExtra("markedAs",msg);
 //        LocalBroadcastManager.getInstance(EventActivity.this).sendBroadcast(intent);
 //    }
+    public void setIcon(){
+        Log.d("markxxx",marker);
+        if(marker.equals("interested")){
+            star.setImageResource(star_yellow);
+            star.setTag(star_yellow);
+        }
+        else if(marker.equals("going")){
+            tick_mark.setImageResource(R.drawable.tick_yellow);
+            tick_mark.setTag(tick_yellow);
+            Log.d("set","true");
+        }
+        else{
+            star.setTag(star_img);
+            tick_mark.setTag(tick);
+        }
+    }
     @Override
     public void onBackPressed(){
-        startActivity(new Intent(EventActivity.this,MainActivity2.class));
+        if(screen.equals("home")) {
+            startActivity(new Intent(EventActivity.this, MainActivity2.class));
+        }
+        else{
+           Intent intent= new Intent(EventActivity.this,MainActivity2.class);
+           intent.putExtra("Fragment","profile");
+            startActivity(intent);
+        }
     }
     public void deleteRequest(){
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
@@ -325,11 +346,10 @@ public class EventActivity extends AppCompatActivity {
                         final HashMap<String,String> mapToken=new HashMap<String, String>();
                         mapToken.put("token",task.getResult().getToken());
                         Log.d("PostToken",task.getResult().getToken());
-                        final ProgressDialog progressDialog = new ProgressDialog(EventActivity.this,R.style.Theme_AppCompat);
+                        final ProgressDialog progressDialog = new ProgressDialog(EventActivity.this);
                         progressDialog.setMessage("Loading data....");
                         progressDialog.show();
                         RequestQueue requstQueue = Volley.newRequestQueue(EventActivity.this);
-                        progressDialog.dismiss();
                         Log.d("PostObject", String.valueOf(new JSONObject(mapToken)));
                         final JsonObjectRequest jsonobj = new JsonObjectRequest(Request.Method.POST, urlPost,new JSONObject(mapToken),
                                 new Response.Listener<JSONObject>() {
@@ -341,20 +361,20 @@ public class EventActivity extends AppCompatActivity {
                                             String event= keys.next();
                                             try {
                                                 JSONObject jsonObject = response.getJSONObject(event);
-                                                marker="none";
-                                                if(jsonObject.has("markedAs")){
-                                                    marker=jsonObject.getString("markedAs");
-                                                }
-                                                if(jsonObject.has("attachments")) {
-                                                    JSONArray jsonArray = jsonObject.getJSONArray("attachments");
-                                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                                        arrayList.add(jsonArray.getString(i));
-                                                    }
-                                                }
                                                 if(event.equals(eventId)){
                                                     String venue_event = jsonObject.getString("venue");
                                                     String time_event = jsonObject.getString("time");
                                                     String dateEvent = jsonObject.getString("date");
+                                                    if(jsonObject.has("markedAs")){
+                                                        marker=jsonObject.getString("markedAs");
+                                                        Log.d("xx",marker);
+                                                    }
+                                                    if(jsonObject.has("attachments")) {
+                                                        JSONArray jsonArray = jsonObject.getJSONArray("attachments");
+                                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                                            arrayList.add(jsonArray.getString(i));
+                                                        }
+                                                    }
                                                     Date date_event = null;
                                                     try {
                                                         date_event = dateFormat.parse(dateEvent);
@@ -364,15 +384,17 @@ public class EventActivity extends AppCompatActivity {
                                                     eventName.setText(jsonObject.getString("name"));
                                                     byName.setText(jsonObject.getString("byName"));
                                                     desc.setText(jsonObject.getString("desc"));
-                                                    venue.setText(venue_event.substring(7));
+                                                    venue.setText(venue_event);
                                                     date.setText(sdf.format(date_event).substring(0, 3) + ", " + d.format(date_event) + " " + format.format(date_event) + " " + y.format(date_event));
-                                                    time.setText(time_event.substring(6));
+                                                    time.setText(time_event);
+                                                    progressDialog.dismiss();
                                                 }
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
                                         }
-
+                                    Log.d("xxx",marker);
+                                    setIcon();
 
                                     }
                                 },

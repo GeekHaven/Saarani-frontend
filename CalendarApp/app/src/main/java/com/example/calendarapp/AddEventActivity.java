@@ -124,7 +124,6 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
         mailItem=findViewById(R.id.addMail);
         spinnerTime = findViewById(R.id.eventTime);
         calendarView = findViewById(R.id.calendarView);
-        spinnerMinute = findViewById(R.id.eventMinute);
         eventName = findViewById(R.id.eventName);
         eventDesc = findViewById(R.id.eventDesc);
         eventVenue = findViewById(R.id.eventVenue);
@@ -157,12 +156,12 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 Log.d("date", date);
             }
         });
+        Calendar mcurrentTime = Calendar.getInstance();
+        final int[] hour = {mcurrentTime.get(Calendar.HOUR_OF_DAY)};
+        final int[] minute = {mcurrentTime.get(Calendar.MINUTE)};
         spinnerTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar mcurrentTime = Calendar.getInstance();
-                final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(AddEventActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
@@ -172,13 +171,14 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                             a="00";
                         if(selectedHour<10)
                             b="0"+selectedHour;
-                        spinnerTime.setText(b);
-                        spinnerMinute.setText(a);
+                        spinnerTime.setText(b+" : "+a);
+                        hour[0] =selectedHour;
+                        minute[0] =selectedMinute;
                         hourSelect=b;
                         minuteSelect=a;
                         Log.d("time",hourSelect+":"+minuteSelect);
                     }
-                }, hour, minute, true);//Yes 24 hour time
+                }, hour[0], minute[0], true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
             }
@@ -354,6 +354,10 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 }
             }
         });
+    }
+    @Override
+    public void onBackPressed(){
+            startActivity(new Intent(AddEventActivity.this,MainActivity2.class));
     }
     public Long sizeOfFile(Uri uri){
         String scheme = uri.getScheme();
@@ -795,9 +799,14 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                     emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
                 Log.d("URI", String.valueOf(uris));
                 startActivity(Intent.createChooser(emailIntent, "Choose an email application..."));
+                finish();
             } catch (Throwable t) {
                 Toast.makeText(this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
             }
+        }
+        else{
+            startActivity(new Intent(this,MainActivity2.class));
+            finish();
         }
     }
     @Override

@@ -22,7 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" android:theme="@style/MainTheme"/>
         <activity android:name=".LoginActivity"/>
         <activity android:name=".EventActivity" android:parentActivityName=".MainActivity2"/>
         <service
@@ -39,8 +38,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
         <activity android:name=".SubscribeActivity"/>
-        <activity android:name=".AddEventActivity" android:theme="@style/ToolTheme" android:parentActivityName=".MainActivity"/>
-
+        <activity android:name=".AddEventActivity" android:theme="@style/ToolTheme" android:parentActivityName=".MainActivity2"/>
     </application>
 
 </manifest>

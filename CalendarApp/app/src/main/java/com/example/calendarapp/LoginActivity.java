@@ -88,10 +88,11 @@ public class LoginActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                if(account.getEmail().contains("iiita.ac.in"))
-                    firebaseAuthWithGoogle(account);
-                else
-                    Toast.makeText(LoginActivity.this,"Please Sign in using your College ID",Toast.LENGTH_LONG).show();
+                firebaseAuthWithGoogle(account);
+//                if(account.getEmail().contains("iiita.ac.in"))
+//
+//                else
+//                    Toast.makeText(LoginActivity.this,"Please Sign in using your College ID",Toast.LENGTH_LONG).show();
             } catch (ApiException e) {
                 Toast.makeText(LoginActivity.this, "Sign In Cancelled", Toast.LENGTH_SHORT).show();
             }

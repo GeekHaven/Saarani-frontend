@@ -15,6 +15,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
@@ -68,12 +69,14 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class MainActivity2 extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    int x=0;
+    String frag="";
     TextView tvStudentName, tvStudentEmailId;
     NavController navController;
     NavigationView navigationView;
     DrawerLayout drawerLayout;
     ImageView imgUser;
-    MenuItem addEvent;
+    MenuItem addEvent,swap;
     FirebaseAuth mAuth;
     GoogleSignInClient mGoogleSignInClient;
     private RecyclerView recyclerView;
@@ -82,11 +85,16 @@ public class MainActivity2 extends AppCompatActivity {
     private List<ListItems> listItems;
     private static String URL_DATA="https://socupdate.herokuapp.com/events";
     private static String url ="https://socupdate.herokuapp.com/societies/check";
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         mAuth=FirebaseAuth.getInstance();
+        Intent intent =getIntent();
+//        if(Objects.requireNonNull(intent.getExtras()).containsKey("Fragment")){
+//            frag="profile";
+//        }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("271594298370-jmsnpsmnhm1ahm6viiag2gi2dnpqn0lg.apps.googleusercontent.com")
                 .requestEmail()
@@ -126,7 +134,9 @@ public class MainActivity2 extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
+        if(intent.getExtras()!=null&&intent.getExtras().containsKey("Fragment")){
+            navController.navigate(R.id.navigation_nav_profile);
+        }
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -233,8 +243,15 @@ public class MainActivity2 extends AppCompatActivity {
 //                                                    textView.setText(response.getString("society"));
                                                     if(response.getString("society").equals("true")){
                                                         addEvent.setVisible(true);
+                                                        SharedPreferences.Editor editor = getSharedPreferences("user", MODE_PRIVATE).edit();
+                                                        editor.putString("society", "true");
+                                                        editor.apply();
                                                     }
-                                                    progressDialog.dismiss();
+                                                    else{
+                                                        SharedPreferences.Editor editor = getSharedPreferences("user", MODE_PRIVATE).edit();
+                                                        editor.putString("society", "false");
+                                                        editor.apply();
+                                                    }
                                                 } catch (JSONException e) {
                                                     e.printStackTrace();
                                                 }
@@ -260,6 +277,7 @@ public class MainActivity2 extends AppCompatActivity {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu, menu);
         addEvent=menu.findItem(R.id.add_event);
+        swap=menu.findItem(R.id.calendar);
         return true;
     }
     @Override
@@ -279,6 +297,16 @@ public class MainActivity2 extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()==R.id.add_event){
             startActivity(new Intent(MainActivity2.this,AddEventActivity.class));
+        }
+        else if(item.getItemId()==R.id.calendar){
+            if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_list) {
+                navController.navigate(R.id.navigation_nav_list);
+                swap.setIcon(R.drawable.ic_list);
+            }
+            else {
+                navController.navigate(R.id.navigation_nav_main);
+                swap.setIcon(R.drawable.ic_calendar);
+            }
         }
         return super.onOptionsItemSelected(item);
     }
