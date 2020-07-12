@@ -27,7 +27,8 @@
         android:layout_height="30dp"
         android:layout_marginStart="18dp"
         android:layout_marginLeft="18dp"
-        android:layout_marginTop="50dp"
+        android:id="@+id/button"
+        android:layout_marginTop="40dp"
         android:src="@drawable/arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -3,6 +3,7 @@ package com.example.calendarapp;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.example.calendarapp.R.drawable.star_img;
 import static com.example.calendarapp.R.drawable.star_yellow;
 import static com.example.calendarapp.R.drawable.tick;
@@ -50,6 +52,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     private Context context;
     private String eventId,marker;
     private HashMap<Integer, String> map= new HashMap<Integer, String>();
+    SharedPreferences prefs ;
 
 
     AdaptorActivity(List<ListItems> listItems, ClickListener listener, Context context) {
@@ -63,10 +66,12 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.single_event, parent, false);
+        prefs=context.getSharedPreferences("user", MODE_PRIVATE);
         return new ViewHolder(v);
     }
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         ListItems listItem = listItems.get(position);
         String name=listItem.getName();
         if(listItem.getName().length()>16){
@@ -142,6 +147,8 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         intent.putExtra("date",items.getDate());
         intent.putExtra("marker",marker);
         intent.putExtra("eventId",map.get(position));
+        intent.putExtra("type","event");
+        intent.putExtra("screen","home");
         intent.putStringArrayListExtra("attachments", items.getArrayList());
         context.startActivity(intent);
     }
@@ -197,6 +204,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         TextView interested;
         TextView markAsGoing;
 
+
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.eventName);
@@ -209,10 +217,13 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             going=itemView.findViewById(R.id.going);
             interested=itemView.findViewById(R.id.text_interested);
             markAsGoing=itemView.findViewById(R.id.text_going);
-            interested.setOnClickListener(this);
-            markAsGoing.setOnClickListener(this);
-            star.setOnClickListener(this);
-            going.setOnClickListener(this);
+
+            if(prefs.getString("society", "false").equals("false")) {
+                interested.setOnClickListener(this);
+                markAsGoing.setOnClickListener(this);
+                star.setOnClickListener(this);
+                going.setOnClickListener(this);
+            }
             itemView.setClickable(true);
             itemView.setOnClickListener(this);
         }

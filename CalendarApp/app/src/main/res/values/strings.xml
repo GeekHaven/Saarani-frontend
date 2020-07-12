@@ -22,7 +22,8 @@
     <string name="reject">Interested</string>
     <string name="accept">Mark as Going</string>
     <string name="xxx">Ignore</string>
-
+    <string name="today"><b>Today</b></string>
+    <string name="tomorrow"><b>Tomorrow</b></string>
     <string name="btnLoginActivitySignIn">Sign in With Google</string>
     <string name="loginActivityWelcome">Welcome</string>
     <string name="loginActivitySubHeading">Sign In with your college ID to continue</string>

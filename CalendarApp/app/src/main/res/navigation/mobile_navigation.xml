@@ -32,5 +32,11 @@
         android:label="Society Fragment"
         tools:layout="@layout/society_fragment">
     </fragment>
+    <fragment
+        android:id="@+id/navigation_nav_list"
+        android:name="com.example.calendarapp.ListFragment"
+        android:label="List Fragment"
+        tools:layout="@layout/list_fragment">
+    </fragment>
 
 </navigation>

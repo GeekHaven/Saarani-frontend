@@ -59,6 +59,7 @@ public class MainFragment extends Fragment {
     private MainViewModel mViewModel;
     TextView month,year,today,textLay,default_text;
     CompactCalendarView compactCalendar;
+    int x=0;
     private RecyclerView recyclerView;
     private CardView cardView;
     private RecyclerView.Adapter adapter;
@@ -101,7 +102,9 @@ public class MainFragment extends Fragment {
         compactCalendar = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
         compactCalendar.setUseThreeLetterAbbreviation(true);
         Log.d("date",date.toString());
+        textLay.setText(sdf.format(date).substring(0,3)+", "+dateFormat1.format(date)+" "+Selected[Integer.parseInt(dateFormat.format(date))-1]);
         loadRecyclerViewData();
+
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
@@ -122,6 +125,7 @@ public class MainFragment extends Fragment {
 
 
     });
+        showRecyclerView(date);
         return view;
     }
     
@@ -238,12 +242,15 @@ public class MainFragment extends Fragment {
                                                     long milliseconds = d.getTime();
 
                                                     Event eventx;
-                                                    if(map.get(String.valueOf(milliseconds))==null) {
+                                                    if(map.get(String.valueOf(milliseconds))==null||map.get(String.valueOf(milliseconds))%2==0) {
                                                         eventx = new Event(Color.RED, milliseconds);
-                                                        map.put(String.valueOf(milliseconds),1);
+                                                        map.put(String.valueOf(milliseconds),x);
+                                                        x++;
                                                     }
                                                     else {
                                                         eventx = new Event(Color.GREEN, milliseconds);
+                                                        map.put(String.valueOf(milliseconds),x);
+                                                        x++;
                                                     }
                                                     compactCalendar.addEvent(eventx);
                                                 } catch (ParseException e) {
@@ -253,8 +260,8 @@ public class MainFragment extends Fragment {
                                                 e.printStackTrace();
                                             }
                                         }
-
-
+                                        Log.d("size",String.valueOf(listItems.size()));
+                                        showRecyclerView(date);
                                     }
                                 },
                                 new Response.ErrorListener() {
@@ -265,45 +272,11 @@ public class MainFragment extends Fragment {
                                 }
                         );
                         requstQueue.add(jsonobj);
+                        //Log.d("size",String.valueOf(listItems.size()));
                     }
                 }
             });
         }
-        Log.d("called","yes");
-        default_text.setVisibility(View.GONE);
-        recylerViewList=new ArrayList<>();
-        int flag=0;
-        Log.d("listitem", String.valueOf(listItems.size()));
-        for(int i=0;i<listItems.size();i++){
-            ListItems item= listItems.get(i);
-            Log.d("eventDate",item.getDate());
-            Log.d("eventDate1",f.format(date));
-            if(item.getDate().equals(f.format(date))){
-                Log.d("match","yes");
-                recylerViewList.add(item);
-                Log.d("length",String.valueOf(recylerViewList.size()));
-                flag=0;
-            }
-        }
-        if(recylerViewList.size()!=0) {
-            Log.d("what","do");
-            recyclerView.setVisibility(View.VISIBLE);
-            adapter = new AdaptorActivity(recylerViewList, new ClickListener() {
-                @Override
-                public void onPositionClicked(int position) {
-
-                }
-
-                @Override
-                public void onLongClicked(int position) {
-
-                }
-            }, getContext());
-            recyclerView.setAdapter(adapter);
-        }
-        else{
-            recyclerView.setVisibility(View.GONE);
-            default_text.setVisibility(View.VISIBLE);
-        }
+        //Log.d("size",String.valueOf(listItems.size()));
     }
 }
