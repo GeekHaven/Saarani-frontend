@@ -52,6 +52,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     private Context context;
     private String eventId,marker;
     private HashMap<Integer, String> map= new HashMap<Integer, String>();
+    private HashMap<Integer, String> mapMarker= new HashMap<Integer, String>();
     SharedPreferences prefs ;
 
 
@@ -86,6 +87,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         eventId=listItem.getEventId();
         map.put(position,eventId);
         marker=listItem.getMarker();
+        mapMarker.put(position,listItem.getMarker());
         Log.d("mark",listItem.getMarker());
         if(listItem.getMarker().equals("interested")){
             holder.star.setImageResource(star_yellow);
@@ -105,6 +107,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         marker=mark;
+        mapMarker.put(position,mark);
         final String url="https://socupdate.herokuapp.com/events/"+map.get(position)+"/mark";
         if(user!=null){
             user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
@@ -145,7 +148,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         intent.putExtra("time",items.getTime());
         intent.putExtra("venue",items.getVenue());
         intent.putExtra("date",items.getDate());
-        intent.putExtra("marker",marker);
+        intent.putExtra("marker",mapMarker.get(position));
         intent.putExtra("eventId",map.get(position));
         intent.putExtra("type","event");
         intent.putExtra("screen","home");
@@ -156,6 +159,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         marker="none";
+        mapMarker.put(position,"none");
         final String url="https://socupdate.herokuapp.com/events/"+map.get(position)+"/mark/delete";
         if(user!=null){
             user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {

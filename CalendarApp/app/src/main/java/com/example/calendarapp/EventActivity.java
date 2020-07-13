@@ -117,6 +117,8 @@ public class EventActivity extends AppCompatActivity {
         }
         else {
             marker=intent.getExtras().getString("marker");
+            Toast.makeText(EventActivity.this,marker,Toast.LENGTH_SHORT).show();
+            setIcon();
             arrayList=intent.getStringArrayListExtra("attachments");
             String venue_event = intent.getExtras().getString("venue");
             String time_event = intent.getExtras().getString("time");
