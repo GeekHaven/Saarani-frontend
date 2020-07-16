@@ -137,6 +137,9 @@ public class MainActivity2 extends AppCompatActivity {
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("Fragment")){
             navController.navigate(R.id.navigation_nav_profile);
         }
+        if(intent.getExtras()!=null&&intent.getExtras().containsKey("back")){
+            navController.navigate(R.id.navigation_nav_soc_profile);
+        }
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -169,8 +172,15 @@ public class MainActivity2 extends AppCompatActivity {
                             break;
                         }
                         case R.id.nav_profile: {
-                            if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_profile)
-                                navController.navigate(R.id.navigation_nav_profile);
+                            SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+                            if(prefs.getString("society", "false").equals("false")) {
+                                if (navController.getCurrentDestination().getId() != R.id.navigation_nav_profile)
+                                    navController.navigate(R.id.navigation_nav_profile);
+                            }
+                            else{
+                                if (navController.getCurrentDestination().getId() != R.id.navigation_nav_soc_profile)
+                                    navController.navigate(R.id.navigation_nav_soc_profile);
+                            }
                             break;
                         }
                         case R.id.nav_societies: {
@@ -194,7 +204,6 @@ public class MainActivity2 extends AppCompatActivity {
                             msg = getString(R.string.msg_subscribe_failed);
                         }
                         Log.d("VARUN", msg);
-                        Toast.makeText(MainActivity2.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
         FirebaseMessaging.getInstance().subscribeToTopic("iit2019091")
@@ -206,7 +215,6 @@ public class MainActivity2 extends AppCompatActivity {
                             msg = getString(R.string.msg_subscribe_failed);
                         }
                         Log.d("VARUN", msg);
-                        Toast.makeText(MainActivity2.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -296,7 +304,9 @@ public class MainActivity2 extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId()==R.id.add_event){
-            startActivity(new Intent(MainActivity2.this,AddEventActivity.class));
+            Intent intent =new Intent(MainActivity2.this,AddEventActivity.class);
+            intent.putExtra("type","add");
+            startActivity(intent);
         }
         else if(item.getItemId()==R.id.calendar){
             if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_list) {

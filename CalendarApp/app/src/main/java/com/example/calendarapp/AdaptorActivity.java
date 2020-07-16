@@ -221,13 +221,10 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             going=itemView.findViewById(R.id.going);
             interested=itemView.findViewById(R.id.text_interested);
             markAsGoing=itemView.findViewById(R.id.text_going);
-
-            if(prefs.getString("society", "false").equals("false")) {
                 interested.setOnClickListener(this);
                 markAsGoing.setOnClickListener(this);
                 star.setOnClickListener(this);
                 going.setOnClickListener(this);
-            }
             itemView.setClickable(true);
             itemView.setOnClickListener(this);
         }
@@ -249,45 +246,53 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         @Override
         public void onClick(View v) {
             if(v.getId()==star.getId()||v.getId()==interested.getId()){
-                Object tag = star.getTag();
-                if(tag != null && (Integer) tag == star_yellow){
-                    Toast.makeText(context,"Unmarked",Toast.LENGTH_SHORT).show();
-                    star.setTag(R.drawable.star_img);
-                    star.setImageResource(R.drawable.star_img);
-                    deleteRequest(this.getAdapterPosition());
-                    sendBroadcast("none",this.getAdapterPosition());
+                if(prefs.getString("society", "false").equals("false")) {
+                    Object tag = star.getTag();
+                    if (tag != null && (Integer) tag == star_yellow) {
+                        Toast.makeText(context, "Unmarked", Toast.LENGTH_SHORT).show();
+                        star.setTag(R.drawable.star_img);
+                        star.setImageResource(R.drawable.star_img);
+                        deleteRequest(this.getAdapterPosition());
+                        sendBroadcast("none", this.getAdapterPosition());
+                    } else {
+                        Toast.makeText(context, "Marked", Toast.LENGTH_SHORT).show();
+                        star.setTag(star_yellow);
+                        star.setImageResource(star_yellow);
+                        if ((Integer) going.getTag() == tick_yellow) {
+                            going.setTag(tick);
+                            going.setImageResource(R.drawable.tick);
+                        }
+                        sendBroadcast("interested", this.getAdapterPosition());
+                        addMarker(this.getAdapterPosition(), "interested");
+                    }
                 }
                 else{
-                    Toast.makeText(context,"Marked",Toast.LENGTH_SHORT).show();
-                    star.setTag(star_yellow);
-                    star.setImageResource(star_yellow);
-                    if((Integer) going.getTag()==tick_yellow){
-                        going.setTag(tick);
-                        going.setImageResource(R.drawable.tick);
-                    }
-                    sendBroadcast("interested",this.getAdapterPosition());
-                    addMarker(this.getAdapterPosition(),"interested");
+                    Toast.makeText(context,"This feature is not available for societies. To use this feature please login with student id",Toast.LENGTH_LONG).show();
                 }
             }
             else if(v.getId()==going.getId()||v.getId()==markAsGoing.getId()){
-                Object tag=going.getTag();
-                if(tag!=null &&(Integer) tag== tick_yellow){
-                    Toast.makeText(context,"Unmarked",Toast.LENGTH_SHORT).show();
-                    going.setTag(tick);
-                    going.setImageResource(R.drawable.tick);
-                    deleteRequest(this.getAdapterPosition());
-                    sendBroadcast("none",this.getAdapterPosition());
+                if(prefs.getString("society", "false").equals("false")) {
+                    Object tag = going.getTag();
+                    if (tag != null && (Integer) tag == tick_yellow) {
+                        Toast.makeText(context, "Unmarked", Toast.LENGTH_SHORT).show();
+                        going.setTag(tick);
+                        going.setImageResource(R.drawable.tick);
+                        deleteRequest(this.getAdapterPosition());
+                        sendBroadcast("none", this.getAdapterPosition());
+                    } else {
+                        Toast.makeText(context, "Marked", Toast.LENGTH_SHORT).show();
+                        going.setTag(tick_yellow);
+                        going.setImageResource(R.drawable.tick_yellow);
+                        if ((Integer) star.getTag() == star_yellow) {
+                            star.setTag(R.drawable.star_img);
+                            star.setImageResource(R.drawable.star_img);
+                        }
+                        sendBroadcast("going", this.getAdapterPosition());
+                        addMarker(this.getAdapterPosition(), "going");
+                    }
                 }
                 else{
-                    Toast.makeText(context,"Marked",Toast.LENGTH_SHORT).show();
-                    going.setTag(tick_yellow);
-                    going.setImageResource(R.drawable.tick_yellow);
-                    if((Integer)star.getTag()==star_yellow){
-                        star.setTag(R.drawable.star_img);
-                        star.setImageResource(R.drawable.star_img);
-                    }
-                    sendBroadcast("going",this.getAdapterPosition());
-                    addMarker(this.getAdapterPosition(),"going");
+                    Toast.makeText(context,"This feature is not available for societies",Toast.LENGTH_SHORT).show();
                 }
             }
             else{
