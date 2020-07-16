@@ -9,20 +9,30 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -64,6 +74,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.example.calendarapp.R.drawable.star_img;
 import static com.example.calendarapp.R.drawable.star_yellow;
@@ -76,10 +87,12 @@ public class EventActivity extends AppCompatActivity {
     ImageView download_url,button_back;
     String screen;
     String marker="";
+    LinearLayout layout_attachment;
     ArrayList<String> arrayList=new ArrayList<>();
     ImageView star,tick_mark;
     TextView interested,going;
     private ProgressDialog pDialog;
+    HashMap<String,String> mapUrl= new HashMap<>();
     private int i=0;
     public static final int progress_bar_type = 0;
     final SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.getDefault());
@@ -88,6 +101,7 @@ public class EventActivity extends AppCompatActivity {
     final SimpleDateFormat y = new SimpleDateFormat("yyyy", Locale.getDefault());
     SimpleDateFormat dateFormat = new SimpleDateFormat(
             "dd/MM/yyyy",Locale.getDefault());
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
@@ -103,6 +117,7 @@ public class EventActivity extends AppCompatActivity {
         interested=findViewById(R.id.text_interested);
         going=findViewById(R.id.text_going);
         button_back=findViewById(R.id.button);
+        layout_attachment=findViewById(R.id.attachmentLayout);
         button_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,9 +132,9 @@ public class EventActivity extends AppCompatActivity {
         }
         else {
             marker=intent.getExtras().getString("marker");
-            Toast.makeText(EventActivity.this,marker,Toast.LENGTH_SHORT).show();
-            setIcon();
+//            Toast.makeText(EventActivity.this,marker,Toast.LENGTH_SHORT).show();
             arrayList=intent.getStringArrayListExtra("attachments");
+            setIcon();
             String venue_event = intent.getExtras().getString("venue");
             String time_event = intent.getExtras().getString("time");
             String dateEvent = intent.getExtras().getString("date");
@@ -132,6 +147,7 @@ public class EventActivity extends AppCompatActivity {
             eventName.setText(intent.getExtras().getString("name"));
             byName.setText(intent.getExtras().getString("byName"));
             desc.setText(intent.getExtras().getString("desc"));
+            Linkify.addLinks(desc , Linkify.WEB_URLS);
             venue.setText(venue_event.substring(7));
             date.setText(sdf.format(date_event).substring(0, 3) + ", " + d.format(date_event) + " " + format.format(date_event) + " " + y.format(date_event));
             time.setText(time_event.substring(6));
@@ -223,14 +239,20 @@ public class EventActivity extends AppCompatActivity {
                 }
             });
         }
+        else{
+            star.setVisibility(View.GONE);
+            interested.setVisibility(View.GONE);
+            going.setVisibility(View.GONE);
+            tick_mark.setVisibility(View.GONE);
+        }
         download_url.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    download_files();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+////                    download_files();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
     }
@@ -240,6 +262,91 @@ public class EventActivity extends AppCompatActivity {
 //        intent.putExtra("markedAs",msg);
 //        LocalBroadcastManager.getInstance(EventActivity.this).sendBroadcast(intent);
 //    }
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void addAttachmentList(String url,int count){
+        final LinearLayout linearLayout = new LinearLayout(this);
+        final int id = View.generateViewId();
+        mapUrl.put(String.valueOf(id),url);
+        linearLayout.setId(id);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        Resources r = EventActivity.this.getResources();
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        60,
+                        r.getDisplayMetrics()));
+        params.bottomMargin = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                16,
+                r.getDisplayMetrics()
+        );
+        linearLayout.setWeightSum(10);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            linearLayout.setElevation(10);
+        }
+        linearLayout.setBackgroundResource(R.drawable.background_event);
+        layout_attachment.addView(linearLayout,params);
+        TextView name= new TextView(this);
+        name.setSingleLine();
+        name.setTextSize(20);
+        Typeface face = Typeface.createFromAsset(getAssets(),
+                "fonts/montserratmedium.ttf");
+        name.setTypeface(face);
+        name.setTextColor(Color.WHITE);
+        if(arrayList.size()>1)
+        name.setText("Attachment "+(count+1));
+        else
+        name.setText("Attachment");
+        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
+                0,LinearLayout.LayoutParams.WRAP_CONTENT);
+        textParams.gravity= Gravity.CENTER;
+//        name.setGravity(View.TEXT_ALIGNMENT_CENTER);
+        textParams.leftMargin = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                16,
+                r.getDisplayMetrics()
+        );
+        textParams.weight=9;
+        LinearLayout imageLayout = new LinearLayout(this);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        layoutParams.rightMargin = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                16,
+                r.getDisplayMetrics()
+        );
+        layoutParams.weight = 1;
+        linearLayout.addView(name,0,textParams);
+        linearLayout.addView(imageLayout,1,layoutParams);
+        ImageView imageView =new ImageView(this);
+        imageView.setImageResource(R.drawable.download);
+        LinearLayout.LayoutParams paramsBtn = new LinearLayout.LayoutParams(
+                (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        30,
+                        r.getDisplayMetrics()
+                ),
+                (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        30,
+                        r.getDisplayMetrics()
+                ));
+        paramsBtn.gravity = Gravity.CENTER;
+        imageLayout.addView(imageView, 0, paramsBtn);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mapUrl.get(String.valueOf(linearLayout.getId()))));
+                startActivity(browserIntent);
+            }
+        });
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void setIcon(){
         Log.d("markxxx",marker);
         if(marker.equals("interested")){
@@ -254,6 +361,12 @@ public class EventActivity extends AppCompatActivity {
         else{
             star.setTag(star_img);
             tick_mark.setTag(tick);
+        }
+        if(arrayList.size()!=0) {
+            layout_attachment.setVisibility(View.VISIBLE);
+            for (int i = 0; i < arrayList.size(); i++) {
+                addAttachmentList(arrayList.get(i), i);
+            }
         }
     }
     @Override
@@ -355,6 +468,7 @@ public class EventActivity extends AppCompatActivity {
                         Log.d("PostObject", String.valueOf(new JSONObject(mapToken)));
                         final JsonObjectRequest jsonobj = new JsonObjectRequest(Request.Method.POST, urlPost,new JSONObject(mapToken),
                                 new Response.Listener<JSONObject>() {
+                                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
                                     @Override
                                     public void onResponse(JSONObject response) {
                                         Iterator<String> keys = response.keys();
@@ -386,6 +500,7 @@ public class EventActivity extends AppCompatActivity {
                                                     eventName.setText(jsonObject.getString("name"));
                                                     byName.setText(jsonObject.getString("byName"));
                                                     desc.setText(jsonObject.getString("desc"));
+                                                    Linkify.addLinks(desc , Linkify.WEB_URLS);
                                                     venue.setText(venue_event);
                                                     date.setText(sdf.format(date_event).substring(0, 3) + ", " + d.format(date_event) + " " + format.format(date_event) + " " + y.format(date_event));
                                                     time.setText(time_event);

@@ -3,9 +3,10 @@
 
     <item android:drawable="@color/colorPrimary" />
 
-    <item>
+    <item >
         <bitmap android:src="@drawable/geekhaven_transparent"
-            android:gravity="center" />
+            android:gravity="center"
+            />
 
     </item>
 

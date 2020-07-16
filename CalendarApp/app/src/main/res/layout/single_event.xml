@@ -8,9 +8,9 @@
     android:background="#2C2B2B"
     android:layout_height="114dp"
     android:orientation="vertical"
-    android:layout_marginBottom="6dp"
+    android:layout_marginBottom="8dp"
     card_view:cardCornerRadius="8dp"
-    card_view:cardElevation="16dp">
+    card_view:cardElevation="32dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:background="#2C2B2B"
@@ -53,8 +53,9 @@
          android:text="Upcoming"
          android:textColor="#2C2B2B"
          android:layout_gravity="center"
+         android:textStyle="bold"
          android:paddingVertical="1dp"
-         android:paddingHorizontal="2dp"
+         android:paddingHorizontal="4dp"
          android:fontFamily="@font/montserratmedium"
          android:textSize="8sp"
          android:background="@drawable/upcoming_background"

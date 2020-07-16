@@ -38,5 +38,11 @@
         android:label="List Fragment"
         tools:layout="@layout/list_fragment">
     </fragment>
+    <fragment
+        android:id="@+id/navigation_nav_soc_profile"
+        android:name="com.example.calendarapp.SocietyProfileFragment"
+        android:label="Soc Profile Fragment"
+        tools:layout="@layout/society_profile_fragment">
+    </fragment>
 
 </navigation>

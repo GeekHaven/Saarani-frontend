@@ -39,6 +39,7 @@
             android:resource="@array/preloaded_fonts" />
         <activity android:name=".SubscribeActivity"/>
         <activity android:name=".AddEventActivity" android:theme="@style/ToolTheme" android:parentActivityName=".MainActivity2"/>
+
     </application>
 
 </manifest>

@@ -18,6 +18,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -60,6 +61,7 @@ import org.json.JSONArray;
 import java.io.File;
 import java.io.InputStream;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,9 +81,9 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
     final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     EditText eventName, eventDesc, eventVenue, sendTo, sendCC;
     public Button addEvent;
-    TextView spinnerTime, spinnerMinute;
+    TextView spinnerTime, heading;
     CalendarView calendarView;
-    String date;
+    String date,eventId;
     String hourSelect, minuteSelect;
     ImageButton mailItem;
     LinearLayout itemLayout1,attachmentParent,addEmailLayout;
@@ -109,15 +111,10 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        String[] arraySpinner = new String[]{
-//                 "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"
-//        };
-//        String[] minuteArray = new String[]{
-//                 "00", "10", "20", "30", "40", "50"
-//        };
         final Date dateToday = new Date();
         date=dateFormat.format(dateToday);
         Log.d("date",date);
+        heading=findViewById(R.id.textView3);
         addEmailLayout=findViewById(R.id.addEmailLayout);
         attachmentParent=findViewById(R.id.attachmentLayout);
         addAttachment=findViewById(R.id.attachment);
@@ -126,17 +123,52 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
         calendarView = findViewById(R.id.calendarView);
         eventName = findViewById(R.id.eventName);
         eventDesc = findViewById(R.id.eventDesc);
+        eventDesc.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                if (eventDesc.hasFocus()) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK){
+                        case MotionEvent.ACTION_SCROLL:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            return true;
+                    }
+                }
+                return false;
+            }
+        });
         eventVenue = findViewById(R.id.eventVenue);
         sendTo = findViewById(R.id.mailTo);
         addEvent = findViewById(R.id.add_event);
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_spinner_item, arraySpinner);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinnerTime.setAdapter(adapter);
-//        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_spinner_item, minuteArray);
-//        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinnerMinute.setAdapter(adapter2);
+        Calendar mcurrentTime = Calendar.getInstance();
+        final int[] hour = {mcurrentTime.get(Calendar.HOUR_OF_DAY)};
+        final int[] minute = {mcurrentTime.get(Calendar.MINUTE)};
+        Intent intent=getIntent();
+        if(intent.getExtras().getString("type").equals("edit")){
+            heading.setText("Edit Event");
+            eventName.setText(intent.getExtras().getString("name"));
+            eventDesc.setText(intent.getExtras().getString("desc"));
+            eventVenue.setText(intent.getExtras().getString("venue").split(":")[1]);
+            spinnerTime.setText(intent.getExtras().getString("time").split(" ")[1]);
+            eventId=intent.getExtras().getString("eventId");
+            String time=intent.getExtras().getString("time").split(" ")[1];
+            String[] split=time.split(":");
+            hour[0]= Integer.parseInt(split[0]);
+            minute[0]=Integer.parseInt(split[1]);
+            String dateString=intent.getExtras().getString("date").split(" ")[1];
+            Log.d("dateToParse",dateString);
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
+                Date date = sdf.parse(dateString);
+
+                long startDate = date.getTime();
+                calendarView.setDate(startDate);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
@@ -156,9 +188,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 Log.d("date", date);
             }
         });
-        Calendar mcurrentTime = Calendar.getInstance();
-        final int[] hour = {mcurrentTime.get(Calendar.HOUR_OF_DAY)};
-        final int[] minute = {mcurrentTime.get(Calendar.MINUTE)};
+
         spinnerTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,8 +197,8 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         String a=String.valueOf(selectedMinute),b=String.valueOf(selectedHour);
-                        if(selectedMinute==0)
-                            a="00";
+                        if(selectedMinute<10)
+                            a="0"+selectedMinute;
                         if(selectedHour<10)
                             b="0"+selectedHour;
                         spinnerTime.setText(b+" : "+a);
@@ -183,31 +213,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 mTimePicker.show();
             }
         });
-//        spinnerTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                hour = spinnerTime.getItemAtPosition(spinnerTime.getSelectedItemPosition()).toString();
-//                Log.d("hour", hour);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
-//        spinnerMinute.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                minute = spinnerMinute.getItemAtPosition(spinnerMinute.getSelectedItemPosition()).toString();
-//                Log.d("minute", minute);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
-//        Log.d("eventTime", hour + ":" + minute);
+
         
         addEvent.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -339,7 +345,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             @Override
             public void onClick(View v) {
                 if (!EasyPermissions.hasPermissions(AddEventActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    EasyPermissions.requestPermissions(this, "Read External data", 2, Manifest.permission.READ_EXTERNAL_STORAGE);
+                    EasyPermissions.requestPermissions(AddEventActivity.this, "Read External data", 2, Manifest.permission.READ_EXTERNAL_STORAGE);
                 }
                 else {
                     Intent chooseFile = null;
@@ -355,10 +361,12 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             }
         });
     }
+
     @Override
     public void onBackPressed(){
             startActivity(new Intent(AddEventActivity.this,MainActivity2.class));
     }
+
     public Long sizeOfFile(Uri uri){
         String scheme = uri.getScheme();
         System.out.println("Scheme type " + scheme);
