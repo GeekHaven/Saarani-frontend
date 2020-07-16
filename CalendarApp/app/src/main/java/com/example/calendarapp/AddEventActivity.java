@@ -79,23 +79,21 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class AddEventActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
     public static final int PICKFILE_RESULT_CODE = 1;
     final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-    EditText eventName, eventDesc, eventVenue, sendTo, sendCC;
-    public Button addEvent;
+    EditText eventName, eventDesc, eventVenue, sendTo;
+    public Button addEvent,addAttachment;
     TextView spinnerTime, heading;
     CalendarView calendarView;
-    String date,eventId;
-    String hourSelect, minuteSelect;
+    String date,eventId,hourSelect, minuteSelect,requestType="post";
     ImageButton mailItem;
-    LinearLayout itemLayout1,attachmentParent,addEmailLayout;
-    Button addAttachment;
-    private Uri fileUri;
-    private String filePath;
+    LinearLayout attachmentParent,addEmailLayout;
+//    private Uri fileUri;
+//    private String filePath;
     public JSONArray jsonAttachments=new JSONArray();
     public static List<String> arr = new ArrayList<String>();
     List<String> to = new ArrayList<String>();
-    List<Uri> uriList=new ArrayList<>();
-    JSONArray jsonEmailRecipients=new JSONArray();
-    String[] mailList= new String[15];
+//    List<Uri> uriList=new ArrayList<>();
+//    JSONArray jsonEmailRecipients=new JSONArray();
+//    String[] mailList= new String[15];
     int index=0;
     long size=0,prev;
     Map<String,String> map=new HashMap<String,String>();
@@ -103,6 +101,8 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
     Map<String,Uri> uriMap =new HashMap<>();
     Map<String,Uri> uriMapAttach= new HashMap<>();
     Map<String,File> fileMap =new HashMap<>();
+    String url = "https://socupdate.herokuapp.com/events";
+    String urlPut="https://socupdate.herokuapp.com/events/";
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
@@ -143,32 +143,6 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
         Calendar mcurrentTime = Calendar.getInstance();
         final int[] hour = {mcurrentTime.get(Calendar.HOUR_OF_DAY)};
         final int[] minute = {mcurrentTime.get(Calendar.MINUTE)};
-        Intent intent=getIntent();
-        if(intent.getExtras().getString("type").equals("edit")){
-            heading.setText("Edit Event");
-            eventName.setText(intent.getExtras().getString("name"));
-            eventDesc.setText(intent.getExtras().getString("desc"));
-            eventVenue.setText(intent.getExtras().getString("venue").split(":")[1]);
-            spinnerTime.setText(intent.getExtras().getString("time").split(" ")[1]);
-            eventId=intent.getExtras().getString("eventId");
-            String time=intent.getExtras().getString("time").split(" ")[1];
-            String[] split=time.split(":");
-            hour[0]= Integer.parseInt(split[0]);
-            minute[0]=Integer.parseInt(split[1]);
-            String dateString=intent.getExtras().getString("date").split(" ")[1];
-            Log.d("dateToParse",dateString);
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
-                Date date = sdf.parse(dateString);
-
-                long startDate = date.getTime();
-                calendarView.setDate(startDate);
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-        }
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,
@@ -188,6 +162,38 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 Log.d("date", date);
             }
         });
+
+        Intent intent=getIntent();
+        if(intent.getExtras().getString("type").equals("edit")){
+            requestType="put";
+            heading.setText("Edit Event");
+            eventName.setText(intent.getExtras().getString("name"));
+            eventDesc.setText(intent.getExtras().getString("desc"));
+            eventVenue.setText(intent.getExtras().getString("venue").split(" ")[1]);
+            spinnerTime.setText(intent.getExtras().getString("time").split(" ")[1]);
+            eventId=intent.getExtras().getString("eventId");
+            String time=intent.getExtras().getString("time").split(" ")[1];
+            String[] split=time.split(":");
+            hourSelect=split[0];
+            minuteSelect=split[1];
+            hour[0]= Integer.parseInt(split[0]);
+            minute[0]=Integer.parseInt(split[1]);
+            String dateString=intent.getExtras().getString("date").split(" ")[1];
+            date=dateString;
+            Log.d("dateToParse",dateString);
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
+                Date date = sdf.parse(dateString);
+
+                long startDate = date.getTime();
+                calendarView.setDate(startDate);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            urlPut = urlPut+eventId;
+            addEvent.setText("Update Event");
+        }
 
         spinnerTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,7 +220,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             }
         });
 
-        
+
         addEvent.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -238,7 +244,12 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                             uploadFile((Uri) mapElement.getValue());
                         }
                     }
-                    sendEvent(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
+                    else {
+                        if(requestType.equals("post"))
+                            sendEvent(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
+                        else if (requestType.equals("put"))
+                            sendEventPut(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
+                    }
                 }
             }
         });
@@ -412,7 +423,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                 for (int i = 0; i < data.getClipData().getItemCount(); i++) {
                                     final int[] flag = {0};
                                     Uri uri = data.getClipData().getItemAt(i).getUri();
-                                    filePath = uri.getPath();
+//                                    filePath = uri.getPath();
                                     File file = new File(uri.getPath());
                                     String result = null;
                                     if (uri.getScheme().equals("content")) {
@@ -541,7 +552,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                             prev=size;
                             size=size+sizeOfFile(uri);
                             if (size <= 5000000) {
-                                filePath = uri.getPath();
+//                                filePath = uri.getPath();
                                 File file = new File(uri.getPath());
                                 String result = null;
                                 if (uri.getScheme().equals("content")) {
@@ -669,8 +680,12 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void addAttachmnetUrl(String url){
         jsonAttachments.put(url);
-        if(jsonAttachments.length()==uriMap.size())
-            sendEvent(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
+        if(jsonAttachments.length()==uriMap.size()) {
+            if(requestType.equals("post"))
+                sendEvent(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
+            else if (requestType.equals("put"))
+                sendEventPut(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
+        }
         else
             Toast.makeText(AddEventActivity.this,"Loading Data...",Toast.LENGTH_SHORT).show();
     }
@@ -714,7 +729,6 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
     }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void sendEvent(final String name, final String desc, final String venue, final String time, final String date) {
-        final String url = "https://socupdate.herokuapp.com/events";
         FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
@@ -736,6 +750,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                 jsonObject.put("date", date);
                                 jsonObject.put("venue", venue);
                                 jsonObject.put("time", time);
+                                if(jsonAttachments.length()!=0)
                                 jsonObject.put("attachments",jsonAttachments);
                                 Log.d("json",jsonObject.toString());
 //                                Toast.makeText(AddEventActivity.this,array.length(),Toast.LENGTH_SHORT).show();
@@ -764,6 +779,121 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             });
         }
         Toast.makeText(this,"Event Added",Toast.LENGTH_SHORT).show();
+        int size=0;
+//        for (int i = 0; i < 15; i++) {
+//            if(!mailList[i].isEmpty())
+//                size++;
+//        }
+        if(to.size()!=0) {
+            String[] subarray = new String[to.size()];
+            int z = 0;
+            for (int i = 0; i < to.size(); i++) {
+                subarray[i] = to.get(i);
+            }
+            try {
+                Intent emailSelectorIntent = new Intent(Intent.ACTION_SENDTO);
+                emailSelectorIntent.setData(Uri.parse("mailto:"));
+                Log.d("mailList", Arrays.toString(subarray));
+                final Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, subarray);
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, eventName.getText().toString());
+                ArrayList<String> bodyList = new ArrayList<>();
+                String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
+                bodyList.add(body);
+                ArrayList<Uri> uris = new ArrayList<Uri>();
+                emailIntent.putExtra(Intent.EXTRA_TEXT, bodyList);
+                emailIntent.setSelector(emailSelectorIntent);
+                emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                emailIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                emailIntent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
+                emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                Iterator iterator = fileMap.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry mapElement = (Map.Entry) iterator.next();
+                    File f = (File) mapElement.getValue();
+                    f.setReadable(true, false);
+                    uris.add(Uri.fromFile(f));
+                }
+//            emailIntent.setType("text/html");
+//            emailIntent.setType("application/pdf");
+//            emailIntent.setType("message/rfc822");
+//            emailIntent.setType("text/plain");
+                if (uris.size() != 0)
+                    emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+                Log.d("URI", String.valueOf(uris));
+                startActivity(Intent.createChooser(emailIntent, "Choose an email application..."));
+                finish();
+            } catch (Throwable t) {
+                Toast.makeText(this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
+            }
+        }
+        else{
+            startActivity(new Intent(this,MainActivity2.class));
+            finish();
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void sendEventPut(final String name, final String desc, final String venue, final String time, final String date) {
+        FirebaseAuth mAuth;
+        mAuth = FirebaseAuth.getInstance();
+        final FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().getToken() != null) {
+                            JSONObject jsonObject =new JSONObject();
+                            try {
+                                jsonObject.put("token", task.getResult().getToken());
+                                jsonObject.put("name", name);
+                                jsonObject.put("desc", desc);
+                                jsonObject.put("date", date);
+                                jsonObject.put("venue", venue);
+                                jsonObject.put("time", time);
+                                if(jsonAttachments.length()!=0)
+                                    jsonObject.put("attachments",jsonAttachments);
+                                Log.d("json",jsonObject.toString());
+//                                Toast.makeText(AddEventActivity.this,array.length(),Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            RequestQueue requstQueue = Volley.newRequestQueue(AddEventActivity.this);
+                            JsonObjectRequest jsonobj = new JsonObjectRequest(Request.Method.PUT, urlPut, jsonObject,
+                                    new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject response) {
+
+                                        }
+                                    },
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+
+                                        }
+                                    }
+
+                            ){
+                                @Override
+                                public Map<String, String> getHeaders()
+                                {
+                                    Map<String, String> headers = new HashMap<String, String>();
+                                    headers.put("Content-Type", "application/json");
+                                    return headers;
+                                }
+                                @Override
+                                public String getBodyContentType() {
+                                    return "application/json";
+                                }
+                            };
+                            requstQueue.add(jsonobj);
+
+                        }
+                    }
+                }
+            });
+        }
+        Toast.makeText(this,"Event Updated",Toast.LENGTH_SHORT).show();
         int size=0;
 //        for (int i = 0; i < 15; i++) {
 //            if(!mailList[i].isEmpty())
