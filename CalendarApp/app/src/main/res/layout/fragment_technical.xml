@@ -1,16 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<ScrollView android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:background="#232323"
         android:orientation="vertical"
-        android:paddingBottom="32dp"
-        android:layout_height="match_parent"
+        android:paddingBottom="200dp"
+        android:layout_height="wrap_content"
         tools:context=".CulturalFragment">
         <LinearLayout
             android:layout_marginTop="16dp"
+            android:id="@+id/apk"
+            android:layout_width="match_parent"
+            android:layout_height="176dp"
+            android:elevation="16dp"
+            android:background="@drawable/apk_background"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="24dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:fontFamily="@font/montserratmedium"
+                android:text="Aparoksha"
+                android:textColor="#FFFFFF"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:fontFamily="@font/montserratmedium"
+                android:text="Technical Fest"
+                android:textColor="#F0D453"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="6dp"
+                android:text="Follow"
+                android:layout_marginTop="19dp"
+                android:id="@+id/apk_btn"
+                android:layout_gravity="end|bottom"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/custom_view_border"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#F0D453"
+                android:textSize="16sp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="16dp"
+            android:id="@+id/geekhaven"
             android:layout_width="match_parent"
             android:layout_height="176dp"
             android:elevation="16dp"
@@ -44,6 +93,7 @@
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="6dp"
                 android:text="Follow"
+                android:id="@+id/gh_btn"
                 android:layout_marginTop="19dp"
                 android:layout_gravity="end|bottom"
                 android:layout_marginRight="16dp"
@@ -58,6 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="176dp"
             android:elevation="16dp"
+            android:id="@+id/tesla"
             android:background="@drawable/tesla_background"
             android:orientation="vertical"
             android:layout_marginHorizontal="24dp"
@@ -77,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:fontFamily="@font/montserratmedium"
-                android:text="Technical Society"
+                android:text="Electronics Society"
                 android:textColor="#F0D453"
                 android:textSize="30sp"
                 android:textStyle="bold"
@@ -90,6 +141,7 @@
                 android:text="Follow"
                 android:layout_marginTop="19dp"
                 android:layout_gravity="end|bottom"
+                android:id="@+id/t_btn"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/custom_view_border"
                 android:fontFamily="@font/montserratmedium"
@@ -101,6 +153,7 @@
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="176dp"
+            android:id="@+id/gravity"
             android:elevation="16dp"
             android:background="@drawable/eventimage"
             android:orientation="vertical"
@@ -135,6 +188,7 @@
                 android:layout_marginTop="19dp"
                 android:layout_gravity="end|bottom"
                 android:layout_marginRight="16dp"
+                android:id="@+id/g_btn"
                 android:background="@drawable/custom_view_border"
                 android:fontFamily="@font/montserratmedium"
                 android:textColor="#F0D453"
@@ -143,3 +197,4 @@
         </LinearLayout>
 
     </LinearLayout>
+</ScrollView>

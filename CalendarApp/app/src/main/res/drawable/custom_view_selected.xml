@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item>
+                <shape>
+                    <stroke
+                        android:width="2dp"
+                        android:color="#F0D453" />
+                    <corners
+                        android:radius="8dp" />
+                    <solid
+                        android:color="#F0D453"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

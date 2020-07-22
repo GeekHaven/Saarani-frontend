@@ -176,7 +176,7 @@ public class SocietyProfileFragment extends Fragment  {
                         public void onLongClicked(int position) {
 
                         }
-                    }, getContext());
+                    }, getContext(),"alertDialog");
                     recyclerView.setAdapter(adapter);
                     progressDialog.dismiss();
                 } catch (JSONException e) {
