@@ -2,6 +2,7 @@ package com.example.calendarapp;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,15 +27,16 @@ public class SocietyCardAdaptor extends RecyclerView.Adapter<SocietyCardAdaptor.
     private List<ListItems> listItems,listUpdated;
     private final ClickListener listener;
     private Context context;
-    private String eventId,marker;
+    private String eventId,marker,clickAction;
     DialogFragment newFragment = new CustomAlertFragment();
     HashMap<Integer,String>map =new HashMap<>();
 
 
-    SocietyCardAdaptor(List<ListItems> listItems, ClickListener listener, Context context) {
+    SocietyCardAdaptor(List<ListItems> listItems, ClickListener listener, Context context,String clickAction) {
         this.listItems = listItems;
         this.listener = listener;
         this.context = context;
+        this.clickAction=clickAction;
     }
 
     @NonNull
@@ -85,20 +87,29 @@ public class SocietyCardAdaptor extends RecyclerView.Adapter<SocietyCardAdaptor.
 
         @Override
         public void onClick(View v) {
-            ListItems items =listItems.get(getAdapterPosition());
+            if(clickAction.equals("alertDialog")) {
+                ListItems items = listItems.get(getAdapterPosition());
 
-            Bundle bundle=new Bundle();
-            bundle.putString("name",items.getName() );
-            bundle.putString("byName",items.getByName());
-            bundle.putString("desc",items.getDesc());
-            bundle.putString("date",items.getDate());
-            bundle.putString("venue",items.getVenue());
-            bundle.putString("time",items.getTime());
-            bundle.putString("eventId",items.getEventId());
-            bundle.putStringArrayList("attachments",items.getArrayList());
-            bundle.putInt("position",getAdapterPosition());
-            newFragment.setArguments(bundle);
-            newFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "alertDialog");
+                Bundle bundle = new Bundle();
+                bundle.putString("name", items.getName());
+                bundle.putString("byName", items.getByName());
+                bundle.putString("desc", items.getDesc());
+                bundle.putString("date", items.getDate());
+                bundle.putString("venue", items.getVenue());
+                bundle.putString("time", items.getTime());
+                bundle.putString("eventId", items.getEventId());
+                bundle.putStringArrayList("attachments", items.getArrayList());
+                bundle.putInt("position", getAdapterPosition());
+                newFragment.setArguments(bundle);
+                newFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "alertDialog");
+            }
+            else{
+                Intent intent =new Intent(context,EventActivity.class);
+                intent.putExtra("type","notif");
+                intent.putExtra("eventId",eventId);
+                intent.putExtra("screen","");
+                context.startActivity(intent);
+            }
         }
 
         @Override

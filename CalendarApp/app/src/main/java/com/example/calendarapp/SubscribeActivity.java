@@ -50,7 +50,7 @@ public class SubscribeActivity extends AppCompatActivity {
         effe = findViewById(R.id.effe);
         effe_image = findViewById(R.id.effe_logo);
         effe_image.setColorFilter(Color.parseColor("#FFFFFF"));
-        if (pref.getBoolean("effe", false)) {
+        if (pref.getBoolean("effervescence", false)) {
             x[1]++;
             effe_image.setColorFilter(Color.parseColor("#F5D22B"));
             effe.setBackgroundResource(R.drawable.society_card_highlight);
@@ -96,14 +96,14 @@ public class SubscribeActivity extends AppCompatActivity {
         rangtarangini = findViewById(R.id.rangtarini);
         rangtarangini_image = findViewById(R.id.rangtarini_logo);
         rangtarangini_image.setColorFilter(Color.parseColor("#FFFFFF"));
-        if (pref.getBoolean("rang", false)) {
+        if (pref.getBoolean("rangtarangini", false)) {
             x[7]++;
             rangtarangini_image.setColorFilter(Color.parseColor("#F5D22B"));
             rangtarangini.setBackgroundResource(R.drawable.society_card_highlight);
         }
         genitix = findViewById(R.id.geniticx);
         genitix_image = findViewById(R.id.geniticx_logo);
-        if (pref.getBoolean("geniticx", false)) {
+        if (pref.getBoolean("dance", false)) {
             x[8]++;
             genitix_image.setImageResource(R.drawable.geneticx_yellow);
             genitix.setBackgroundResource(R.drawable.society_card_highlight);
@@ -138,7 +138,7 @@ public class SubscribeActivity extends AppCompatActivity {
         }
         spirit = findViewById(R.id.spirit);
         spirit_image = findViewById(R.id.spirit_logo);
-        if (pref.getBoolean("spirit", false)) {
+        if (pref.getBoolean("sports", false)) {
             x[13]++;
             spirit_image.setColorFilter(Color.parseColor("#F5D22B"));
             spirit.setBackgroundResource(R.drawable.society_card_highlight);
@@ -169,13 +169,13 @@ public class SubscribeActivity extends AppCompatActivity {
                     effe.setBackgroundResource(R.drawable.society_card_highlight);
                     FirebaseMessaging.getInstance().subscribeToTopic("effervescence");
                     x[1]++;
-                    editor.putBoolean("effe", true);
+                    editor.putBoolean("effervescence", true);
                 } else {
                     effe_image.setColorFilter(Color.parseColor("#FFFFFF"));
                     effe.setBackgroundResource(R.drawable.society_card);
                     FirebaseMessaging.getInstance().unsubscribeFromTopic("effervescence");
                     x[1]++;
-                    editor.putBoolean("effe", false);
+                    editor.putBoolean("effervescence", false);
                 }
             }
         });
@@ -277,13 +277,13 @@ public class SubscribeActivity extends AppCompatActivity {
                     rangtarangini.setBackgroundResource(R.drawable.society_card_highlight);
                     FirebaseMessaging.getInstance().subscribeToTopic("rangtarangini");
                     x[7]++;
-                    editor.putBoolean("rang", true);
+                    editor.putBoolean("rangtarangini", true);
                 } else {
                     rangtarangini_image.setColorFilter(Color.parseColor("#FFFFFF"));
                     rangtarangini.setBackgroundResource(R.drawable.society_card);
                     FirebaseMessaging.getInstance().unsubscribeFromTopic("rangtarangini");
                     x[7]++;
-                    editor.putBoolean("rang", false);
+                    editor.putBoolean("rangtarangini", false);
                 }
             }
         });
@@ -295,13 +295,13 @@ public class SubscribeActivity extends AppCompatActivity {
                     genitix.setBackgroundResource(R.drawable.society_card_highlight);
                     FirebaseMessaging.getInstance().subscribeToTopic("dance");
                     x[8]++;
-                    editor.putBoolean("geniticx", true);
+                    editor.putBoolean("dance", true);
                 } else {
                     genitix_image.setImageResource(R.drawable.geneticx_white);
                     genitix.setBackgroundResource(R.drawable.society_card);
                     FirebaseMessaging.getInstance().unsubscribeFromTopic("dance");
                     x[8]++;
-                    editor.putBoolean("geniticx", false);
+                    editor.putBoolean("dance", false);
                 }
             }
         });
@@ -385,13 +385,13 @@ public class SubscribeActivity extends AppCompatActivity {
                     spirit.setBackgroundResource(R.drawable.society_card_highlight);
                     FirebaseMessaging.getInstance().subscribeToTopic("sports");
                     x[13]++;
-                    editor.putBoolean("spirit", true);
+                    editor.putBoolean("sports", true);
                 } else {
                     spirit_image.setColorFilter(Color.parseColor("#FFFFFF"));
                     spirit.setBackgroundResource(R.drawable.society_card);
                     FirebaseMessaging.getInstance().unsubscribeFromTopic("sports");
                     x[13]++;
-                    editor.putBoolean("spirit", false);
+                    editor.putBoolean("sports", false);
                 }
             }
         });

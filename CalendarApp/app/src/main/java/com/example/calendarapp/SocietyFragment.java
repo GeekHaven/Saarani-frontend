@@ -45,6 +45,7 @@ public class SocietyFragment extends Fragment {
         adapter.addFragment(new TechnicalFragment(), "Technical");
 
         viewPager.setAdapter(adapter);
+
     }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
