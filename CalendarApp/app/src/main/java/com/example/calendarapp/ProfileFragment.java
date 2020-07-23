@@ -64,7 +64,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
     int posIn=0,posGo=0;
     private int eventType=1;
     ImageView imgProfileUserPhoto;
-    TextView tvUserName,tvUserEmailID;
+    TextView tvUserName,tvUserEmailID, tvNoEvent;
     TabLayout tabLayout;
     RecyclerView rcvInterestedEvents, rcvGoingEvents;
     RecyclerView.Adapter interestedEventsAdapter, goingEventsAdapter;
@@ -84,6 +84,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
         imgProfileUserPhoto=view.findViewById(R.id.imgProfileFragmentUserPhoto);
         tvUserName=view.findViewById(R.id.tvProfileFragmentUserName);
         tvUserEmailID=view.findViewById(R.id.tvProfileFragmentUserEmailID);
+        tvNoEvent=view.findViewById(R.id.tvNoEvent);
         tabLayout=view.findViewById(R.id.tabLayoutProfileFragment);
 
         rcvInterestedEvents=view.findViewById(R.id.rcvProfileFragmentInterestedEvents);
@@ -140,11 +141,27 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                     rcvInterestedEvents.setVisibility(View.VISIBLE);
                     rcvGoingEvents.setVisibility(View.GONE);
                     eventType=EVENT_INTERESTED;
+
+                    if(listInterestedEvents.size()==0){
+                        tvNoEvent.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        tvNoEvent.setVisibility(View.GONE);
+                    }
+
                 }
                 else if(tab.getPosition()==1){
                     rcvInterestedEvents.setVisibility(View.GONE);
                     rcvGoingEvents.setVisibility(View.VISIBLE);
                     eventType=EVENT_GOING;
+
+                    if(listGoingEvents.size()==0){
+                        tvNoEvent.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        tvNoEvent.setVisibility(View.GONE);
+                    }
+
                 }
             }
 
@@ -177,6 +194,13 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
         rcvInterestedEvents.setAdapter(interestedEventsAdapter);
         rcvInterestedEvents.setVisibility(View.VISIBLE);
         interestedEventsAdapter.notifyDataSetChanged();
+
+        if(listInterestedEvents.size()==0){
+            tvNoEvent.setVisibility(View.VISIBLE);
+        }
+        else {
+            tvNoEvent.setVisibility(View.GONE);
+        }
 
         goingEventsAdapter=new EventListAdaptor(this.getActivity(), listGoingEvents);
         rcvGoingEvents.setAdapter(goingEventsAdapter);
@@ -314,6 +338,9 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                             deleteRequest(listInterestedEvents.get(position).getEventId());
                             listInterestedEvents.remove(position);
                             interestedEventsAdapter.notifyDataSetChanged();
+                            if(listInterestedEvents.size()==0){
+                                tvNoEvent.setVisibility(View.VISIBLE);
+                            }
                             tabLayout.getTabAt(0).setText("Interested ("+listInterestedEvents.size()+")");
 
                         }
@@ -341,6 +368,9 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                             deleteRequest(listGoingEvents.get(position).getEventId());
                             listGoingEvents.remove(position);
                             goingEventsAdapter.notifyDataSetChanged();
+                            if(listGoingEvents.size()==0){
+                                tvNoEvent.setVisibility(View.VISIBLE);
+                            }
                             tabLayout.getTabAt(1).setText("Going ("+listGoingEvents.size()+")");
                         }
                     })

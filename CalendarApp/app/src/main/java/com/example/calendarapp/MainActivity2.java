@@ -130,7 +130,7 @@ public class MainActivity2 extends AppCompatActivity {
         mAppBarConfiguration=new AppBarConfiguration.
                 Builder(R.id.navigation_nav_main, R.id.navigation_nav_profile, R.id.navigation_nav_subscription, R.id.navigation_nav_society)
                 .setDrawerLayout(drawerLayout).build();
-
+        
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
