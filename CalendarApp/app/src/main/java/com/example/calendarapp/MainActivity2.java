@@ -72,6 +72,7 @@ public class MainActivity2 extends AppCompatActivity {
     int x=0;
     String frag="";
     TextView tvStudentName, tvStudentEmailId;
+    Toolbar toolbar;
     NavController navController;
     NavigationView navigationView;
     DrawerLayout drawerLayout;
@@ -122,19 +123,21 @@ public class MainActivity2 extends AppCompatActivity {
         tvStudentName.setText(user.getDisplayName());
         tvStudentEmailId.setText(user.getEmail());
 
-        Toolbar toolbar=findViewById(R.id.toolbar);
+        toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setBackgroundColor(Integer.parseInt("232323"));
 
 
 
         mAppBarConfiguration=new AppBarConfiguration.
-                Builder(R.id.navigation_nav_main, R.id.navigation_nav_profile, R.id.navigation_nav_subscription, R.id.navigation_nav_society)
+                Builder(R.id.navigation_nav_main, R.id.navigation_nav_profile, R.id.navigation_nav_list,R.id.navigation_nav_soc_profile, R.id.navigation_nav_society)
                 .setDrawerLayout(drawerLayout).build();
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("Fragment")){
+            toolbar.setBackgroundColor(Color.rgb(59,59,59));
             navController.navigate(R.id.navigation_nav_profile);
         }
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("back")){
@@ -149,29 +152,19 @@ public class MainActivity2 extends AppCompatActivity {
                             break;
                         }
                         case R.id.nav_home: {
+                            toolbar.setBackgroundColor(Integer.parseInt("232323"));
+                            swap.setVisible(true);
+                            SharedPreferences preferences =getSharedPreferences("user",MODE_PRIVATE);
+                            if(preferences.getString("society", "false").equals("true"))
+                                addEvent.setVisible(true);
                             if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_main)
                                 navController.navigate(R.id.navigation_nav_main);
                             break;
                         }
-                        case R.id.nav_subscription: {
-//                        navController.navigate(R.id.navigation_nav_subscription);
-//                        addEvent.setVisible(false);
-//                        Intent intent =new Intent(getApplicationContext(),SubscribeActivity.class);
-//                        intent.putExtra("val",2);
-//                        startActivity(intent);
-                            Intent i = new Intent(getApplicationContext(), SubscribeActivity.class);
-                            i.putExtra("val", 2);
-                            if (Build.VERSION.SDK_INT > 20) {
-//                            ActivityOptions options =
-//                                    ActivityOptions.makeSceneTransitionAnimation(MainActivity2.this);
-//                            startActivity(i,options.toBundle());
-                                startActivity(i);
-                            } else {
-                                startActivity(i);
-                            }
-                            break;
-                        }
                         case R.id.nav_profile: {
+                            toolbar.setBackgroundColor(Color.rgb(59,59,59));
+                            swap.setVisible(false);
+                            addEvent.setVisible(false);
                             SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
                             if(prefs.getString("society", "false").equals("false")) {
                                 if (navController.getCurrentDestination().getId() != R.id.navigation_nav_profile)
@@ -184,6 +177,9 @@ public class MainActivity2 extends AppCompatActivity {
                             break;
                         }
                         case R.id.nav_societies: {
+                            toolbar.setBackgroundColor(Integer.parseInt("232323"));
+                            swap.setVisible(false);
+                            addEvent.setVisible(false);
                             if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_society)
                                 navController.navigate(R.id.navigation_nav_society);
                             break;

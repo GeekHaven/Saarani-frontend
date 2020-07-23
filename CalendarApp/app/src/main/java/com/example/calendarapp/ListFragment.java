@@ -120,6 +120,7 @@ public class ListFragment extends Fragment {
     }
     public void addDataToRV(String dateSelected,String dateTomSelected){
         default_text1.setVisibility(View.GONE);
+        default_text2.setVisibility(View.GONE);
         recylerViewList=new ArrayList<>();
         recyclerViewListTom=new ArrayList<>();
         int flag=0;
@@ -138,6 +139,7 @@ public class ListFragment extends Fragment {
         if(recylerViewList.size()!=0) {
             Log.d("what","do");
             recyclerViewToday.setVisibility(View.VISIBLE);
+            default_text1.setVisibility(View.GONE);
             adapter = new AdaptorActivity(recylerViewList, new ClickListener() {
                 @Override
                 public void onPositionClicked(int position) {
@@ -158,6 +160,7 @@ public class ListFragment extends Fragment {
         if(recyclerViewListTom.size()!=0) {
             Log.d("what","do");
             recyclerViewTom.setVisibility(View.VISIBLE);
+            default_text2.setVisibility(View.GONE);
             adapter2 = new AdaptorActivity(recyclerViewListTom, new ClickListener() {
                 @Override
                 public void onPositionClicked(int position) {

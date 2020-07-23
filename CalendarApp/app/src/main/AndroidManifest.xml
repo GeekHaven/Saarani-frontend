@@ -7,9 +7,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/geekhaven_transparent"
-        android:label="@string/app_name"
-        android:roundIcon="@drawable/geekhaven_transparent"
+        android:icon="@mipmap/ic_icon"
+        android:label="Caliiita"
+        android:roundIcon="@mipmap/ic_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity2"/>

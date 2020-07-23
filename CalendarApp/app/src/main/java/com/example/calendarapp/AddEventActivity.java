@@ -671,12 +671,12 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 break;
         }
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_add, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater menuInflater = getMenuInflater();
+//        menuInflater.inflate(R.menu.menu_add, menu);
+//        return true;
+//    }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void addAttachmnetUrl(String url){
         jsonAttachments.put(url);

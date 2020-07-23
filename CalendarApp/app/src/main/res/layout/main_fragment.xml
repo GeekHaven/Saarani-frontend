@@ -44,7 +44,7 @@
         android:layout_height="350dp"
         android:layout_marginHorizontal="21dp"
         android:layout_marginTop="116dp"
-        android:elevation="16dp"
+        android:elevation="6dp"
         android:paddingLeft="10dp"
         android:paddingTop="16dp"
         android:paddingRight="10dp"

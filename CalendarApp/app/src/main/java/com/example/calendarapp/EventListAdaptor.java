@@ -79,12 +79,12 @@ public class EventListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof EventListViewHolder) {
-            Picasso
-                    .get()
-                    .load(Uri.parse(eventList.get(position).getPhotoUrl()))
-                    .resize(65, 65)
-                    .transform(new CropCircleTransformation())
-                    .into(((EventListViewHolder) holder).imgSocietyLogo);
+//            Picasso
+//                    .get()
+//                    .load(Uri.parse(eventList.get(position).getPhotoUrl()))
+//                    .resize(65, 65)
+//                    .transform(new CropCircleTransformation())
+//                    .into(((EventListViewHolder) holder).imgSocietyLogo);
 
             ((EventListViewHolder)holder).tvEventName.setText(eventList.get(position).getName());
             ((EventListViewHolder)holder).tvSocietyName.setText(eventList.get(position).getByName());
