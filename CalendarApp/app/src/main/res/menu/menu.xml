@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/calendar"
         android:icon="@drawable/ic_calendar"
+        android:visible="true"
         app:showAsAction="always"
         android:title="Calendar"
         />

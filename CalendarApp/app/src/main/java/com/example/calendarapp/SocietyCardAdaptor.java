@@ -107,7 +107,7 @@ public class SocietyCardAdaptor extends RecyclerView.Adapter<SocietyCardAdaptor.
                 Intent intent =new Intent(context,EventActivity.class);
                 intent.putExtra("type","notif");
                 intent.putExtra("eventId",eventId);
-                intent.putExtra("screen","");
+                intent.putExtra("screen","soc");
                 context.startActivity(intent);
             }
         }

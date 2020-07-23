@@ -256,10 +256,10 @@ public class EventActivity extends AppCompatActivity {
             }
         });
     }
-//    public void sendBroadcast(String msg){
-//        Intent intent = new Intent("custom-message");
+//    public void sendBroadcast(String current){
+//        Intent intent = new Intent("markerChange");
 //        intent.putExtra("eventId",eventId);
-//        intent.putExtra("markedAs",msg);
+//        intent.putExtra("markedAs",current);
 //        LocalBroadcastManager.getInstance(EventActivity.this).sendBroadcast(intent);
 //    }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -374,13 +374,16 @@ public class EventActivity extends AppCompatActivity {
         if(screen.equals("home")) {
             startActivity(new Intent(EventActivity.this, MainActivity2.class));
         }
-        else{
+        else if(screen.equals("profile")){
            Intent intent= new Intent(EventActivity.this,MainActivity2.class);
            intent.putExtra("Fragment","profile");
             startActivity(intent);
         }
+        else
+            super.onBackPressed();
     }
     public void deleteRequest(){
+//        sendBroadcast("none");
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         marker="none";
@@ -415,6 +418,7 @@ public class EventActivity extends AppCompatActivity {
         }
     }
     public void addMarker(final String mark){
+//        sendBroadcast(mark);
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         marker=mark;
