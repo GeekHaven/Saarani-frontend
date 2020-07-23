@@ -95,6 +95,25 @@
 
     </com.google.android.material.tabs.TabLayout>
 
+    <TextView
+        android:id="@+id/tvNoEvent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:fontFamily="@font/montserratmedium"
+        android:text="No Event Found"
+        android:textColor="#9D9D9D"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayoutProfileFragment"
+        app:layout_constraintVertical_bias="0.1" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvProfileFragmentGoingEvents"
         android:layout_width="0dp"
