@@ -22,19 +22,18 @@
     <string name="reject">Interested</string>
     <string name="accept">Mark as Going</string>
     <string name="xxx">Ignore</string>
-    <string name="today"><b>Today</b></string>
-    <string name="tomorrow"><b>Tomorrow</b></string>
+    <string name="today">Today </string>
+    <string name="tomorrow">Tomorrow </string>
     <string name="btnLoginActivitySignIn">Sign in With Google</string>
     <string name="loginActivityWelcome">Welcome</string>
     <string name="loginActivitySubHeading">Sign In with your college ID to continue</string>
     <string name="loginActivityGoogleImgDescription">GoogleSignIn</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
-        <item name="android:fontFamily">@font/montserratmedium</item>
-        <item name="textAllCaps">false</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+<!--    <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">-->
+<!--        <item name="android:fontFamily">@font/montserratmedium</item>-->
+<!--        -->
+<!--        <item name="android:textSize">18sp</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+<!--    </style>-->
 </resources>

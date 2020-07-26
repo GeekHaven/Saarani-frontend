@@ -31,22 +31,26 @@
                 android:id="@+id/image"
                 android:layout_height="90dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/eventimage" />
+                android:src="@drawable/ellipse" />
 
         </androidx.cardview.widget.CardView>
 
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/cordi_name"
+        android:layout_width="wrap_content"
+        android:textSize="16sp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:textStyle="normal"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/montserratmedium"
         android:text="Name"
         android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,7 +31,7 @@
                 android:layout_height="90dp"
                 android:id="@+id/image"
                 android:scaleType="centerCrop"
-                android:src="@drawable/eventimage" />
+                android:src="@drawable/ellipse" />
 
         </androidx.cardview.widget.CardView>
 
@@ -43,10 +43,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:textSize="16sp"
         android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/montserratmedium"
         android:text="Name"
+        android:textStyle="normal"
         android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/cardView"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

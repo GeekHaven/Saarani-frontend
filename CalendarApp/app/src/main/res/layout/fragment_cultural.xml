@@ -12,18 +12,13 @@
     android:layout_height="wrap_content"
     tools:context=".CulturalFragment">
     <LinearLayout
+        android:id="@+id/effe"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="170dp"
+        android:elevation="16dp"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/effe_background"
-        >
-    <LinearLayout
-        android:id="@+id/effe"
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:elevation="16dp"
-        android:background="@drawable/custom_border"
         android:orientation="vertical"
 
         >
@@ -31,11 +26,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Effervescence"
             android:textColor="#FFFFFF"
             android:textSize="40sp"
-            android:textStyle="bold"
+            android:textStyle="bold|normal"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -50,10 +46,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="6dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="8dp"
             android:id="@+id/effe_btn"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
@@ -63,12 +59,11 @@
             android:textSize="16sp"
             />
     </LinearLayout>
-</LinearLayout>
     <LinearLayout
         android:layout_marginTop="16dp"
         android:id="@+id/asmita"
         android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_height="170dp"
         android:elevation="16dp"
         android:background="@drawable/asmita_background"
         android:orientation="vertical"
@@ -80,9 +75,10 @@
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Asmita"
+            android:layout_marginTop="24dp"
             android:textColor="#FFFFFF"
             android:textSize="40sp"
-            android:textStyle="bold"
+            android:textStyle="bold|normal"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -97,10 +93,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="6dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="8dp"
             android:id="@+id/asmita_btn"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
@@ -114,7 +110,7 @@
         android:layout_marginTop="16dp"
         android:id="@+id/gymkhana"
         android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_height="170dp"
         android:elevation="16dp"
         android:background="@drawable/gymkhana_background"
         android:orientation="vertical"
@@ -124,11 +120,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Gymkhana"
             android:textColor="#FFFFFF"
             android:textSize="40sp"
-            android:textStyle="bold"
+            android:textStyle="bold|normal"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -143,10 +140,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="6dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="8dp"
             android:id="@+id/gymkhana_btn"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
@@ -160,7 +157,7 @@
         android:layout_marginTop="16dp"
         android:id="@+id/geniticx"
         android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_height="170dp"
         android:elevation="16dp"
         android:background="@drawable/image"
         android:orientation="vertical"
@@ -169,12 +166,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Geneticx Crew"
             android:textColor="#FFFFFF"
             android:textSize="40sp"
-            android:textStyle="bold"
+            android:textStyle="bold|normal"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -189,10 +187,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="6dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="8dp"
             android:id="@+id/geniticx_btn"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
@@ -205,7 +203,7 @@
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_height="170dp"
         android:elevation="16dp"
         android:id="@+id/virtuosi"
         android:background="@drawable/virtuosi_background"
@@ -215,12 +213,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Virtousi"
             android:textColor="#FFFFFF"
             android:textSize="40sp"
-            android:textStyle="bold"
+            android:textStyle="bold|normal"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -235,8 +234,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="6dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp"
             android:text="Follow"
             android:layout_marginTop="19dp"
             android:layout_gravity="end|bottom"
@@ -251,7 +250,7 @@
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_height="170dp"
         android:elevation="16dp"
         android:id="@+id/rang"
         android:background="@drawable/rang_background"
@@ -260,13 +259,14 @@
         >
         <TextView
             android:layout_width="wrap_content"
+            android:layout_marginTop="24dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Rangtarangini"
             android:textColor="#FFFFFF"
             android:textSize="40sp"
-            android:textStyle="bold"
+            android:textStyle="bold|normal"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -281,10 +281,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="6dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="8dp"
             android:id="@+id/rang_btn"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
@@ -297,7 +297,7 @@
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_height="170dp"
         android:id="@+id/nirmiti"
         android:elevation="16dp"
         android:background="@drawable/nirmiti_background"
@@ -307,12 +307,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Nirmiti"
             android:textColor="#FFFFFF"
             android:textSize="40sp"
-            android:textStyle="bold"
+            android:textStyle="bold|normal"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -327,10 +328,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="6dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="8dp"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:id="@+id/nirmiti_btn"
@@ -343,7 +344,7 @@
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_height="170dp"
         android:elevation="16dp"
         android:id="@+id/ams"
         android:background="@drawable/ams_background"
@@ -353,12 +354,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="AMS"
             android:textColor="#FFFFFF"
             android:textSize="40sp"
-            android:textStyle="bold"
+            android:textStyle="bold|normal"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -373,10 +375,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="6dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="8dp"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:id="@+id/ams_btn"
@@ -389,7 +391,7 @@
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_height="170dp"
         android:id="@+id/sarvasa"
         android:elevation="16dp"
         android:background="@drawable/sarasva_background"
@@ -399,12 +401,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Sarasva"
             android:textColor="#FFFFFF"
             android:textSize="40sp"
-            android:textStyle="bold"
+            android:textStyle="bold|normal"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -419,10 +422,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="6dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="8dp"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:id="@+id/sarvasa_btn"
@@ -435,7 +438,7 @@
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_height="170dp"
         android:elevation="16dp"
         android:id="@+id/spirit"
         android:background="@drawable/spirit_background"
@@ -446,11 +449,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Spirit"
             android:textColor="#FFFFFF"
             android:textSize="40sp"
-            android:textStyle="bold"
+            android:textStyle="bold|normal"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -465,10 +469,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="6dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="8dp"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:id="@+id/spirit_btn"
@@ -483,7 +487,7 @@
         android:layout_marginTop="16dp"
         android:id="@+id/iiic"
         android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_height="170dp"
         android:elevation="16dp"
         android:background="@drawable/iiic_background"
         android:orientation="vertical"
@@ -492,12 +496,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="IIIC"
             android:textColor="#FFFFFF"
             android:textSize="40sp"
-            android:textStyle="bold"
+            android:textStyle="bold|normal"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -512,10 +517,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="6dp"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="8dp"
             android:id="@+id/iiic_btn"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"

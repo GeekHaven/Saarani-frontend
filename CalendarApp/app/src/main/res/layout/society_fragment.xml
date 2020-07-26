@@ -13,11 +13,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
+        android:textStyle="bold|normal"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/montserratmedium"
         android:text="Societies"
         android:textColor="#FFFFFF"
-        android:textSize="60sp"
+        android:textSize="56sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

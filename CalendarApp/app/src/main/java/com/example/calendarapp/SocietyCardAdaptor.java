@@ -104,9 +104,10 @@ public class SocietyCardAdaptor extends RecyclerView.Adapter<SocietyCardAdaptor.
                 newFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "alertDialog");
             }
             else{
+                ListItems items = listItems.get(getAdapterPosition());
                 Intent intent =new Intent(context,EventActivity.class);
                 intent.putExtra("type","notif");
-                intent.putExtra("eventId",eventId);
+                intent.putExtra("eventId",items.getEventId());
                 intent.putExtra("screen","soc");
                 context.startActivity(intent);
             }

@@ -1,8 +1,12 @@
 package com.example.calendarapp;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -15,7 +19,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,15 +44,16 @@ import java.util.zip.Inflater;
 
 public class SocShowActivity extends AppCompatActivity {
     int i;
-    String id,gmail,fb,desc;
+    String id,gmail="",fb="https://www.google.com/",desc,insta="https://www.google.com/";
     Boolean k=false;
-    ImageView imageView;
+    ImageView imageView,instagram,facebook,mail,back_btn;
     RecyclerView recyclerView;
     LinearLayout linearLayout;
     LayoutInflater layoutInflater;
     RecyclerView.Adapter adapter;
     List<ListItems> listItems =new ArrayList<>();
     TextView soc_name,soc_desc,view_more,defaultText;
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +64,34 @@ public class SocShowActivity extends AppCompatActivity {
         view_more=findViewById(R.id.view_more);
         defaultText=findViewById(R.id.default_text);
         linearLayout=findViewById(R.id.linearLayout);
+        instagram=findViewById(R.id.insta);
+        instagram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToInsta(insta);
+            }
+        });
+        facebook=findViewById(R.id.fb);
+        facebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToFb(fb);
+            }
+        });
+        mail=findViewById(R.id.gmail);
+        mail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                emailIntent(gmail);
+            }
+        });
+        back_btn=findViewById(R.id.backArrow);
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         recyclerView=findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -114,6 +149,47 @@ public class SocShowActivity extends AppCompatActivity {
         getEventData();
         getCordiData();
     }
+    public void goToFb(String x){
+        x="https://www.facebook.com/shreyashwr";
+        Uri uri = Uri.parse(x);
+        try {
+            ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo("com.facebook.katana", 0);
+            if (applicationInfo.enabled) {
+                uri = Uri.parse("fb://facewebmodal/f?href=" + x);
+            }
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+    public void goToInsta(String x){
+        x="35han.v?igshid=xvwubkz21sdd";
+        Uri uri = Uri.parse("http://instagram.com/_u/"+x);
+        Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
+
+        likeIng.setPackage("com.instagram.android");
+
+        try {
+            startActivity(likeIng);
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://instagram.com/"+x)));
+        }
+
+    }
+    public void emailIntent(String url){
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:"+url));
+        startActivity(emailIntent);
+    }
+    public void webIntent(String url){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
+    }
     public void addBackImage(ImageView imageView){
         if(id.equals("effervescence")){
             soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,50);
@@ -124,8 +200,8 @@ public class SocShowActivity extends AppCompatActivity {
             imageView.setImageResource(R.drawable.asmita_background);
         }
         if(id.equals("gymkhana")) {
-            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,50);
-            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,55);
+            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,35);
             imageView.setImageResource(R.drawable.gymkhana_background);
         }
         if(id.equals("dance")) {
@@ -151,13 +227,13 @@ public class SocShowActivity extends AppCompatActivity {
         if(id.equals("iiic"))
             imageView.setImageResource(R.drawable.iiic_background);
         if(id.equals("aparoksha")) {
-            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,50);
-            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,55);
+            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
             imageView.setImageResource(R.drawable.apk_background);
         }
         if(id.equals("geekhaven")) {
-            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,50);
-            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,55);
+            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
             imageView.setImageResource(R.drawable.geekhaven_background);
         }
         if(id.equals("tesla")) {

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,8 +107,10 @@ public class ListFragment extends Fragment {
         gc.add(Calendar.DATE, 1);
         tomorrowDate=f.format(gc.getTime());
         date_setUp.setText(dateFormatMonth.format(date)+", "+yearFormat.format(date));
-        today_text.setText(getString(R.string.today)+" "+sdf.format(date).substring(0,3)+", "+dateFormat1.format(date)+" "+dateFormatMonth.format(date));
-        tomorrow_text.setText(getString(R.string.tomorrow)+" "+sdf.format(gc.getTime()).substring(0,3)+", "+dateFormat1.format(gc.getTime())+" "+dateFormatMonth.format(gc.getTime()));
+        String t="<b>"+getString(R.string.today)+"</b>"+"  "+sdf.format(date).substring(0,3)+", "+dateFormat1.format(date)+" "+dateFormatMonth.format(date);
+        today_text.setText(Html.fromHtml(t));
+        String to="<b>"+getString(R.string.tomorrow)+"</b>"+"  "+sdf.format(gc.getTime()).substring(0,3)+", "+dateFormat1.format(gc.getTime())+" "+dateFormatMonth.format(gc.getTime());
+        tomorrow_text.setText(Html.fromHtml(to));
         addEventsToCal();
         return view;
     }
@@ -150,7 +153,7 @@ public class ListFragment extends Fragment {
                 public void onLongClicked(int position) {
 
                 }
-            }, getContext());
+            }, getContext(),"list");
             recyclerViewToday.setAdapter(adapter);
         }
         else{
@@ -171,7 +174,7 @@ public class ListFragment extends Fragment {
                 public void onLongClicked(int position) {
 
                 }
-            }, getContext());
+            }, getContext(),"list");
             recyclerViewTom.setAdapter(adapter2);
         }
         else{
@@ -234,8 +237,10 @@ public class ListFragment extends Fragment {
                 Log.d("f1",f.format(date.getTime()));
                 Log.d("f2",f.format(dateToday));
                 if(selectedDate.equals(currentDate)){
-                    today_text.setText(getString(R.string.today)+" "+selectedDateDay+", "+selectedDateDate+" "+selectedDateMonth);
-                    tomorrow_text.setText(getString(R.string.tomorrow)+" "+selectedDateTomDay+", "+selectedDateTomDate+" "+selectedDateTomMonth);
+                    String t="<b>"+getString(R.string.today)+"</b>"+"  "+selectedDateDay+", "+selectedDateDate+" "+selectedDateMonth;
+                    today_text.setText(Html.fromHtml(t));
+                    String to="<b>"+getString(R.string.tomorrow)+"</b>"+"  "+selectedDateTomDay+", "+selectedDateTomDate+" "+selectedDateTomMonth;
+                    tomorrow_text.setText(Html.fromHtml(to));
                 }
                 else {
                     today_text.setText(selectedDateDay+", "+selectedDateDate+" "+selectedDateMonth);

@@ -12,6 +12,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.util.TypedValue;
@@ -89,6 +91,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
 //    private Uri fileUri;
 //    private String filePath;
     public JSONArray jsonAttachments=new JSONArray();
+    Map<String,String> filePaths=new HashMap<>();
     public static List<String> arr = new ArrayList<String>();
     List<String> to = new ArrayList<String>();
 //    List<Uri> uriList=new ArrayList<>();
@@ -359,6 +362,8 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                     EasyPermissions.requestPermissions(AddEventActivity.this, "Read External data", 2, Manifest.permission.READ_EXTERNAL_STORAGE);
                 }
                 else {
+                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                    StrictMode.setVmPolicy(builder.build());
                     Intent chooseFile = null;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
                         chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -447,6 +452,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                     final int id = View.generateViewId();
                                     attachLayout.setId(id);
                                     attachLayout.setOrientation(LinearLayout.HORIZONTAL);
+                                    filePaths.put(String.valueOf(id),getPath(uri));
                                     mapAttachSize.put(String.valueOf(id),sizeOfFile(uri));
                                     uriMap.put(String.valueOf(id),uri);
                                     uriMapAttach.put(String.valueOf(id),Uri.parse("file://" +result));
@@ -576,6 +582,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                 final int id = View.generateViewId();
                                 attachLayout.setId(id);
                                 attachLayout.setOrientation(LinearLayout.HORIZONTAL);
+                                filePaths.put(String.valueOf(id),getPath(uri));
                                 mapAttachSize.put(String.valueOf(id),sizeOfFile(uri));
                                 uriMapAttach.put(String.valueOf(id),Uri.parse("file://" +result));
                                 uriMap.put(String.valueOf(id),uri);
@@ -677,6 +684,24 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
 //        menuInflater.inflate(R.menu.menu_add, menu);
 //        return true;
 //    }
+public String getPath(Uri uri) {
+
+    String path = null;
+    String[] projection = { MediaStore.Files.FileColumns.DATA };
+    Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+
+    if(cursor == null){
+        path = uri.getPath();
+    }
+    else{
+        cursor.moveToFirst();
+        int column_index = cursor.getColumnIndexOrThrow(projection[0]);
+        path = cursor.getString(column_index);
+        cursor.close();
+    }
+
+    return ((path == null || path.isEmpty()) ? (uri.getPath()) : path);
+}
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void addAttachmnetUrl(String url){
         jsonAttachments.put(url);
@@ -796,33 +821,37 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 Log.d("mailList", Arrays.toString(subarray));
                 final Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
                 emailIntent.putExtra(Intent.EXTRA_EMAIL, subarray);
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, eventName.getText().toString());
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT,(CharSequence) eventName.getText().toString());
                 ArrayList<String> bodyList = new ArrayList<>();
                 String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
                 bodyList.add(body);
                 ArrayList<Uri> uris = new ArrayList<Uri>();
                 emailIntent.putExtra(Intent.EXTRA_TEXT, bodyList);
                 emailIntent.setSelector(emailSelectorIntent);
+                emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 emailIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
                 emailIntent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
                 emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                Iterator iterator = fileMap.entrySet().iterator();
+                Iterator iterator = filePaths.entrySet().iterator();
                 while (iterator.hasNext()) {
                     Map.Entry mapElement = (Map.Entry) iterator.next();
-                    File f = (File) mapElement.getValue();
+                    Log.d("File-path", (String) mapElement.getValue());
+                    String x= (String) ((String) mapElement.getValue()).split(":/")[1];
+                    File f = new File(x);
                     f.setReadable(true, false);
-                    uris.add(Uri.fromFile(f));
+                    Uri u = Uri.fromFile(f);
+                    uris.add(u);
                 }
 //            emailIntent.setType("text/html");
 //            emailIntent.setType("application/pdf");
 //            emailIntent.setType("message/rfc822");
+                Log.d("URI", String.valueOf(uris));
 //            emailIntent.setType("text/plain");
                 if (uris.size() != 0)
                     emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-                Log.d("URI", String.valueOf(uris));
+
                 startActivity(Intent.createChooser(emailIntent, "Choose an email application..."));
-                finish();
             } catch (Throwable t) {
                 Toast.makeText(this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
             }
