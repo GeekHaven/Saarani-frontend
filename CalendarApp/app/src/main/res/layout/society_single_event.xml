@@ -8,9 +8,9 @@
     android:background="#2C2B2B"
     android:layout_height="100dp"
     android:orientation="vertical"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="16dp"
     card_view:cardCornerRadius="8dp"
-    card_view:cardElevation="32dp">
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:background="#2C2B2B"
@@ -40,6 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
+                    android:textStyle="bold|normal"
                     android:text="Music Event"
                     android:textColor="#FFFFFF"
                     android:fontFamily="@font/montserratmedium"

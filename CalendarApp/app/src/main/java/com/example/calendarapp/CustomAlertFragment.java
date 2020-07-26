@@ -227,9 +227,9 @@ public class CustomAlertFragment extends DialogFragment {
         arrayList=getArguments().getStringArrayList("attachments");
         position=getArguments().getInt("position");
         name.setText(eventName);
-        date.setText(eventDate);
-        time.setText(eventTime);
-        venue.setText(eventVenue);
+        date.setText(eventDate.split(" ")[1]);
+        time.setText(eventTime.split(" ")[1]);
+        venue.setText(eventVenue.split(": ")[1]);
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override

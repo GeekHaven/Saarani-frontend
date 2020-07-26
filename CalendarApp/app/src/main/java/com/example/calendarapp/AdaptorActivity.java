@@ -50,16 +50,17 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     private List<ListItems> listItems,listUpdated;
     private final ClickListener listener;
     private Context context;
-    private String eventId,marker;
+    private String eventId,marker,backFragment;
     private HashMap<Integer, String> map= new HashMap<Integer, String>();
     private HashMap<Integer, String> mapMarker= new HashMap<Integer, String>();
     SharedPreferences prefs ;
 
 
-    AdaptorActivity(List<ListItems> listItems, ClickListener listener, Context context) {
+    AdaptorActivity(List<ListItems> listItems, ClickListener listener, Context context,String backFragment) {
         this.listItems = listItems;
         this.listener = listener;
         this.context = context;
+        this.backFragment=backFragment;
     }
 
     @NonNull
@@ -151,7 +152,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         intent.putExtra("marker",mapMarker.get(position));
         intent.putExtra("eventId",map.get(position));
         intent.putExtra("type","event");
-        intent.putExtra("screen","home");
+        intent.putExtra("screen",backFragment);
         intent.putStringArrayListExtra("attachments", items.getArrayList());
         context.startActivity(intent);
     }

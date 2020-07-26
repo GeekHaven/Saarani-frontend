@@ -379,6 +379,11 @@ public class EventActivity extends AppCompatActivity {
            intent.putExtra("Fragment","profile");
             startActivity(intent);
         }
+        else if(screen.equals("list")){
+            Intent intent= new Intent(EventActivity.this,MainActivity2.class);
+            intent.putExtra("Fragment","list");
+            startActivity(intent);
+        }
         else
             super.onBackPressed();
     }

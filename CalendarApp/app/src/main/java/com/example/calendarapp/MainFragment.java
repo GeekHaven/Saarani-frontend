@@ -178,7 +178,7 @@ public class MainFragment extends Fragment {
                 public void onLongClicked(int position) {
 
                 }
-            }, getContext());
+            }, getContext(),"home");
             recyclerView.setAdapter(adapter);
         }
         else{

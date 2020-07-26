@@ -137,12 +137,29 @@ public class MainActivity2 extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("Fragment")){
-            toolbar.setBackgroundColor(Color.rgb(59,59,59));
-            navController.navigate(R.id.navigation_nav_profile);
+            if(intent.getExtras().getString("Fragment").equals("profile")) {
+                toolbar.setBackgroundColor(Color.rgb(59, 59, 59));
+                onCreateOptionsMenu(toolbar.getMenu());
+//                Menu menu=toolbar.getMenu();
+//                addEvent=menu.findItem(R.id.add_event);
+//                swap=menu.findItem(R.id.calendar);
+                addEvent.setVisible(false);
+                swap.setVisible(false);
+                navController.navigate(R.id.navigation_nav_profile);
+
+            }
+            else{
+//                Menu menu=toolbar.getMenu();
+//                addEvent=menu.findItem(R.id.add_event);
+//                swap=menu.findItem(R.id.calendar);
+//                swap.setIcon(R.drawable.ic_calendar);
+                navController.navigate(R.id.navigation_nav_list);
+            }
         }
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("back")){
             navController.navigate(R.id.navigation_nav_soc_profile);
         }
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -157,7 +174,7 @@ public class MainActivity2 extends AppCompatActivity {
                             SharedPreferences preferences =getSharedPreferences("user",MODE_PRIVATE);
                             if(preferences.getString("society", "false").equals("true"))
                                 addEvent.setVisible(true);
-                            if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_main)
+                            if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_main&&navController.getCurrentDestination().getId()!=R.id.navigation_nav_list)
                                 navController.navigate(R.id.navigation_nav_main);
                             break;
                         }
@@ -307,11 +324,11 @@ public class MainActivity2 extends AppCompatActivity {
         else if(item.getItemId()==R.id.calendar){
             if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_list) {
                 navController.navigate(R.id.navigation_nav_list);
-                swap.setIcon(R.drawable.ic_list);
+                swap.setIcon(R.drawable.ic_calendar);
             }
             else {
                 navController.navigate(R.id.navigation_nav_main);
-                swap.setIcon(R.drawable.ic_calendar);
+                swap.setIcon(R.drawable.ic_list);
             }
         }
         return super.onOptionsItemSelected(item);

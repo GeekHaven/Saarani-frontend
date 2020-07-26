@@ -3,6 +3,7 @@ package com.example.calendarapp;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -26,11 +27,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -68,6 +71,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
     final int EVENT_INTERESTED=1, EVENT_GOING=2;
     int posIn=0,posGo=0;
     private int eventType=1;
+    ActionBar toolbar;
     ImageView imgProfileUserPhoto;
     TextView tvUserName,tvUserEmailID, tvNoEvent;
     TabLayout tabLayout;
@@ -129,7 +133,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
         }
 
         fetchEventsData();
-
+        
         interestedEventsLayoutManager=new LinearLayoutManager(this.getActivity());
         rcvInterestedEvents.setLayoutManager(interestedEventsLayoutManager);
         goingEventsLayoutManager=new LinearLayoutManager(this.getActivity());
