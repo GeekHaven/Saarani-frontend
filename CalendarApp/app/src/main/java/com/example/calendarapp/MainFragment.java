@@ -202,12 +202,12 @@ public class MainFragment extends Fragment {
                         mapToken.put("token",task.getResult().getToken());
                         Log.d("PostToken",task.getResult().getToken());
                         RequestQueue requstQueue = Volley.newRequestQueue(requireContext());
-                        progressDialog.dismiss();
                         Log.d("PostObject", String.valueOf(new JSONObject(mapToken)));
                         JsonObjectRequest jsonobj = new JsonObjectRequest(Request.Method.POST, urlPost,new JSONObject(mapToken),
                                 new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
+                                        progressDialog.dismiss();
                                         Iterator<String> keys = response.keys();
                                         int position=0;
                                         while(keys.hasNext()){

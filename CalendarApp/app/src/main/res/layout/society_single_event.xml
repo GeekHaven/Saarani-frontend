@@ -44,21 +44,20 @@
                     android:text="Music Event"
                     android:textColor="#FFFFFF"
                     android:fontFamily="@font/montserratmedium"
-                    android:textSize="25sp"
+                    android:textSize="9.90pt"
                     android:id="@+id/eventName"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginLeft="5.4pt"
                     android:text="Upcoming"
                     android:textColor="#2C2B2B"
                     android:layout_gravity="center"
-                    android:paddingVertical="1dp"
-                    android:paddingHorizontal="4dp"
+                    android:paddingHorizontal="2.7pt"
                     android:textStyle="bold"
                     android:fontFamily="@font/montserratmedium"
-                    android:textSize="8sp"
+                    android:textSize="3.6pt"
                     android:background="@drawable/upcoming_background"
                     />
             </LinearLayout>

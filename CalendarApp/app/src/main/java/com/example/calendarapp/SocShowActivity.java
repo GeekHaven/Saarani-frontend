@@ -44,7 +44,7 @@ import java.util.zip.Inflater;
 
 public class SocShowActivity extends AppCompatActivity {
     int i;
-    String id,gmail="",fb="https://www.google.com/",desc,insta="https://www.google.com/";
+    String id,gmail="",fb="",desc,insta="";
     Boolean k=false;
     ImageView imageView,instagram,facebook,mail,back_btn;
     RecyclerView recyclerView;
@@ -150,7 +150,6 @@ public class SocShowActivity extends AppCompatActivity {
         getCordiData();
     }
     public void goToFb(String x){
-        x="https://www.facebook.com/shreyashwr";
         Uri uri = Uri.parse(x);
         try {
             ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo("com.facebook.katana", 0);
@@ -167,7 +166,6 @@ public class SocShowActivity extends AppCompatActivity {
         return true;
     }
     public void goToInsta(String x){
-        x="35han.v?igshid=xvwubkz21sdd";
         Uri uri = Uri.parse("http://instagram.com/_u/"+x);
         Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
 
@@ -186,34 +184,30 @@ public class SocShowActivity extends AppCompatActivity {
         emailIntent.setData(Uri.parse("mailto:"+url));
         startActivity(emailIntent);
     }
-    public void webIntent(String url){
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(browserIntent);
-    }
     public void addBackImage(ImageView imageView){
         if(id.equals("effervescence")){
-            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,50);
-            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 21.50);
+            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 11.25);
             imageView.setImageResource(R.drawable.effe_background);
         }
         if(id.equals("asmita")){
             imageView.setImageResource(R.drawable.asmita_background);
         }
         if(id.equals("gymkhana")) {
-            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,55);
-            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,35);
+            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 24.75);
+            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 15.75);
             imageView.setImageResource(R.drawable.gymkhana_background);
         }
         if(id.equals("dance")) {
-            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,50);
-            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 22.50);
+            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 11.25);
             imageView.setImageResource(R.drawable.image);
         }
         if(id.equals("virtuosi"))
             imageView.setImageResource(R.drawable.virtuosi_background);
         if(id.equals("rangtarangini")) {
-            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,45);
-            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,35);
+            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 20.25);
+            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 15.75);
             imageView.setImageResource(R.drawable.rang_background);
         }
         if(id.equals("nirmiti"))
@@ -227,25 +221,21 @@ public class SocShowActivity extends AppCompatActivity {
         if(id.equals("iiic"))
             imageView.setImageResource(R.drawable.iiic_background);
         if(id.equals("aparoksha")) {
-            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,55);
-            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
+            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 24.75);
+            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 13.50);
             imageView.setImageResource(R.drawable.apk_background);
         }
         if(id.equals("geekhaven")) {
-            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_SP,55);
-            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
+            soc_name.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 24.75);
+            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 13.50);
             imageView.setImageResource(R.drawable.geekhaven_background);
         }
         if(id.equals("tesla")) {
             imageView.setImageResource(R.drawable.tesla_background);
-            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_SP,35);
+            soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 15.75);
         }
     }
     public void addCordisToView(ArrayList<String> arrayList){
-//        View view=getLayoutInflater().inflate(R.layout.soc_profile_cordi,linearLayout,false);
-//        TextView name=view.findViewById(R.id.cordi_name);
-//        name.setText(arrayList.get(0));
-//        linearLayout.addView(view);
         for(i=0;i<arrayList.size();i++){
 
             if(i%2==0){
@@ -286,6 +276,15 @@ public class SocShowActivity extends AppCompatActivity {
                                 }
                             }
                             gmail=jsonObject.getString("email");
+                            if(jsonObject.has("fb"))
+                                fb=jsonObject.getString("fb");
+                            else
+                                facebook.setVisibility(View.GONE);
+                            if(jsonObject.has("insta"))
+                                insta=jsonObject.getString("insta");
+                            else
+                                instagram.setVisibility(View.GONE);
+
                             desc=jsonObject.getString("name");
                             soc_desc.setText(jsonObject.getString("desc"));
                             soc_name.setText(desc);

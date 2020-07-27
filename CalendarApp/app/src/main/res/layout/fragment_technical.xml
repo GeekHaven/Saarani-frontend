@@ -15,7 +15,7 @@
             android:layout_marginTop="16dp"
             android:id="@+id/apk"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
+            android:layout_height="76.5pt"
             android:elevation="16dp"
             android:background="@drawable/apk_background"
             android:orientation="vertical"
@@ -23,13 +23,13 @@
             >
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="10.8pt"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:fontFamily="@font/montserratmedium"
                 android:text="Aparoksha"
                 android:textColor="#FFFFFF"
-                android:textSize="40sp"
+                android:textSize="18pt"
                 android:textStyle="bold"
                 />
             <TextView
@@ -39,7 +39,7 @@
                 android:fontFamily="@font/montserratmedium"
                 android:text="Technical Fest"
                 android:textColor="#F0D453"
-                android:textSize="30sp"
+                android:textSize="13.5pt"
                 android:textStyle="bold"
                 />
             <TextView
@@ -48,21 +48,21 @@
                 android:paddingHorizontal="24dp"
                 android:paddingVertical="4dp"
                 android:text="Follow"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="3.6pt"
                 android:id="@+id/apk_btn"
                 android:layout_gravity="end|bottom"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/custom_view_border"
                 android:fontFamily="@font/montserratmedium"
                 android:textColor="#F0D453"
-                android:textSize="16sp"
+                android:textSize="7.2pt"
                 />
         </LinearLayout>
         <LinearLayout
             android:layout_marginTop="16dp"
             android:id="@+id/geekhaven"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
+            android:layout_height="76.5pt"
             android:elevation="16dp"
             android:background="@drawable/geekhaven_background"
             android:orientation="vertical"
@@ -71,12 +71,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="10.8pt"
                 android:layout_marginHorizontal="16dp"
                 android:fontFamily="@font/montserratmedium"
                 android:text="Geekhaven"
                 android:textColor="#FFFFFF"
-                android:textSize="40sp"
+                android:textSize="18pt"
                 android:textStyle="bold|normal"
                 />
             <TextView
@@ -86,7 +86,7 @@
                 android:fontFamily="@font/montserratmedium"
                 android:text="Technical Society"
                 android:textColor="#F0D453"
-                android:textSize="30sp"
+                android:textSize="13.5pt"
                 android:textStyle="bold"
                 />
             <TextView
@@ -96,19 +96,19 @@
                 android:paddingVertical="4dp"
                 android:text="Follow"
                 android:id="@+id/gh_btn"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="3.6pt"
                 android:layout_gravity="end|bottom"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/custom_view_border"
                 android:fontFamily="@font/montserratmedium"
                 android:textColor="#F0D453"
-                android:textSize="16sp"
+                android:textSize="7.2pt"
                 />
         </LinearLayout>
         <LinearLayout
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
+            android:layout_height="76.5pt"
             android:elevation="16dp"
             android:id="@+id/tesla"
             android:background="@drawable/tesla_background"
@@ -121,9 +121,9 @@
                 android:layout_marginHorizontal="16dp"
                 android:fontFamily="@font/montserratmedium"
                 android:text="Tesla"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="10.8pt"
                 android:textColor="#FFFFFF"
-                android:textSize="40sp"
+                android:textSize="18pt"
                 android:textStyle="bold|normal"
                 />
             <TextView
@@ -133,7 +133,7 @@
                 android:fontFamily="@font/montserratmedium"
                 android:text="Electronics Society"
                 android:textColor="#F0D453"
-                android:textSize="30sp"
+                android:textSize="13.5pt"
                 android:textStyle="bold"
                 />
             <TextView
@@ -142,20 +142,20 @@
                 android:paddingHorizontal="24dp"
                 android:paddingVertical="4dp"
                 android:text="Follow"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="3.6pt"
                 android:layout_gravity="end|bottom"
                 android:id="@+id/t_btn"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/custom_view_border"
                 android:fontFamily="@font/montserratmedium"
                 android:textColor="#F0D453"
-                android:textSize="16sp"
+                android:textSize="7.2pt"
                 />
         </LinearLayout>
         <LinearLayout
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
+            android:layout_height="76.5pt"
             android:id="@+id/gravity"
             android:elevation="16dp"
             android:background="@drawable/eventimage"
@@ -166,11 +166,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="10.8pt"
                 android:fontFamily="@font/montserratmedium"
                 android:text="Gravity"
                 android:textColor="#FFFFFF"
-                android:textSize="40sp"
+                android:textSize="18pt"
                 android:textStyle="bold|normal"
                 />
             <TextView
@@ -180,7 +180,7 @@
                 android:fontFamily="@font/montserratmedium"
                 android:text="Technical Society"
                 android:textColor="#F0D453"
-                android:textSize="30sp"
+                android:textSize="13.5pt"
                 android:textStyle="bold"
                 />
             <TextView
@@ -189,14 +189,14 @@
                 android:paddingHorizontal="24dp"
                 android:paddingVertical="4dp"
                 android:text="Follow"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="3.6pt"
                 android:layout_gravity="end|bottom"
                 android:layout_marginRight="16dp"
                 android:id="@+id/g_btn"
                 android:background="@drawable/custom_view_border"
                 android:fontFamily="@font/montserratmedium"
                 android:textColor="#F0D453"
-                android:textSize="16sp"
+                android:textSize="7.2pt"
                 />
         </LinearLayout>
 

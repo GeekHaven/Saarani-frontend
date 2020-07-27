@@ -14,7 +14,7 @@
     <LinearLayout
         android:id="@+id/effe"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="76.50pt"
         android:elevation="16dp"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="16dp"
@@ -26,11 +26,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10.80pt"
             android:fontFamily="@font/montserratmedium"
             android:text="Effervescence"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
+            android:textSize="17pt"
             android:textStyle="bold|normal"
             />
         <TextView
@@ -40,7 +40,7 @@
             android:fontFamily="@font/montserratmedium"
             android:text="Cultural Fest"
             android:textColor="#F0D453"
-            android:textSize="30sp"
+            android:textSize="13.50pt"
             android:textStyle="bold"
             />
         <TextView
@@ -49,21 +49,21 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3.6pt"
             android:id="@+id/effe_btn"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:background="@drawable/custom_view_border"
             android:fontFamily="@font/montserratmedium"
             android:textColor="#F0D453"
-            android:textSize="16sp"
+            android:textSize="7.2pt"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_marginTop="16dp"
         android:id="@+id/asmita"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="76.50pt"
         android:elevation="16dp"
         android:background="@drawable/asmita_background"
         android:orientation="vertical"
@@ -75,9 +75,9 @@
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Asmita"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10.80pt"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
+            android:textSize="18pt"
             android:textStyle="bold|normal"
             />
         <TextView
@@ -87,7 +87,7 @@
             android:fontFamily="@font/montserratmedium"
             android:text="Sports Fest"
             android:textColor="#F0D453"
-            android:textSize="30sp"
+            android:textSize="13.50pt"
             android:textStyle="bold"
             />
         <TextView
@@ -96,21 +96,21 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3.6pt"
             android:id="@+id/asmita_btn"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:background="@drawable/custom_view_border"
             android:fontFamily="@font/montserratmedium"
             android:textColor="#F0D453"
-            android:textSize="16sp"
+            android:textSize="7.2pt"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_marginTop="16dp"
         android:id="@+id/gymkhana"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="76.5pt"
         android:elevation="16dp"
         android:background="@drawable/gymkhana_background"
         android:orientation="vertical"
@@ -120,11 +120,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10.80pt"
             android:fontFamily="@font/montserratmedium"
             android:text="Gymkhana"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
+            android:textSize="18pt"
             android:textStyle="bold|normal"
             />
         <TextView
@@ -134,7 +134,7 @@
             android:fontFamily="@font/montserratmedium"
             android:text="Students' Council"
             android:textColor="#F0D453"
-            android:textSize="30sp"
+            android:textSize="13.5pt"
             android:textStyle="bold"
             />
         <TextView
@@ -143,21 +143,21 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3.6pt"
             android:id="@+id/gymkhana_btn"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:background="@drawable/custom_view_border"
             android:fontFamily="@font/montserratmedium"
             android:textColor="#F0D453"
-            android:textSize="16sp"
+            android:textSize="7.2pt"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_marginTop="16dp"
         android:id="@+id/geniticx"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="76.5pt"
         android:elevation="16dp"
         android:background="@drawable/image"
         android:orientation="vertical"
@@ -166,12 +166,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10.80pt"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Geneticx Crew"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
+            android:textSize="18pt"
             android:textStyle="bold|normal"
             />
         <TextView
@@ -181,7 +181,7 @@
             android:fontFamily="@font/montserratmedium"
             android:text="Dance Society"
             android:textColor="#F0D453"
-            android:textSize="30sp"
+            android:textSize="13.50pt"
             android:textStyle="bold"
             />
         <TextView
@@ -190,20 +190,20 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3.6pt"
             android:id="@+id/geniticx_btn"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:background="@drawable/custom_view_border"
             android:fontFamily="@font/montserratmedium"
             android:textColor="#F0D453"
-            android:textSize="16sp"
+            android:textSize="7.2pt"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="76.5pt"
         android:elevation="16dp"
         android:id="@+id/virtuosi"
         android:background="@drawable/virtuosi_background"
@@ -213,12 +213,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10.8pt"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Virtousi"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
+            android:textSize="18pt"
             android:textStyle="bold|normal"
             />
         <TextView
@@ -228,7 +228,7 @@
             android:fontFamily="@font/montserratmedium"
             android:text="Music Society"
             android:textColor="#F0D453"
-            android:textSize="30sp"
+            android:textSize="13.5pt"
             android:textStyle="bold"
             />
         <TextView
@@ -237,20 +237,20 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="19dp"
+            android:layout_marginTop="3.6pt"
             android:layout_gravity="end|bottom"
             android:id="@+id/virtuosi_btn"
             android:layout_marginRight="16dp"
             android:background="@drawable/custom_view_border"
             android:fontFamily="@font/montserratmedium"
             android:textColor="#F0D453"
-            android:textSize="16sp"
+            android:textSize="7.2pt"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="76.5pt"
         android:elevation="16dp"
         android:id="@+id/rang"
         android:background="@drawable/rang_background"
@@ -259,13 +259,13 @@
         >
         <TextView
             android:layout_width="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10.8pt"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Rangtarangini"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
+            android:textSize="18pt"
             android:textStyle="bold|normal"
             />
         <TextView
@@ -275,7 +275,7 @@
             android:fontFamily="@font/montserratmedium"
             android:text="Drama Society"
             android:textColor="#F0D453"
-            android:textSize="30sp"
+            android:textSize="13.5pt"
             android:textStyle="bold"
             />
         <TextView
@@ -284,20 +284,20 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3.6pt"
             android:id="@+id/rang_btn"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:background="@drawable/custom_view_border"
             android:fontFamily="@font/montserratmedium"
             android:textColor="#F0D453"
-            android:textSize="16sp"
+            android:textSize="7.2pt"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="76.5pt"
         android:id="@+id/nirmiti"
         android:elevation="16dp"
         android:background="@drawable/nirmiti_background"
@@ -307,12 +307,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10.8pt"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Nirmiti"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
+            android:textSize="18pt"
             android:textStyle="bold|normal"
             />
         <TextView
@@ -322,7 +322,7 @@
             android:fontFamily="@font/montserratmedium"
             android:text="Fine Arts Society"
             android:textColor="#F0D453"
-            android:textSize="30sp"
+            android:textSize="13.5pt"
             android:textStyle="bold"
             />
         <TextView
@@ -331,20 +331,20 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3.6pt"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:id="@+id/nirmiti_btn"
             android:background="@drawable/custom_view_border"
             android:fontFamily="@font/montserratmedium"
             android:textColor="#F0D453"
-            android:textSize="16sp"
+            android:textSize="7.2pt"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="76.5pt"
         android:elevation="16dp"
         android:id="@+id/ams"
         android:background="@drawable/ams_background"
@@ -354,12 +354,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10.8pt"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="AMS"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
+            android:textSize="18pt"
             android:textStyle="bold|normal"
             />
         <TextView
@@ -369,7 +369,7 @@
             android:fontFamily="@font/montserratmedium"
             android:text="Media Society"
             android:textColor="#F0D453"
-            android:textSize="30sp"
+            android:textSize="13.5pt"
             android:textStyle="bold"
             />
         <TextView
@@ -378,20 +378,20 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3.6pt"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:id="@+id/ams_btn"
             android:background="@drawable/custom_view_border"
             android:fontFamily="@font/montserratmedium"
             android:textColor="#F0D453"
-            android:textSize="16sp"
+            android:textSize="7.2pt"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="76.5pt"
         android:id="@+id/sarvasa"
         android:elevation="16dp"
         android:background="@drawable/sarasva_background"
@@ -401,12 +401,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10.8pt"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Sarasva"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
+            android:textSize="18pt"
             android:textStyle="bold|normal"
             />
         <TextView
@@ -416,7 +416,7 @@
             android:fontFamily="@font/montserratmedium"
             android:text="Literary Society"
             android:textColor="#F0D453"
-            android:textSize="30sp"
+            android:textSize="13.5pt"
             android:textStyle="bold"
             />
         <TextView
@@ -425,20 +425,20 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3.6pt"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:id="@+id/sarvasa_btn"
             android:background="@drawable/custom_view_border"
             android:fontFamily="@font/montserratmedium"
             android:textColor="#F0D453"
-            android:textSize="16sp"
+            android:textSize="7.2pt"
             />
     </LinearLayout>
     <LinearLayout
         android:layout_marginTop="16dp"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="76.5pt"
         android:elevation="16dp"
         android:id="@+id/spirit"
         android:background="@drawable/spirit_background"
@@ -449,11 +449,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10.8pt"
             android:fontFamily="@font/montserratmedium"
             android:text="Spirit"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
+            android:textSize="18pt"
             android:textStyle="bold|normal"
             />
         <TextView
@@ -463,7 +463,7 @@
             android:fontFamily="@font/montserratmedium"
             android:text="Sports Society"
             android:textColor="#F0D453"
-            android:textSize="30sp"
+            android:textSize="13.5pt"
             android:textStyle="bold"
             />
         <TextView
@@ -472,14 +472,14 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3.6pt"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:id="@+id/spirit_btn"
             android:background="@drawable/custom_view_border"
             android:fontFamily="@font/montserratmedium"
             android:textColor="#F0D453"
-            android:textSize="16sp"
+            android:textSize="7.2pt"
             />
     </LinearLayout>
 
@@ -487,7 +487,7 @@
         android:layout_marginTop="16dp"
         android:id="@+id/iiic"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="76.5pt"
         android:elevation="16dp"
         android:background="@drawable/iiic_background"
         android:orientation="vertical"
@@ -496,12 +496,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10.8pt"
             android:layout_marginHorizontal="16dp"
             android:fontFamily="@font/montserratmedium"
             android:text="IIIC"
             android:textColor="#FFFFFF"
-            android:textSize="40sp"
+            android:textSize="18pt"
             android:textStyle="bold|normal"
             />
         <TextView
@@ -511,7 +511,7 @@
             android:fontFamily="@font/montserratmedium"
             android:text="Incubation Center"
             android:textColor="#F0D453"
-            android:textSize="30sp"
+            android:textSize="13.5pt"
             android:textStyle="bold"
             />
         <TextView
@@ -520,14 +520,14 @@
             android:paddingHorizontal="24dp"
             android:paddingVertical="4dp"
             android:text="Follow"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3.6pt"
             android:id="@+id/iiic_btn"
             android:layout_gravity="end|bottom"
             android:layout_marginRight="16dp"
             android:background="@drawable/custom_view_border"
             android:fontFamily="@font/montserratmedium"
             android:textColor="#F0D453"
-            android:textSize="16sp"
+            android:textSize="7.2pt"
             />
     </LinearLayout>
 </LinearLayout>

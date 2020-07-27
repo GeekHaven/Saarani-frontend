@@ -14,7 +14,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view_outer"
         android:layout_width="wrap_content"
-        android:layout_height="320dp"
+        android:layout_height="144pt"
         android:layout_gravity="center"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="0dp"
@@ -26,7 +26,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/card_view_inner"
             android:layout_width="match_parent"
-            android:layout_height="320dp"
+            android:layout_height="144pt"
             android:layout_gravity="center"
             android:layout_marginTop="-30dp"
             app:cardBackgroundColor="@android:color/transparent"
@@ -66,7 +66,7 @@
         android:fontFamily="@font/montserratmedium"
         android:text=""
         android:textColor="#FFFFFF"
-        android:textSize="75sp"
+        android:textSize="30pt"
         android:textStyle="bold|normal"
         android:lineSpacingMultiplier="0.8"
         app:layout_constraintEnd_toEndOf="parent"
@@ -87,7 +87,7 @@
         android:fontFamily="@font/montserratmedium"
         android:text=""
         android:textColor="#F0D453"
-        android:textSize="45sp"
+        android:textSize="17pt"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/soc_name"
         app:layout_constraintStart_toStartOf="parent"
@@ -115,7 +115,7 @@
         android:layout_marginRight="16dp"
         android:scaleType="centerInside"
         android:background="@drawable/icon_background"
-        app:srcCompat="@drawable/ic_gmail"
+        app:srcCompat="@drawable/ic_gmail_logo"
         />
     <ImageView
         android:layout_width="30dp"

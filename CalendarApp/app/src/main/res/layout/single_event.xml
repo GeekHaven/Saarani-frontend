@@ -43,20 +43,20 @@
         android:textStyle="bold"
         android:textColor="#FFFFFF"
         android:fontFamily="@font/montserratmedium"
-        android:textSize="22sp"
+        android:textSize="9.9pt"
         android:id="@+id/eventName"
         />
      <TextView
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_marginLeft="12dp"
+         android:layout_marginLeft="5.4pt"
          android:text="Upcoming"
          android:textColor="#2C2B2B"
          android:layout_gravity="center"
          android:textStyle="bold"
-         android:paddingHorizontal="6dp"
+         android:paddingHorizontal="2.7pt"
          android:fontFamily="@font/montserratmedium"
-         android:textSize="8sp"
+         android:textSize="3.6pt"
          android:background="@drawable/upcoming_background"
          />
      </LinearLayout>

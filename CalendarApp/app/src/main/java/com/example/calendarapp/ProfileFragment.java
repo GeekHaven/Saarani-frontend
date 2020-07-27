@@ -133,7 +133,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
         }
 
         fetchEventsData();
-        
+
         interestedEventsLayoutManager=new LinearLayoutManager(this.getActivity());
         rcvInterestedEvents.setLayoutManager(interestedEventsLayoutManager);
         goingEventsLayoutManager=new LinearLayoutManager(this.getActivity());
