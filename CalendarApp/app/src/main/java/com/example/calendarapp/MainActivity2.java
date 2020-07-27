@@ -306,7 +306,7 @@ public class MainActivity2 extends AppCompatActivity {
                 swap.setVisible(false);
             }
             else {
-                swap.setIcon(R.drawable.ic_calendar);
+                swap.setIcon(R.drawable.ic_calendar_home);
             }
         }
         return true;
@@ -334,11 +334,11 @@ public class MainActivity2 extends AppCompatActivity {
         else if(item.getItemId()==R.id.calendar){
             if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_list) {
                 navController.navigate(R.id.navigation_nav_list);
-                swap.setIcon(R.drawable.ic_calendar);
+                swap.setIcon(R.drawable.ic_calendar_home);
             }
             else {
                 navController.navigate(R.id.navigation_nav_main);
-                swap.setIcon(R.drawable.ic_list);
+                swap.setIcon(R.drawable.ic_list_view);
             }
         }
         return super.onOptionsItemSelected(item);

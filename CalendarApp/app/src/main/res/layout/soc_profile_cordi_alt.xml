@@ -8,27 +8,27 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="45pt"
+        android:layout_height="45pt"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginBottom="16dp"
         app:cardBackgroundColor="#F0D453"
-        app:cardCornerRadius="180dp"
+        app:cardCornerRadius="81pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="40.5pt"
+            android:layout_height="40.5pt"
             android:layout_gravity="center"
-            app:cardCornerRadius="180dp">
+            app:cardCornerRadius="81pt">
 
             <ImageView
-                android:layout_width="90dp"
-                android:layout_height="90dp"
+                android:layout_width="40.5pt"
+                android:layout_height="40.5pt"
                 android:id="@+id/image"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ellipse" />
@@ -43,11 +43,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:textSize="16sp"
+        android:textSize="7.6pt"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="@font/montserratmedium"
-        android:text="Name"
+        android:text=""
         android:textStyle="normal"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"

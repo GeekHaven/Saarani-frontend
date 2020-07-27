@@ -195,7 +195,7 @@
                         android:layout_height="wrap_content"
                         android:text="EFFERVESCENCE"
                         android:gravity="center"
-                        android:textSize="16sp"
+                        android:textSize="7.2pt"
                         android:layout_gravity="center"
                         android:textColor="#FFFFFF"/>
                     <TextView
@@ -404,7 +404,7 @@
                         android:layout_height="wrap_content"
                         android:text="RANGTARANGINI"
                         android:gravity="center"
-                        android:textSize="16sp"
+                        android:textSize="7.2pt"
                         android:layout_gravity="center"
                         android:textColor="#FFFFFF"/>
                     <TextView
