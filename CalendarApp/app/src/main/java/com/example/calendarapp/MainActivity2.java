@@ -136,6 +136,7 @@ public class MainActivity2 extends AppCompatActivity {
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("Fragment")){
             if(intent.getExtras().getString("Fragment").equals("profile")) {
                 toolbar.setBackgroundColor(Color.rgb(59, 59, 59));
@@ -143,9 +144,9 @@ public class MainActivity2 extends AppCompatActivity {
 //                Menu menu=toolbar.getMenu();
 //                addEvent=menu.findItem(R.id.add_event);
 //                swap=menu.findItem(R.id.calendar);
+                navController.navigate(R.id.navigation_nav_profile);
                 addEvent.setVisible(false);
                 swap.setVisible(false);
-                navController.navigate(R.id.navigation_nav_profile);
 
             }
             else{
@@ -299,6 +300,15 @@ public class MainActivity2 extends AppCompatActivity {
         menuInflater.inflate(R.menu.menu, menu);
         addEvent=menu.findItem(R.id.add_event);
         swap=menu.findItem(R.id.calendar);
+        if(getIntent().getExtras()!=null && getIntent().getExtras().containsKey("Fragment")){
+            if(getIntent().getExtras().getString("Fragment").equals("profile")){
+                addEvent.setVisible(false);
+                swap.setVisible(false);
+            }
+            else {
+                swap.setIcon(R.drawable.ic_calendar);
+            }
+        }
         return true;
     }
     @Override
