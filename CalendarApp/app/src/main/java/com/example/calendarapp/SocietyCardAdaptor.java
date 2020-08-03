@@ -99,6 +99,8 @@ public class SocietyCardAdaptor extends RecyclerView.Adapter<SocietyCardAdaptor.
                 bundle.putString("time", items.getTime());
                 bundle.putString("eventId", items.getEventId());
                 bundle.putStringArrayList("attachments", items.getArrayList());
+                //Log.d("attach", String.valueOf(items.getArrayList()));
+                bundle.putStringArrayList("attachments_name",items.getNameList());
                 bundle.putInt("position", getAdapterPosition());
                 newFragment.setArguments(bundle);
                 newFragment.show(((FragmentActivity) context).getSupportFragmentManager(), "alertDialog");

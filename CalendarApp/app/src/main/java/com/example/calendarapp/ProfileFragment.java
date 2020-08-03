@@ -252,10 +252,14 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                                                 if (jsonObject.has("markedAs")) {
                                                     marker = jsonObject.getString("markedAs");
                                                     ArrayList<String> list= new ArrayList<>();
+                                                    ArrayList<String> nameList=new ArrayList<>();
                                                     if(jsonObject.has("attachments")) {
-                                                        JSONArray jsonArray = jsonObject.getJSONArray("attachments");
-                                                        for (int i = 0; i < jsonArray.length(); i++) {
-                                                            list.add(jsonArray.getString(i));
+                                                        JSONObject jsonObject1 = jsonObject.getJSONObject("attachments");
+                                                        Iterator iterator= jsonObject1.keys();
+                                                        while(iterator.hasNext()){
+                                                            String name= iterator.next().toString();
+                                                            list.add(jsonObject1.getString(name));
+                                                            nameList.add(name);
                                                         }
                                                     }
                                                     ListItems item = new ListItems(
@@ -266,7 +270,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                                                             "Time: " + jsonObject.getString("time"),
                                                             "Venue: " + jsonObject.getString("venue"), marker, eventId,list
                                                     );
-
+                                                    item.setNameList(nameList);
                                                     item.setPhotoUrl(jsonObject.getString("photoURL"));
                                                     if(marker.equals("interested")) {
                                                         listInterestedEvents.add(item);

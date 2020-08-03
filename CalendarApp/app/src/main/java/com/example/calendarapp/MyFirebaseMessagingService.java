@@ -175,7 +175,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if(data.get("del").equals("0")) {
                     notificationBuilder =
                     new NotificationCompat.Builder(this, channelId)
-                            .setSmallIcon(R.drawable.geekhaven_transparent)
+                            .setSmallIcon(R.drawable.ic_logo7)
+//                            .setColor(Color.rgb(0,0,0))
                             .setContentTitle(data.get("title"))
                             .setSubText(data.get("subtext"))
                             .setContentText(data.get("body"))
@@ -197,7 +198,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         else{
                     notificationBuilder =
                     new NotificationCompat.Builder(this, channelId)
-                            .setSmallIcon(R.drawable.geekhaven_transparent)
+                            .setSmallIcon(R.drawable.ic_logo7)
+//                            .setColor(Color.rgb(0,0,0))
                             .setContentTitle(data.get("title"))
                             .setSubText(data.get("subtext"))
                             .setContentText(data.get("body"))

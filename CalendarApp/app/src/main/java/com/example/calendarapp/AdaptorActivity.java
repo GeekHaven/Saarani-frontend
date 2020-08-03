@@ -154,6 +154,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         intent.putExtra("type","event");
         intent.putExtra("screen",backFragment);
         intent.putStringArrayListExtra("attachments", items.getArrayList());
+        intent.putStringArrayListExtra("attachments_name",items.getNameList());
         context.startActivity(intent);
     }
     public void deleteRequest(int position){

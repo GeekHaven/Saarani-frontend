@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.icu.text.Edits;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -219,10 +220,14 @@ public class MainFragment extends Fragment {
                                                     marker=jsonObject.getString("markedAs");
                                                 }
                                                 ArrayList<String> attachmentsList= new ArrayList<>();
+                                                ArrayList<String> attachmentNameList=new ArrayList<>();
                                                 if(jsonObject.has("attachments")) {
-                                                    JSONArray jsonArray = jsonObject.getJSONArray("attachments");
-                                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                                        attachmentsList.add(jsonArray.getString(i));
+                                                    JSONObject attachmentJson = jsonObject.getJSONObject("attachments");
+                                                    Iterator iterator = attachmentJson.keys();
+                                                    while(iterator.hasNext()){
+                                                        String name_of_attachment= (String) iterator.next();
+                                                        attachmentsList.add(attachmentJson.getString(name_of_attachment));
+                                                        attachmentNameList.add(name_of_attachment);
                                                     }
                                                 }
                                                 ListItems item =new ListItems(
@@ -233,6 +238,7 @@ public class MainFragment extends Fragment {
                                                         "Time: "+jsonObject.getString("time"),
                                                         "Venue: "+jsonObject.getString("venue"),marker,eventId,attachmentsList
                                                 );
+                                                item.setNameList(attachmentNameList);
                                                 listItems.add(item);
                                                 mapPosition.put(eventId,position);
                                                 position++;

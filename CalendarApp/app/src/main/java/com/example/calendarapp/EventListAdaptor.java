@@ -65,6 +65,7 @@ public class EventListAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHold
             intent.putExtra("type","event");
             intent.putExtra("screen","profile");
             intent.putStringArrayListExtra("attachments", items.getArrayList());
+            intent.putStringArrayListExtra("attachments_name",items.getNameList());
             context.startActivity(intent);
         }
     }

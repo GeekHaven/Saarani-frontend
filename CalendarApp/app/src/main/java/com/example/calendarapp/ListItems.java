@@ -11,7 +11,7 @@ public class ListItems {
     private String venue;
     private String marker;
     private String eventId;
-    private ArrayList<String> arrayList;
+    private ArrayList<String> arrayList,nameList;
     private String photoUrl;
     private boolean showMenu;
 
@@ -32,10 +32,12 @@ public class ListItems {
     public String getPhotoUrl() {
         return photoUrl;
     }
+    public ArrayList<String> getNameList(){return nameList;}
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
+    public void setNameList(ArrayList<String> nameList){this.nameList=nameList;}
 
     public void setShowMenu(boolean showMenu) {
         this.showMenu = showMenu;
