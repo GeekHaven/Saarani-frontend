@@ -89,6 +89,7 @@ public class EventActivity extends AppCompatActivity {
     String marker="";
     LinearLayout layout_attachment;
     ArrayList<String> arrayList=new ArrayList<>();
+    ArrayList<String> nameList =new ArrayList<>();
     ImageView star,tick_mark;
     TextView interested,going;
     private ProgressDialog pDialog;
@@ -134,6 +135,16 @@ public class EventActivity extends AppCompatActivity {
             marker=intent.getExtras().getString("marker");
 //            Toast.makeText(EventActivity.this,marker,Toast.LENGTH_SHORT).show();
             arrayList=intent.getStringArrayListExtra("attachments");
+            nameList=intent.getStringArrayListExtra("attachments_name");
+            for(int i=0;i<nameList.size();i++){
+                StringBuilder convertString = new StringBuilder(nameList.get(i));
+                for(int y=0;y<nameList.get(i).length();y++){
+                    if(nameList.get(i).charAt(y)=='-'){
+                        convertString.setCharAt(y, '.');
+                    }
+                }
+                nameList.set(i,convertString.toString());
+            }
             setIcon();
             String venue_event = intent.getExtras().getString("venue");
             String time_event = intent.getExtras().getString("time");
@@ -263,7 +274,7 @@ public class EventActivity extends AppCompatActivity {
 //        LocalBroadcastManager.getInstance(EventActivity.this).sendBroadcast(intent);
 //    }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
-    public void addAttachmentList(String url,int count){
+    public void addAttachmentList(String url,int count,String nameOfAttachment){
         final LinearLayout linearLayout = new LinearLayout(this);
         final int id = View.generateViewId();
         mapUrl.put(String.valueOf(id),url);
@@ -294,10 +305,7 @@ public class EventActivity extends AppCompatActivity {
                 "fonts/montserratmedium.ttf");
         name.setTypeface(face);
         name.setTextColor(Color.WHITE);
-        if(arrayList.size()>1)
-        name.setText("Attachment "+(count+1));
-        else
-        name.setText("Attachment");
+        name.setText(nameOfAttachment);
         LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
                 0,LinearLayout.LayoutParams.WRAP_CONTENT);
         textParams.gravity= Gravity.CENTER;
@@ -365,7 +373,7 @@ public class EventActivity extends AppCompatActivity {
         if(arrayList.size()!=0) {
             layout_attachment.setVisibility(View.VISIBLE);
             for (int i = 0; i < arrayList.size(); i++) {
-                addAttachmentList(arrayList.get(i), i);
+                addAttachmentList(arrayList.get(i), i,nameList.get(i));
             }
         }
     }
@@ -495,9 +503,18 @@ public class EventActivity extends AppCompatActivity {
                                                         Log.d("xx",marker);
                                                     }
                                                     if(jsonObject.has("attachments")) {
-                                                        JSONArray jsonArray = jsonObject.getJSONArray("attachments");
-                                                        for (int i = 0; i < jsonArray.length(); i++) {
-                                                            arrayList.add(jsonArray.getString(i));
+                                                        JSONObject attachmentsJsonObj = jsonObject.getJSONObject("attachments");
+                                                        Iterator iterator= attachmentsJsonObj.keys();
+                                                        while (iterator.hasNext()){
+                                                            String name=iterator.next().toString();
+                                                            arrayList.add(attachmentsJsonObj.getString(name));
+                                                            StringBuilder convertString = new StringBuilder(name);
+                                                            for(int y=0;y<name.length();y++){
+                                                                if(name.charAt(y)=='-'){
+                                                                    convertString.setCharAt(y, '.');
+                                                                }
+                                                            }
+                                                            nameList.add(convertString.toString());
                                                         }
                                                     }
                                                     Date date_event = null;
@@ -537,41 +554,6 @@ public class EventActivity extends AppCompatActivity {
             });
         }
     }
-    public String getMimeType(Uri uri) {
-        String mimeType = null;
-        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
-            ContentResolver cr = getApplicationContext().getContentResolver();
-            mimeType = cr.getType(uri);
-        } else {
-            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
-                    .toString());
-            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-                    fileExtension.toLowerCase());
-        }
-        return mimeType;
-    }
-    public void download_files() throws IOException {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        for(i=0;i<arrayList.size();i++) {
-            StorageReference httpsReference = storage.getReferenceFromUrl(arrayList.get(i));
-            File rootPath = new File(Environment.getExternalStorageDirectory(), "download");
-            if(!rootPath.exists()) {
-                rootPath.mkdirs();
-            }
-            final File localFile = new File(rootPath,"name.jpg");
-            httpsReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    // Local temp file has been created
-                    Toast.makeText(EventActivity.this,"File downloaded",Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                    Toast.makeText(EventActivity.this,"Download failed",Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
+
+
 }

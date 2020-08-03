@@ -294,10 +294,14 @@ public class ListFragment extends Fragment {
                                                     marker=jsonObject.getString("markedAs");
                                                 }
                                                 ArrayList<String> attachmentsList= new ArrayList<>();
+                                                ArrayList<String> attachmentNameList =new ArrayList<>();
                                                 if(jsonObject.has("attachments")) {
-                                                    JSONArray jsonArray = jsonObject.getJSONArray("attachments");
-                                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                                        attachmentsList.add(jsonArray.getString(i));
+                                                    JSONObject attachmentsObj = jsonObject.getJSONObject("attachments");
+                                                    Iterator iterator= attachmentsObj.keys();
+                                                    while (iterator.hasNext()){
+                                                        String name_of_attachment=iterator.next().toString();
+                                                        attachmentsList.add(attachmentsObj.getString(name_of_attachment));
+                                                        attachmentNameList.add(name_of_attachment);
                                                     }
                                                 }
                                                 ListItems item =new ListItems(
@@ -308,6 +312,7 @@ public class ListFragment extends Fragment {
                                                         "Time: "+jsonObject.getString("time"),
                                                         "Venue: "+jsonObject.getString("venue"),marker,eventId,attachmentsList
                                                 );
+                                                item.setNameList(attachmentNameList);
                                                 final String date0= jsonObject.getString("date");
                                                 temp.add(item);
                                                 listItems.add(item);

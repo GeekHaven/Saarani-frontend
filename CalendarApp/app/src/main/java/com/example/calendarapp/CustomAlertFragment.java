@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,6 +66,7 @@ public class CustomAlertFragment extends DialogFragment {
     AlertDialog.Builder builder;
     String eventName,byName,eventDate,eventVenue,eventTime,eventDesc,eventId;
     ArrayList<String> arrayList =new ArrayList<>();
+    ArrayList<String> nameList =new ArrayList<>();
     Context context;
 //    MyDialogCloseListener closeListener;
     private DialogInterface.OnDismissListener onDismissListener;
@@ -188,7 +190,9 @@ public class CustomAlertFragment extends DialogFragment {
         intent.putExtra("time",eventTime);
         intent.putExtra("venue",eventVenue);
         intent.putExtra("eventId",eventId);
-        intent.putExtra("attachments",arrayList);
+        intent.putStringArrayListExtra("attachments",arrayList);
+        Log.d("intent_alert", String.valueOf(arrayList.size()));
+        intent.putStringArrayListExtra("attachments_name",nameList);
         intent.putExtra("type","edit");
         startActivity(intent);
 
@@ -225,6 +229,8 @@ public class CustomAlertFragment extends DialogFragment {
         eventDesc=getArguments().getString("desc");
         byName=getArguments().getString("byName");
         arrayList=getArguments().getStringArrayList("attachments");
+        Log.d("attach_dailog", String.valueOf(arrayList.size()));
+        nameList=getArguments().getStringArrayList("attachments_name");
         position=getArguments().getInt("position");
         name.setText(eventName);
         date.setText(eventDate.split(" ")[1]);

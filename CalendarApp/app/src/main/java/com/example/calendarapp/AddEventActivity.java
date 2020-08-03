@@ -12,9 +12,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -62,6 +64,7 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import java.io.File;
 import java.io.InputStream;
+import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -85,27 +88,26 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
     public Button addEvent,addAttachment;
     TextView spinnerTime, heading;
     CalendarView calendarView;
-    String date,eventId,hourSelect, minuteSelect,requestType="post";
+    String date,eventId,hourSelect="00", minuteSelect="00",requestType="post";
     ImageButton mailItem;
     LinearLayout attachmentParent,addEmailLayout;
-//    private Uri fileUri;
-//    private String filePath;
-    public JSONArray jsonAttachments=new JSONArray();
-    Map<String,String> filePaths=new HashMap<>();
+    Map<String,Integer> index_attachment=new HashMap<>();
     public static List<String> arr = new ArrayList<String>();
     List<String> to = new ArrayList<String>();
-//    List<Uri> uriList=new ArrayList<>();
-//    JSONArray jsonEmailRecipients=new JSONArray();
-//    String[] mailList= new String[15];
-    int index=0;
+    int index=0,mailItemSize=1;
+    String attachmentFile;
+    int columnIndex;
     long size=0,prev;
+    ArrayList<String> attachmentList =new ArrayList<>();
+    ArrayList<String> attachmentNameList =new ArrayList<>();
     Map<String,String> map=new HashMap<String,String>();
     Map<String,Long> mapAttachSize=new HashMap<>();
     Map<String,Uri> uriMap =new HashMap<>();
-    Map<String,Uri> uriMapAttach= new HashMap<>();
-    Map<String,File> fileMap =new HashMap<>();
+    Map<String,String> names_of_attachment=new HashMap<>();
+    Map<String,String> json_map_attachments=new HashMap<>();
     String url = "https://socupdate.herokuapp.com/events";
     String urlPut="https://socupdate.herokuapp.com/events/";
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
@@ -168,6 +170,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
 
         Intent intent=getIntent();
         if(intent.getExtras().getString("type").equals("edit")){
+
             requestType="put";
             heading.setText("Edit Event");
             eventName.setText(intent.getExtras().getString("name"));
@@ -175,6 +178,9 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             eventVenue.setText(intent.getExtras().getString("venue").split(" ")[1]);
             spinnerTime.setText(intent.getExtras().getString("time").split(" ")[1]);
             eventId=intent.getExtras().getString("eventId");
+            attachmentList=intent.getExtras().getStringArrayList("attachments");
+            attachmentNameList=intent.getExtras().getStringArrayList("attachments_name");
+            Log.d("Attachment_Size",attachmentList+"/"+attachmentNameList);
             String time=intent.getExtras().getString("time").split(" ")[1];
             String[] split=time.split(":");
             hourSelect=split[0];
@@ -196,6 +202,99 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             }
             urlPut = urlPut+eventId;
             addEvent.setText("Update Event");
+            for(int i=0;i<attachmentList.size();i++){
+                final LinearLayout attachLayout = new LinearLayout(this);
+                final int id = View.generateViewId();
+                json_map_attachments.put(attachmentNameList.get(i),attachmentList.get(i));
+                index_attachment.put(String.valueOf(id),i);
+                attachLayout.setId(id);
+                attachLayout.setOrientation(LinearLayout.HORIZONTAL);
+//                mapAttachSize.put(String.valueOf(id),sizeOfFile(uri));
+                Resources r = AddEventActivity.this.getResources();
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        (int) TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                30,
+                                r.getDisplayMetrics()));
+                attachLayout.setBackgroundResource(R.color.colorPrimaryDark);
+                params.topMargin = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        8,
+                        r.getDisplayMetrics()
+                );
+                params.leftMargin = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        22,
+                        r.getDisplayMetrics()
+                );
+                params.rightMargin = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        22,
+                        r.getDisplayMetrics()
+                );
+                attachLayout.setWeightSum(10);
+                attachmentParent.addView(attachLayout, params);
+                final TextView attachmentName = new TextView(this);
+                attachmentName.setText(attachmentNameList.get(i));
+                attachmentName.setSingleLine();
+                LinearLayout.LayoutParams paramsText = new LinearLayout.LayoutParams(
+                        0
+                        ,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                paramsText.gravity = Gravity.CENTER;
+                paramsText.weight = 9;
+                paramsText.leftMargin = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        8,
+                        r.getDisplayMetrics()
+                );
+                LinearLayout imageLayout = new LinearLayout(this);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        0,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                );
+                layoutParams.rightMargin = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        4,
+                        r.getDisplayMetrics()
+                );
+                layoutParams.weight = 1;
+                attachLayout.addView(attachmentName, 0, paramsText);
+                attachLayout.addView(imageLayout, 1, layoutParams);
+                ImageButton btn = new ImageButton(this);
+                btn.setImageResource(R.drawable.cross);
+                btn.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                btn.setBackgroundResource(R.color.colorPrimaryDark);
+                LinearLayout.LayoutParams paramsBtn = new LinearLayout.LayoutParams(
+                        (int) TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                50,
+                                r.getDisplayMetrics()
+                        ),
+                        (int) TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                50,
+                                r.getDisplayMetrics()
+                        ));
+                paramsBtn.gravity = Gravity.CENTER;
+                imageLayout.addView(btn, 0, paramsBtn);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        attachmentParent.removeView(attachLayout);
+//                        size=size-mapAttachSize.get(String.valueOf(id));
+//                        uriMap.remove(String.valueOf(id));
+//                        names_of_attachment.remove(String.valueOf(id));
+                        json_map_attachments.remove(attachmentNameList.get(index_attachment.get(String.valueOf(id))));
+                        Log.d("attachNameB",attachmentNameList.size()+"");
+                        attachmentNameList.remove(attachmentNameList.get(index_attachment.get(String.valueOf(id))));
+                        Log.d("attachNameA",attachmentNameList.size()+"");
+                        attachmentList.remove(attachmentList.get(index_attachment.get(String.valueOf(id))));
+                        Log.d("btn_remove","working");
+                    }
+                });
+            }
         }
 
         spinnerTime.setOnClickListener(new View.OnClickListener() {
@@ -244,7 +343,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                         int x = 0;
                         while (iterator.hasNext()) {
                             Map.Entry mapElement = (Map.Entry) iterator.next();
-                            uploadFile((Uri) mapElement.getValue());
+                            uploadFile((Uri) mapElement.getValue(), (String) mapElement.getKey());
                         }
                     }
                     else {
@@ -265,7 +364,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 }
                 else{
                     final LinearLayout attachLayout= new LinearLayout(AddEventActivity.this);
-                    final int id=attachLayout.generateViewId();
+                    final int id=View.generateViewId();
                     attachLayout.setId(id);
                     attachLayout.setOrientation(LinearLayout.HORIZONTAL);
                     Resources r = AddEventActivity.this.getResources();
@@ -276,11 +375,19 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                     30,
                                     r.getDisplayMetrics()));
                     attachLayout.setBackgroundResource(R.color.colorPrimaryDark);
+                    if(mailItemSize==1)
                     params.topMargin=(int) TypedValue.applyDimension(
                             TypedValue.COMPLEX_UNIT_DIP,
                             16,
                             r.getDisplayMetrics()
                     );
+                    else
+                        params.topMargin=(int) TypedValue.applyDimension(
+                                TypedValue.COMPLEX_UNIT_DIP,
+                                8,
+                                r.getDisplayMetrics()
+                        );
+                    mailItemSize++;
                     params.leftMargin=(int) TypedValue.applyDimension(
                             TypedValue.COMPLEX_UNIT_DIP,
                             22,
@@ -358,21 +465,14 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
             @Override
             public void onClick(View v) {
-                if (!EasyPermissions.hasPermissions(AddEventActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    EasyPermissions.requestPermissions(AddEventActivity.this, "Read External data", 2, Manifest.permission.READ_EXTERNAL_STORAGE);
+                if (!EasyPermissions.hasPermissions(AddEventActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    EasyPermissions.requestPermissions(AddEventActivity.this, "Read External data",2, Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 }
                 else {
-                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                    StrictMode.setVmPolicy(builder.build());
-                    Intent chooseFile = null;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                        chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    }
-                    assert chooseFile != null;
-                    chooseFile.setType("*/*");
-                    chooseFile.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                    chooseFile = Intent.createChooser(chooseFile, "Choose a file");
-                    startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("*/*");
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+                    startActivityForResult(Intent.createChooser(intent, "ChooseFile"), PICKFILE_RESULT_CODE);
                 }
             }
         });
@@ -426,9 +526,9 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                             }
                             if(size <=5000000) {
                                 for (int i = 0; i < data.getClipData().getItemCount(); i++) {
-                                    final int[] flag = {0};
+                                    final int id = View.generateViewId();
                                     Uri uri = data.getClipData().getItemAt(i).getUri();
-//                                    filePath = uri.getPath();
+                                    uriMap.put(String.valueOf(id),uri);
                                     File file = new File(uri.getPath());
                                     String result = null;
                                     if (uri.getScheme().equals("content")) {
@@ -448,15 +548,17 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                             result = result.substring(cut + 1);
                                         }
                                     }
+                                    StringBuilder convertString = new StringBuilder(result);
+                                    for(int x=0;x<result.length();x++){
+                                        if(result.charAt(x)=='.'){
+                                            convertString.setCharAt(x, '-');
+                                        }
+                                    }
+                                    names_of_attachment.put(String.valueOf(id), convertString.toString());
                                     final LinearLayout attachLayout = new LinearLayout(this);
-                                    final int id = View.generateViewId();
                                     attachLayout.setId(id);
                                     attachLayout.setOrientation(LinearLayout.HORIZONTAL);
-                                    filePaths.put(String.valueOf(id),getPath(uri));
                                     mapAttachSize.put(String.valueOf(id),sizeOfFile(uri));
-                                    uriMap.put(String.valueOf(id),uri);
-                                    uriMapAttach.put(String.valueOf(id),Uri.parse("file://" +result));
-                                    fileMap.put(String.valueOf(id),file);
                                     Resources r = AddEventActivity.this.getResources();
                                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                                             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -490,7 +592,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                     );
                                     attachLayout.setWeightSum(10);
                                     attachmentParent.addView(attachLayout, params);
-                                    TextView attachmentName = new TextView(this);
+                                    final TextView attachmentName = new TextView(this);
                                     attachmentName.setText(result);
                                     attachmentName.setSingleLine();
                                     LinearLayout.LayoutParams paramsText = new LinearLayout.LayoutParams(
@@ -540,7 +642,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                             attachmentParent.removeView(attachLayout);
                                             size = size -mapAttachSize.get(String.valueOf(id));
                                             uriMap.remove(String.valueOf(id));
-                                            uriMapAttach.remove(String.valueOf(id));
+                                            names_of_attachment.remove(String.valueOf(id));
                                         }
                                     });
                                 }
@@ -551,6 +653,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                             }
                         } else {
                             final int[] flag = {0};
+                            final int id = View.generateViewId();
                             Uri uri;
                             uri = data.getData();
                             String scheme = uri.getScheme();
@@ -559,6 +662,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                             size=size+sizeOfFile(uri);
                             if (size <= 5000000) {
 //                                filePath = uri.getPath();
+                                uriMap.put(String.valueOf(id),uri);
                                 File file = new File(uri.getPath());
                                 String result = null;
                                 if (uri.getScheme().equals("content")) {
@@ -578,15 +682,19 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                         result = result.substring(cut + 1);
                                     }
                                 }
+                                StringBuilder convertString = new StringBuilder(result);
+                                for(int x=0;x<result.length();x++){
+                                    if(result.charAt(x)=='.'){
+                                        convertString.setCharAt(x, '-');
+                                    }
+                                }
+                                names_of_attachment.put(String.valueOf(id),convertString.toString());
+
                                 final LinearLayout attachLayout = new LinearLayout(this);
-                                final int id = View.generateViewId();
+
                                 attachLayout.setId(id);
                                 attachLayout.setOrientation(LinearLayout.HORIZONTAL);
-                                filePaths.put(String.valueOf(id),getPath(uri));
                                 mapAttachSize.put(String.valueOf(id),sizeOfFile(uri));
-                                uriMapAttach.put(String.valueOf(id),Uri.parse("file://" +result));
-                                uriMap.put(String.valueOf(id),uri);
-                                fileMap.put(String.valueOf(id),file);
                                 Resources r = AddEventActivity.this.getResources();
                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                                         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -662,7 +770,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                         attachmentParent.removeView(attachLayout);
                                         size=size-mapAttachSize.get(String.valueOf(id));
                                         uriMap.remove(String.valueOf(id));
-                                        uriMapAttach.remove(String.valueOf(id));
+                                        names_of_attachment.remove(String.valueOf(id));
                                     }
                                 });
                             }
@@ -678,34 +786,16 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 break;
         }
     }
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater menuInflater = getMenuInflater();
-//        menuInflater.inflate(R.menu.menu_add, menu);
-//        return true;
-//    }
-public String getPath(Uri uri) {
-
-    String path = null;
-    String[] projection = { MediaStore.Files.FileColumns.DATA };
-    Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-
-    if(cursor == null){
-        path = uri.getPath();
-    }
-    else{
-        cursor.moveToFirst();
-        int column_index = cursor.getColumnIndexOrThrow(projection[0]);
-        path = cursor.getString(column_index);
-        cursor.close();
-    }
-
-    return ((path == null || path.isEmpty()) ? (uri.getPath()) : path);
-}
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void addAttachmnetUrl(String url){
-        jsonAttachments.put(url);
-        if(jsonAttachments.length()==uriMap.size()) {
+    public void addAttachmnetUrl(String url,String id){
+        json_map_attachments.put(names_of_attachment.get(String.valueOf(id)),url);
+        int size=0;
+        if(!attachmentNameList.isEmpty()){
+            size=attachmentNameList.size();
+        }
+        Log.d("json_map_attachSize", String.valueOf(json_map_attachments.size()));
+        Log.d("uriMapSize+size", uriMap.size()+" "+ size);
+        if(json_map_attachments.size()==uriMap.size()+size) {
             if(requestType.equals("post"))
                 sendEvent(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
             else if (requestType.equals("put"))
@@ -714,7 +804,8 @@ public String getPath(Uri uri) {
         else
             Toast.makeText(AddEventActivity.this,"Loading Data...",Toast.LENGTH_SHORT).show();
     }
-    public void uploadFile(Uri uri){
+
+    public void uploadFile(Uri uri, final String ids){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference =storage.getReference();
         final StorageReference ref
@@ -742,7 +833,7 @@ public String getPath(Uri uri) {
                         String downloadUrl = downloadUri.toString();
                         Log.d("url", downloadUrl);
                         if(!downloadUrl.isEmpty())
-                            addAttachmnetUrl(downloadUrl);
+                            addAttachmnetUrl(downloadUrl,ids);
 //                        jsonAttachments.put(downloadUrl[0]);
                 } else {
                     Toast.makeText(AddEventActivity.this,"Upload Failed",Toast.LENGTH_LONG).show();
@@ -775,8 +866,9 @@ public String getPath(Uri uri) {
                                 jsonObject.put("date", date);
                                 jsonObject.put("venue", venue);
                                 jsonObject.put("time", time);
-                                if(jsonAttachments.length()!=0)
-                                jsonObject.put("attachments",jsonAttachments);
+                                if(json_map_attachments.size()!=0) {
+                                    jsonObject.put("attachments", new JSONObject(json_map_attachments));
+                                }
                                 Log.d("json",jsonObject.toString());
 //                                Toast.makeText(AddEventActivity.this,array.length(),Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
@@ -804,11 +896,6 @@ public String getPath(Uri uri) {
             });
         }
         Toast.makeText(this,"Event Added",Toast.LENGTH_SHORT).show();
-        int size=0;
-//        for (int i = 0; i < 15; i++) {
-//            if(!mailList[i].isEmpty())
-//                size++;
-//        }
         if(to.size()!=0) {
             String[] subarray = new String[to.size()];
             int z = 0;
@@ -816,44 +903,30 @@ public String getPath(Uri uri) {
                 subarray[i] = to.get(i);
             }
             try {
-                Intent emailSelectorIntent = new Intent(Intent.ACTION_SENDTO);
-                emailSelectorIntent.setData(Uri.parse("mailto:"));
-                Log.d("mailList", Arrays.toString(subarray));
-                final Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, subarray);
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT,(CharSequence) eventName.getText().toString());
-                ArrayList<String> bodyList = new ArrayList<>();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Intent.EXTRA_EMAIL, subarray);
+                intent.putExtra(Intent.EXTRA_SUBJECT,eventName.getText().toString());
                 String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
-                bodyList.add(body);
-                ArrayList<Uri> uris = new ArrayList<Uri>();
-                emailIntent.putExtra(Intent.EXTRA_TEXT, bodyList);
-                emailIntent.setSelector(emailSelectorIntent);
-                emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                emailIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-                emailIntent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
-                emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                Iterator iterator = filePaths.entrySet().iterator();
-                while (iterator.hasNext()) {
-                    Map.Entry mapElement = (Map.Entry) iterator.next();
-                    Log.d("File-path", (String) mapElement.getValue());
-                    String x= (String) ((String) mapElement.getValue()).split(":/")[1];
-                    File f = new File(x);
-                    f.setReadable(true, false);
-                    Uri u = Uri.fromFile(f);
-                    uris.add(u);
+                intent.putExtra(Intent.EXTRA_TEXT, body);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setType("vnd.android.cursor.dir/email");
+                ArrayList<Uri> uris=new ArrayList<Uri>();
+                if (uriMap.size()!=0) {
+                    Iterator i= uriMap.entrySet().iterator();
+                    while(i.hasNext()){
+                        Map.Entry mapElement = (Map.Entry) i.next();
+                        uris.add((Uri)mapElement.getValue());
+                    }
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
                 }
-//            emailIntent.setType("text/html");
-//            emailIntent.setType("application/pdf");
-//            emailIntent.setType("message/rfc822");
-                Log.d("URI", String.valueOf(uris));
-//            emailIntent.setType("text/plain");
-                if (uris.size() != 0)
-                    emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-
-                startActivity(Intent.createChooser(emailIntent, "Choose an email application..."));
+                intent.setPackage("com.google.android.gm");
+                startActivityForResult(intent, 101);
             } catch (Throwable t) {
                 Toast.makeText(this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this,MainActivity2.class));
+                finish();
             }
         }
         else{
@@ -880,8 +953,8 @@ public String getPath(Uri uri) {
                                 jsonObject.put("date", date);
                                 jsonObject.put("venue", venue);
                                 jsonObject.put("time", time);
-                                if(jsonAttachments.length()!=0)
-                                    jsonObject.put("attachments",jsonAttachments);
+                                if(json_map_attachments.size()!=0)
+                                    jsonObject.put("attachments",new JSONObject(json_map_attachments));
                                 Log.d("json",jsonObject.toString());
 //                                Toast.makeText(AddEventActivity.this,array.length(),Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
@@ -923,11 +996,6 @@ public String getPath(Uri uri) {
             });
         }
         Toast.makeText(this,"Event Updated",Toast.LENGTH_SHORT).show();
-        int size=0;
-//        for (int i = 0; i < 15; i++) {
-//            if(!mailList[i].isEmpty())
-//                size++;
-//        }
         if(to.size()!=0) {
             String[] subarray = new String[to.size()];
             int z = 0;
@@ -935,38 +1003,26 @@ public String getPath(Uri uri) {
                 subarray[i] = to.get(i);
             }
             try {
-                Intent emailSelectorIntent = new Intent(Intent.ACTION_SENDTO);
-                emailSelectorIntent.setData(Uri.parse("mailto:"));
-                Log.d("mailList", Arrays.toString(subarray));
-                final Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                emailIntent.putExtra(Intent.EXTRA_EMAIL, subarray);
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, eventName.getText().toString());
-                ArrayList<String> bodyList = new ArrayList<>();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(Intent.EXTRA_EMAIL, subarray);
+                intent.putExtra(Intent.EXTRA_SUBJECT,eventName.getText().toString());
                 String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
-                bodyList.add(body);
-                ArrayList<Uri> uris = new ArrayList<Uri>();
-                emailIntent.putExtra(Intent.EXTRA_TEXT, bodyList);
-                emailIntent.setSelector(emailSelectorIntent);
-                emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                emailIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-                emailIntent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
-                emailIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                Iterator iterator = fileMap.entrySet().iterator();
-                while (iterator.hasNext()) {
-                    Map.Entry mapElement = (Map.Entry) iterator.next();
-                    File f = (File) mapElement.getValue();
-                    f.setReadable(true, false);
-                    uris.add(Uri.fromFile(f));
+                intent.putExtra(Intent.EXTRA_TEXT, body);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setType("vnd.android.cursor.dir/email");
+                ArrayList<Uri> uris=new ArrayList<Uri>();
+                if (uriMap.size()!=0) {
+                    Iterator i= uriMap.entrySet().iterator();
+                    while(i.hasNext()){
+                        Map.Entry mapElement = (Map.Entry) i.next();
+                        uris.add((Uri)mapElement.getValue());
+                    }
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
                 }
-//            emailIntent.setType("text/html");
-//            emailIntent.setType("application/pdf");
-//            emailIntent.setType("message/rfc822");
-//            emailIntent.setType("text/plain");
-                if (uris.size() != 0)
-                    emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-                Log.d("URI", String.valueOf(uris));
-                startActivity(Intent.createChooser(emailIntent, "Choose an email application..."));
-                finish();
+                intent.setPackage("com.google.android.gm");
+                startActivityForResult(intent, 101);
             } catch (Throwable t) {
                 Toast.makeText(this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
             }
@@ -984,19 +1040,15 @@ public String getPath(Uri uri) {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Intent chooseFile = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        }
-        chooseFile.setType("*/*");
-        chooseFile.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        chooseFile = Intent.createChooser(chooseFile, "Choose a file");
-        startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
+        startActivityForResult(Intent.createChooser(intent, "ChooseFile"), PICKFILE_RESULT_CODE);
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-        Toast.makeText(this,"You will not be able to upload data",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"You will not be able to upload attachments!",Toast.LENGTH_SHORT).show();
     }
 }
 

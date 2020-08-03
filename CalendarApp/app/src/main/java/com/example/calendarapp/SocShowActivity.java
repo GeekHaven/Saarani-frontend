@@ -322,10 +322,14 @@ public class SocShowActivity extends AppCompatActivity {
                         String key = iterator.next();
                         JSONObject jsonObject = json.getJSONObject(key);
                         ArrayList<String> attachmentsList =new ArrayList<>();
+                        ArrayList<String> attachmentNameList =new ArrayList<>();
                         if(jsonObject.has("attachments")){
-                            JSONArray jsonArray = jsonObject.getJSONArray("attachments");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                attachmentsList.add(jsonArray.getString(i));
+                            JSONObject jsonObject1 = jsonObject.getJSONObject("attachments");
+                            Iterator iterator1 = jsonObject1.keys();
+                            while(iterator1.hasNext()){
+                                String name= iterator1.next().toString();
+                                attachmentsList.add(jsonObject.getString(name));
+                                attachmentNameList.add(name);
                             }
                         }
                         ListItems items = new ListItems(
@@ -336,6 +340,7 @@ public class SocShowActivity extends AppCompatActivity {
                                 "Time: "+jsonObject.getString("time"),
                                 "Venue: "+jsonObject.getString("venue"),"",key,attachmentsList
                         );
+                        items.setNameList(attachmentNameList);
                         listItems.add(items);
                     }
 
