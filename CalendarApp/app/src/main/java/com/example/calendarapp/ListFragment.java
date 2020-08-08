@@ -63,6 +63,7 @@ public class ListFragment extends Fragment {
     private CardView cardView;
     private RecyclerView.Adapter adapter,adapter2;
     private String tomorrowDate;
+    DatabaseHandler databaseHandler;
     final DateFormat dateFormat = new SimpleDateFormat("MM", Locale.getDefault());
     final SimpleDateFormat sdf = new SimpleDateFormat("EEEE",Locale.getDefault());
     final DateFormat dateFormat1= new SimpleDateFormat("dd",Locale.getDefault());
@@ -83,6 +84,12 @@ public class ListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.list_fragment, container, false);
         listItems=new ArrayList<>();
+        databaseHandler=new DatabaseHandler(getContext());
+        try {
+            listItems=databaseHandler.getAllEvents();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         Date date= new Date();
         date_setUp=view.findViewById(R.id.month_title);
 
@@ -111,7 +118,10 @@ public class ListFragment extends Fragment {
         today_text.setText(Html.fromHtml(t));
         String to="<b>"+getString(R.string.tomorrow)+"</b>"+"  "+sdf.format(gc.getTime()).substring(0,3)+", "+dateFormat1.format(gc.getTime())+" "+dateFormatMonth.format(gc.getTime());
         tomorrow_text.setText(Html.fromHtml(to));
-        addEventsToCal();
+//        addEventsToCal();
+        Date d=new Date();
+        addDataToRV(f.format(d),tomorrowDate);
+        addEvents(listItems);
         return view;
     }
 
@@ -199,7 +209,7 @@ public class ListFragment extends Fragment {
                 List<CalendarEvent> event = new ArrayList<>();
                 for(int i=0;i<temp.size();i++) {
                     if (f.format(date.getTime()).equals(temp.get(i).getDate())) {
-                        event.add(new CalendarEvent(Color.RED));
+                        event.add(new CalendarEvent(Color.rgb(240, 212, 83)));
                     }
                 }
                 return event;

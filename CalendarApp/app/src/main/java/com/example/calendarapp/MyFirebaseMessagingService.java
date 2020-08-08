@@ -26,6 +26,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
@@ -50,6 +52,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         sendNotification(remoteMessage);
+        scheduleJob();
     }
     public Bitmap getBitmapfromUrl(String imageUrl) {
         try {
@@ -113,9 +116,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     private void scheduleJob() {
         // [START dispatch_job]
-//        OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(MyWorker.class)
-//                .build();
-//        WorkManager.getInstance().beginWith(work).enqueue();
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+        OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(MyWorker.class)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance().beginWith(work).enqueue();
         // [END dispatch_job]
     }
 

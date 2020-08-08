@@ -400,7 +400,9 @@ public class SubscribeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 editor.apply();
-                startActivity(new Intent(SubscribeActivity.this, MainActivity2.class));
+                Intent intent1=new Intent(SubscribeActivity.this, MainActivity2.class);
+                intent1.putExtra("action","request_call");
+                startActivity(intent1);
             }
         });
 

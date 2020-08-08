@@ -13,6 +13,7 @@ public class ListItems {
     private String eventId;
     private ArrayList<String> arrayList,nameList;
     private String photoUrl;
+    private Integer id;
     private boolean showMenu;
 
     public ListItems( String name,String desc,String byName,String date,String time,String venue,String marker,String eventId,ArrayList<String> arrayList){
@@ -37,6 +38,8 @@ public class ListItems {
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
+    public void setId(Integer id){this.id=id;}
+    public Integer getId(){return id;}
     public void setNameList(ArrayList<String> nameList){this.nameList=nameList;}
 
     public void setShowMenu(boolean showMenu) {

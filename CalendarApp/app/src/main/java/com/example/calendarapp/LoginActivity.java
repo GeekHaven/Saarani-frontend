@@ -66,7 +66,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         if (mAuth.getCurrentUser() != null) {
             finish();
-            startActivity(new Intent(this, MainActivity2.class));
+            Intent intent=new Intent(this, MainActivity2.class);
+            intent.putExtra("action","db");
+            startActivity(intent);
         }
     }
 

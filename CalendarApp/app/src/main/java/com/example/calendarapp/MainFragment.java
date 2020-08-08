@@ -62,9 +62,11 @@ public class MainFragment extends Fragment {
     CompactCalendarView compactCalendar;
     int x=0;
     private RecyclerView recyclerView;
+    String loadDataFrom;
     private CardView cardView;
     private RecyclerView.Adapter adapter;
     final Date date = new Date();
+    DatabaseHandler databaseHandler;
     private List<ListItems> listItems,recylerViewList;
     private static String URL_DATA="https://socupdate.herokuapp.com/events";
     HashMap<String, Integer> map
@@ -81,6 +83,11 @@ public class MainFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.main_fragment, container, false);
+        Bundle bundle=getArguments();
+        if (bundle != null) {
+            loadDataFrom=bundle.getString("loadFrom");
+        }
+        databaseHandler = new DatabaseHandler(getContext());
         listItems=new ArrayList<>();
         final DateFormat dateFormat = new SimpleDateFormat("MM",Locale.getDefault());
         final SimpleDateFormat sdf = new SimpleDateFormat("EEEE",Locale.getDefault());
@@ -104,8 +111,20 @@ public class MainFragment extends Fragment {
         compactCalendar.setUseThreeLetterAbbreviation(true);
         Log.d("date",date.toString());
         textLay.setText(sdf.format(date).substring(0,3)+", "+dateFormat1.format(date)+" "+Selected[Integer.parseInt(dateFormat.format(date))-1]);
-        loadRecyclerViewData();
-
+        if(loadDataFrom!=null&&loadDataFrom.equals("server")) {
+            try {
+                loadRecyclerViewData();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            try {
+                loadDatabase();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
@@ -133,22 +152,44 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mMessageReceiver,
-                new IntentFilter("custom-message"));
+//        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mMessageReceiver,
+//                new IntentFilter("custom-message"));
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         // TODO: Use the ViewModel
     }
-    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String eventId = intent.getStringExtra("eventId");
-            String markedAs = intent.getStringExtra("markedAs");
-            ListItems item =new ListItems(listItems.get(mapPosition.get(eventId)).getName(),listItems.get(mapPosition.get(eventId)).getDesc(),listItems.get(mapPosition.get(eventId)).getByName(),listItems.get(mapPosition.get(eventId)).getDate(),listItems.get(mapPosition.get(eventId)).getTime(),listItems.get(mapPosition.get(eventId)).getVenue(),markedAs,eventId,listItems.get(mapPosition.get(eventId)).getArrayList());
-            listItems.set(mapPosition.get(eventId),item);
-//            Toast.makeText(getContext(),ItemName +" "+qty ,Toast.LENGTH_SHORT).show();
+//    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            String eventId = intent.getStringExtra("eventId");
+//            String markedAs = intent.getStringExtra("markedAs");
+//            ListItems item =new ListItems(listItems.get(mapPosition.get(eventId)).getName(),listItems.get(mapPosition.get(eventId)).getDesc(),listItems.get(mapPosition.get(eventId)).getByName(),listItems.get(mapPosition.get(eventId)).getDate(),listItems.get(mapPosition.get(eventId)).getTime(),listItems.get(mapPosition.get(eventId)).getVenue(),markedAs,eventId,listItems.get(mapPosition.get(eventId)).getArrayList());
+//            listItems.set(mapPosition.get(eventId),item);
+////            Toast.makeText(getContext(),ItemName +" "+qty ,Toast.LENGTH_SHORT).show();
+//
+//        }
+//    };
+    public void loadDatabase() throws JSONException {
+        listItems=databaseHandler.getAllEvents();
+        Log.d("db_list_size", String.valueOf(listItems.size()));
+        int pos=0;
+        for(int i=0;i<listItems.size();i++){
+            ListItems item = listItems.get(i);
+            mapPosition.put("position",pos);
+            pos++;
+            try {
+                Date d = f.parse(item.getDate());
+                assert d != null;
+                long milliseconds = d.getTime();
 
+                Event eventx;
+                eventx = new Event(Color.rgb(240, 212, 83), milliseconds);
+                compactCalendar.addEvent(eventx);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-    };
+        showRecyclerView(date);
+    }
     public void showRecyclerView(Date dateClicked){
         Log.d("called","yes");
         default_text.setVisibility(View.GONE);
@@ -187,7 +228,8 @@ public class MainFragment extends Fragment {
             default_text.setVisibility(View.VISIBLE);
         }
     }
-    public void loadRecyclerViewData(){
+    public void loadRecyclerViewData() throws JSONException {
+        databaseHandler.deleteDatabase();
         final String urlPost = "https://socupdate.herokuapp.com/events/marked";
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
@@ -239,25 +281,17 @@ public class MainFragment extends Fragment {
                                                         "Venue: "+jsonObject.getString("venue"),marker,eventId,attachmentsList
                                                 );
                                                 item.setNameList(attachmentNameList);
+                                                item.setPhotoUrl(jsonObject.getString("photoURL"));
                                                 listItems.add(item);
+                                                databaseHandler.addEvent(item);
                                                 mapPosition.put(eventId,position);
                                                 position++;
                                                 try {
                                                     Date d = f.parse(jsonObject.getString("date"));
                                                     assert d != null;
                                                     long milliseconds = d.getTime();
-
                                                     Event eventx;
-                                                    if(map.get(String.valueOf(milliseconds))==null||map.get(String.valueOf(milliseconds))%2==0) {
-                                                        eventx = new Event(Color.RED, milliseconds);
-                                                        map.put(String.valueOf(milliseconds),x);
-                                                        x++;
-                                                    }
-                                                    else {
-                                                        eventx = new Event(Color.GREEN, milliseconds);
-                                                        map.put(String.valueOf(milliseconds),x);
-                                                        x++;
-                                                    }
+                                                    eventx = new Event(Color.rgb(240, 212, 83), milliseconds);
                                                     compactCalendar.addEvent(eventx);
                                                 } catch (ParseException e) {
                                                     e.printStackTrace();
