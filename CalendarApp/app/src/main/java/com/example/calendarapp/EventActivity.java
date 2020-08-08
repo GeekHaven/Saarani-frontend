@@ -82,7 +82,7 @@ import static com.example.calendarapp.R.drawable.tick;
 import static com.example.calendarapp.R.drawable.tick_yellow;
 
 public class EventActivity extends AppCompatActivity {
-    TextView eventName,desc,date,time,venue,byName;
+    TextView eventName,desc,date,venue,byName;
     String eventId;
     ImageView download_url,button_back;
     String screen;
@@ -91,8 +91,9 @@ public class EventActivity extends AppCompatActivity {
     ArrayList<String> arrayList=new ArrayList<>();
     ArrayList<String> nameList =new ArrayList<>();
     ImageView star,tick_mark;
-    TextView interested,going;
+    TextView interested,going,attachment_text;
     private ProgressDialog pDialog;
+    DatabaseHandler databaseHandler;
     HashMap<String,String> mapUrl= new HashMap<>();
     private int i=0;
     public static final int progress_bar_type = 0;
@@ -106,19 +107,20 @@ public class EventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+        databaseHandler=new DatabaseHandler(this);
         eventName=findViewById(R.id.name);
         desc=findViewById(R.id.desc);
         date=findViewById(R.id.date);
-        time=findViewById(R.id.time);
         venue=findViewById(R.id.venue);
-        byName=findViewById(R.id.society);
-        download_url=findViewById(R.id.download);
+        byName=findViewById(R.id.society_name);
         star=findViewById(R.id.star);
         tick_mark=findViewById(R.id.tick);
         interested=findViewById(R.id.text_interested);
         going=findViewById(R.id.text_going);
         button_back=findViewById(R.id.button);
         layout_attachment=findViewById(R.id.attachmentLayout);
+        attachment_text=findViewById(R.id.attachment_text);
+        attachment_text.setVisibility(View.GONE);
         button_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,8 +162,7 @@ public class EventActivity extends AppCompatActivity {
             desc.setText(intent.getExtras().getString("desc"));
             Linkify.addLinks(desc , Linkify.WEB_URLS);
             venue.setText(venue_event.substring(7));
-            date.setText(sdf.format(date_event).substring(0, 3) + ", " + d.format(date_event) + " " + format.format(date_event) + " " + y.format(date_event));
-            time.setText(time_event.substring(6));
+            date.setText(sdf.format(date_event).substring(0, 3) + ", " + d.format(date_event) + " " + format.format(date_event) + " " + y.format(date_event) + " "+time_event.substring(6));
         }
         SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
         if(prefs.getString("society", "false").equals("false")) {
@@ -173,6 +174,11 @@ public class EventActivity extends AppCompatActivity {
                         Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
                         star.setTag(R.drawable.star_img);
                         star.setImageResource(R.drawable.star_img);
+                        try {
+                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         deleteRequest();
                     } else {
                         Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
@@ -181,6 +187,11 @@ public class EventActivity extends AppCompatActivity {
                         if ((Integer) tick_mark.getTag() == tick_yellow) {
                             tick_mark.setTag(tick);
                             tick_mark.setImageResource(R.drawable.tick);
+                        }
+                        try {
+                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"interested");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                         addMarker("interested");
                     }
@@ -194,6 +205,11 @@ public class EventActivity extends AppCompatActivity {
                         Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
                         star.setTag(R.drawable.star_img);
                         star.setImageResource(R.drawable.star_img);
+                        try {
+                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         deleteRequest();
                     } else {
                         Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
@@ -202,6 +218,11 @@ public class EventActivity extends AppCompatActivity {
                         if ((Integer) tick_mark.getTag() == tick_yellow) {
                             tick_mark.setTag(tick);
                             tick_mark.setImageResource(R.drawable.tick);
+                        }
+                        try {
+                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"interested");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                         addMarker("interested");
                     }
@@ -215,6 +236,11 @@ public class EventActivity extends AppCompatActivity {
                         Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
                         tick_mark.setTag(tick);
                         tick_mark.setImageResource(R.drawable.tick);
+                        try {
+                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         deleteRequest();
                     } else {
                         Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
@@ -223,6 +249,11 @@ public class EventActivity extends AppCompatActivity {
                         if ((Integer) star.getTag() == star_yellow) {
                             star.setTag(R.drawable.star_img);
                             star.setImageResource(R.drawable.star_img);
+                        }
+                        try {
+                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"going");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                         addMarker("going");
                     }
@@ -236,6 +267,11 @@ public class EventActivity extends AppCompatActivity {
                         Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
                         tick_mark.setTag(tick);
                         tick_mark.setImageResource(R.drawable.tick);
+                        try {
+                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         deleteRequest();
                     } else {
                         Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
@@ -244,6 +280,11 @@ public class EventActivity extends AppCompatActivity {
                         if ((Integer) star.getTag() == star_yellow) {
                             star.setTag(R.drawable.star_img);
                             star.setImageResource(R.drawable.star_img);
+                        }
+                        try {
+                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"going");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                         addMarker("going");
                     }
@@ -256,25 +297,11 @@ public class EventActivity extends AppCompatActivity {
             going.setVisibility(View.GONE);
             tick_mark.setVisibility(View.GONE);
         }
-        download_url.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                try {
-////                    download_files();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-            }
-        });
+
     }
-//    public void sendBroadcast(String current){
-//        Intent intent = new Intent("markerChange");
-//        intent.putExtra("eventId",eventId);
-//        intent.putExtra("markedAs",current);
-//        LocalBroadcastManager.getInstance(EventActivity.this).sendBroadcast(intent);
-//    }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void addAttachmentList(String url,int count,String nameOfAttachment){
+        attachment_text.setVisibility(View.VISIBLE);
         final LinearLayout linearLayout = new LinearLayout(this);
         final int id = View.generateViewId();
         mapUrl.put(String.valueOf(id),url);
@@ -283,67 +310,57 @@ public class EventActivity extends AppCompatActivity {
         Resources r = EventActivity.this.getResources();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        60,
-                        r.getDisplayMetrics()));
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         params.bottomMargin = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 16,
                 r.getDisplayMetrics()
         );
-        linearLayout.setWeightSum(10);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            linearLayout.setElevation(10);
-        }
-        linearLayout.setBackgroundResource(R.drawable.background_event);
         layout_attachment.addView(linearLayout,params);
         TextView name= new TextView(this);
         name.setSingleLine();
-        name.setTextSize(20);
+        name.setTextSize(14);
         Typeface face = Typeface.createFromAsset(getAssets(),
                 "fonts/montserratmedium.ttf");
         name.setTypeface(face);
         name.setTextColor(Color.WHITE);
         name.setText(nameOfAttachment);
+        name.setPadding(16,0,16,0);
+        name.setBackgroundResource(R.drawable.attachment_background);
+        name.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
-                0,LinearLayout.LayoutParams.WRAP_CONTENT);
-        textParams.gravity= Gravity.CENTER;
+                (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        250,
+                        r.getDisplayMetrics()),(int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                40,
+                r.getDisplayMetrics()));
+//        textParams.gravity= Gravity.CENTER;
 //        name.setGravity(View.TEXT_ALIGNMENT_CENTER);
-        textParams.leftMargin = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                16,
-                r.getDisplayMetrics()
-        );
-        textParams.weight=9;
-        LinearLayout imageLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                0,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        );
-        layoutParams.rightMargin = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                16,
-                r.getDisplayMetrics()
-        );
-        layoutParams.weight = 1;
         linearLayout.addView(name,0,textParams);
-        linearLayout.addView(imageLayout,1,layoutParams);
         ImageView imageView =new ImageView(this);
+        imageView.setPadding(30,30,30,30);
         imageView.setImageResource(R.drawable.download);
+        imageView.setBackgroundResource(R.drawable.ellipse_dark);
         LinearLayout.LayoutParams paramsBtn = new LinearLayout.LayoutParams(
                 (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP,
-                        30,
+                        42,
                         r.getDisplayMetrics()
                 ),
                 (int) TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP,
-                        30,
+                        42,
                         r.getDisplayMetrics()
                 ));
+        paramsBtn.leftMargin = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                16,
+                r.getDisplayMetrics()
+        );
         paramsBtn.gravity = Gravity.CENTER;
-        imageLayout.addView(imageView, 0, paramsBtn);
+        linearLayout.addView(imageView,1,paramsBtn);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -380,7 +397,9 @@ public class EventActivity extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         if(screen.equals("home")) {
-            startActivity(new Intent(EventActivity.this, MainActivity2.class));
+            Intent intent=new Intent(EventActivity.this, MainActivity2.class);
+            intent.putExtra("action","db");
+            startActivity(intent);
         }
         else if(screen.equals("profile")){
            Intent intent= new Intent(EventActivity.this,MainActivity2.class);
@@ -503,6 +522,7 @@ public class EventActivity extends AppCompatActivity {
                                                         Log.d("xx",marker);
                                                     }
                                                     if(jsonObject.has("attachments")) {
+                                                        attachment_text.setVisibility(View.VISIBLE);
                                                         JSONObject attachmentsJsonObj = jsonObject.getJSONObject("attachments");
                                                         Iterator iterator= attachmentsJsonObj.keys();
                                                         while (iterator.hasNext()){
@@ -528,8 +548,7 @@ public class EventActivity extends AppCompatActivity {
                                                     desc.setText(jsonObject.getString("desc"));
                                                     Linkify.addLinks(desc , Linkify.WEB_URLS);
                                                     venue.setText(venue_event);
-                                                    date.setText(sdf.format(date_event).substring(0, 3) + ", " + d.format(date_event) + " " + format.format(date_event) + " " + y.format(date_event));
-                                                    time.setText(time_event);
+                                                    date.setText(sdf.format(date_event).substring(0, 3) + ", " + d.format(date_event) + " " + format.format(date_event) + " " + y.format(date_event) + " "+time_event);
                                                     progressDialog.dismiss();
                                                 }
                                             } catch (JSONException e) {

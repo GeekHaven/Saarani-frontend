@@ -54,11 +54,12 @@ public class SocietyProfileFragment extends Fragment  {
     private SocietyProfileViewModel mViewModel;
     TextView name,desc;
     ImageView imageView;
-    String key;
+    String key,displayName;
     private RecyclerView recyclerView;
     private CardView cardView;
     private RecyclerView.Adapter adapter;
     final Date date = new Date();
+    DatabaseHandler databaseHandler;
     private List<ListItems> listItems;
 
     public static SocietyProfileFragment newInstance() {
@@ -69,6 +70,7 @@ public class SocietyProfileFragment extends Fragment  {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.society_profile_fragment, container, false);
+        databaseHandler=new DatabaseHandler(getContext());
         listItems=new ArrayList<>();
         name=view.findViewById(R.id.society_name);
         imageView=view.findViewById(R.id.society_profile);
@@ -76,6 +78,8 @@ public class SocietyProfileFragment extends Fragment  {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        displayName=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
         if(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()!=null){
             Picasso
                     .get()
@@ -105,8 +109,34 @@ public class SocietyProfileFragment extends Fragment  {
             nameo=nameo.substring(0, 1).toUpperCase() + nameo.substring(1);
             name.setText(nameo);
         }
-        getSocKey();
-        addDataToRV();
+
+        try {
+            List<ListItems> allEvents=new ArrayList<>();
+            allEvents=databaseHandler.getAllEvents();
+            for(int i=0;i<allEvents.size();i++){
+                ListItems item=allEvents.get(i);
+                if(item.getByName().equals(displayName)){
+                    listItems.add(item);
+                }
+            }
+            adapter=new SocietyCardAdaptor(listItems, new ClickListener() {
+                @Override
+                public void onPositionClicked(int position) {
+
+                }
+
+                @Override
+                public void onLongClicked(int position) {
+
+                }
+            }, getContext(),"alertDialog");
+            recyclerView.setAdapter(adapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+//        getSocKey();
+//        addDataToRV();
 
         return view;
     }

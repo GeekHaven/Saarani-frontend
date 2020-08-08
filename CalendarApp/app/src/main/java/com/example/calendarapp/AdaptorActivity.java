@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -53,6 +54,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     private String eventId,marker,backFragment;
     private HashMap<Integer, String> map= new HashMap<Integer, String>();
     private HashMap<Integer, String> mapMarker= new HashMap<Integer, String>();
+    DatabaseHandler databaseHandler;
     SharedPreferences prefs ;
 
 
@@ -69,6 +71,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.single_event, parent, false);
         prefs=context.getSharedPreferences("user", MODE_PRIVATE);
+        databaseHandler=new DatabaseHandler(context);
         return new ViewHolder(v);
     }
     @Override
@@ -104,9 +107,10 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             holder.going.setTag(tick);
         }
     }
-    public void addMarker(int position, final String mark){
+    public void addMarker(int position, final String mark) throws JSONException {
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        databaseHandler.updateMarker(listItems.get(position),mark);
         marker=mark;
         mapMarker.put(position,mark);
         final String url="https://socupdate.herokuapp.com/events/"+map.get(position)+"/mark";
@@ -157,9 +161,10 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         intent.putStringArrayListExtra("attachments_name",items.getNameList());
         context.startActivity(intent);
     }
-    public void deleteRequest(int position){
+    public void deleteRequest(int position) throws JSONException {
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
+        databaseHandler.updateMarker(listItems.get(position),"none");
         marker="none";
         mapMarker.put(position,"none");
         final String url="https://socupdate.herokuapp.com/events/"+map.get(position)+"/mark/delete";
@@ -239,12 +244,12 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
 //
 //            }
 //        };
-        public void sendBroadcast(String msg,int position){
-            Intent intent = new Intent("custom-message");
-            intent.putExtra("eventId",map.get(position));
-            intent.putExtra("markedAs",msg);
-            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-        }
+//        public void sendBroadcast(String msg,int position){
+//            Intent intent = new Intent("custom-message");
+//            intent.putExtra("eventId",map.get(position));
+//            intent.putExtra("markedAs",msg);
+//            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+//        }
         @Override
         public void onClick(View v) {
             if(v.getId()==star.getId()||v.getId()==interested.getId()){
@@ -254,8 +259,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                         Toast.makeText(context, "Unmarked", Toast.LENGTH_SHORT).show();
                         star.setTag(R.drawable.star_img);
                         star.setImageResource(R.drawable.star_img);
-                        deleteRequest(this.getAdapterPosition());
-                        sendBroadcast("none", this.getAdapterPosition());
+                        try {
+                            deleteRequest(this.getAdapterPosition());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         Toast.makeText(context, "Marked", Toast.LENGTH_SHORT).show();
                         star.setTag(star_yellow);
@@ -264,8 +272,12 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             going.setTag(tick);
                             going.setImageResource(R.drawable.tick);
                         }
-                        sendBroadcast("interested", this.getAdapterPosition());
-                        addMarker(this.getAdapterPosition(), "interested");
+
+                        try {
+                            addMarker(this.getAdapterPosition(), "interested");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 else{
@@ -279,8 +291,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                         Toast.makeText(context, "Unmarked", Toast.LENGTH_SHORT).show();
                         going.setTag(tick);
                         going.setImageResource(R.drawable.tick);
-                        deleteRequest(this.getAdapterPosition());
-                        sendBroadcast("none", this.getAdapterPosition());
+                        try {
+                            deleteRequest(this.getAdapterPosition());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         Toast.makeText(context, "Marked", Toast.LENGTH_SHORT).show();
                         going.setTag(tick_yellow);
@@ -289,8 +304,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             star.setTag(R.drawable.star_img);
                             star.setImageResource(R.drawable.star_img);
                         }
-                        sendBroadcast("going", this.getAdapterPosition());
-                        addMarker(this.getAdapterPosition(), "going");
+                        try {
+                            addMarker(this.getAdapterPosition(), "going");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 else{

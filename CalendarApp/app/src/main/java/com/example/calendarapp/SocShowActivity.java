@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -328,7 +329,7 @@ public class SocShowActivity extends AppCompatActivity {
                             Iterator iterator1 = jsonObject1.keys();
                             while(iterator1.hasNext()){
                                 String name= iterator1.next().toString();
-                                attachmentsList.add(jsonObject.getString(name));
+                                attachmentsList.add(jsonObject1.getString(name));
                                 attachmentNameList.add(name);
                             }
                         }
@@ -388,7 +389,7 @@ public class SocShowActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Log.d("SocShow_volley_error", String.valueOf(error));
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(SocShowActivity.this);

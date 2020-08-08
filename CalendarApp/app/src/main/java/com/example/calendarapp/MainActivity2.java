@@ -71,6 +71,7 @@ public class MainActivity2 extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     int x=0;
     String frag="";
+    Boolean visibility=false;
     TextView tvStudentName, tvStudentEmailId;
     Toolbar toolbar;
     NavController navController;
@@ -102,7 +103,6 @@ public class MainActivity2 extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         subscribeToTopic();
-        sendIdToken();
         drawerLayout=findViewById(R.id.drawerMainActivity);
         navigationView=findViewById(R.id.navigation_main);
 
@@ -134,6 +134,23 @@ public class MainActivity2 extends AppCompatActivity {
                 .setDrawerLayout(drawerLayout).build();
         
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        Bundle bundle =new Bundle();
+        if(intent.getExtras()!=null && intent.getExtras().containsKey("action")) {
+            if(intent.getExtras().getString("action").equals("db")) {
+                bundle.putString("loadFrom", "db");
+                SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+                if(prefs.getString("society", "false").equals("true")) {
+                    visibility=true;
+                }
+                else
+                    visibility=false;
+            }
+            else {
+                bundle.putString("loadFrom", "server");
+                sendIdToken();
+            }
+        }
+        navController.setGraph(R.navigation.mobile_navigation,bundle);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
@@ -141,19 +158,12 @@ public class MainActivity2 extends AppCompatActivity {
             if(intent.getExtras().getString("Fragment").equals("profile")) {
                 toolbar.setBackgroundColor(Color.rgb(59, 59, 59));
                 onCreateOptionsMenu(toolbar.getMenu());
-//                Menu menu=toolbar.getMenu();
-//                addEvent=menu.findItem(R.id.add_event);
-//                swap=menu.findItem(R.id.calendar);
                 navController.navigate(R.id.navigation_nav_profile);
                 addEvent.setVisible(false);
                 swap.setVisible(false);
 
             }
             else{
-//                Menu menu=toolbar.getMenu();
-//                addEvent=menu.findItem(R.id.add_event);
-//                swap=menu.findItem(R.id.calendar);
-//                swap.setIcon(R.drawable.ic_calendar);
                 navController.navigate(R.id.navigation_nav_list);
             }
         }
@@ -246,9 +256,9 @@ public class MainActivity2 extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Log.d("VARUN BHARDWAJ IDTOKEN", Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getToken()));
                                 token[0] =task.getResult().getToken();
-                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText("idtoken", token[0]);
-                                clipboard.setPrimaryClip(clip);
+//                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+//                                ClipData clip = ClipData.newPlainText("idtoken", token[0]);
+//                                clipboard.setPrimaryClip(clip);
                                 HashMap<String,String> map=new HashMap<String, String>();
                                 map.put("token",token[0]);
                                 final ProgressDialog progressDialog = new ProgressDialog(MainActivity2.this);
@@ -265,6 +275,7 @@ public class MainActivity2 extends AppCompatActivity {
 //                                                    textView.setText(response.getString("society"));
                                                     if(response.getString("society").equals("true")){
                                                         addEvent.setVisible(true);
+                                                        visibility=true;
                                                         SharedPreferences.Editor editor = getSharedPreferences("user", MODE_PRIVATE).edit();
                                                         editor.putString("society", "true");
                                                         editor.apply();
@@ -303,12 +314,14 @@ public class MainActivity2 extends AppCompatActivity {
         if(getIntent().getExtras()!=null && getIntent().getExtras().containsKey("Fragment")){
             if(getIntent().getExtras().getString("Fragment").equals("profile")){
                 addEvent.setVisible(false);
+                visibility=false;
                 swap.setVisible(false);
             }
             else {
                 swap.setIcon(R.drawable.ic_calendar_home);
             }
         }
+        addEvent.setVisible(visibility);
         return true;
     }
     @Override
@@ -337,7 +350,9 @@ public class MainActivity2 extends AppCompatActivity {
                 swap.setIcon(R.drawable.ic_calendar_home);
             }
             else {
-                navController.navigate(R.id.navigation_nav_main);
+                Bundle bundle=new Bundle();
+                bundle.putString("action","db");
+                navController.navigate(R.id.navigation_nav_main,bundle);
                 swap.setIcon(R.drawable.ic_list_view);
             }
         }

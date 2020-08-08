@@ -60,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -72,6 +73,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
     int posIn=0,posGo=0;
     private int eventType=1;
     ActionBar toolbar;
+    DatabaseHandler databaseHandler;
     ImageView imgProfileUserPhoto;
     TextView tvUserName,tvUserEmailID, tvNoEvent;
     TabLayout tabLayout;
@@ -89,7 +91,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                              @Nullable Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.profile_fragment, container, false);
-
+        databaseHandler=new DatabaseHandler(getContext());
         imgProfileUserPhoto=view.findViewById(R.id.imgProfileFragmentUserPhoto);
         tvUserName=view.findViewById(R.id.tvProfileFragmentUserName);
         tvUserEmailID=view.findViewById(R.id.tvProfileFragmentUserEmailID);
@@ -132,7 +134,23 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                     .into(imgProfileUserPhoto);
         }
 
-        fetchEventsData();
+//        fetchEventsData();
+        listInterestedEvents = new ArrayList<ListItems>();
+        listGoingEvents = new ArrayList<ListItems>();
+        try {
+            List<ListItems> allEvents=databaseHandler.getAllEvents();
+            for(int i=0;i<allEvents.size();i++){
+                ListItems item= allEvents.get(i);
+                if(item.getMarker().equals("going")){
+                    listGoingEvents.add(item);
+                }
+                else if(item.getMarker().equals("interested"))
+                    listInterestedEvents.add(item);
+            }
+            loadRecyclerView();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         interestedEventsLayoutManager=new LinearLayoutManager(this.getActivity());
         rcvInterestedEvents.setLayoutManager(interestedEventsLayoutManager);
@@ -303,7 +321,8 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
 
         }
     }
-    public void deleteRequest(String id){
+    public void deleteRequest(String id) throws JSONException {
+        databaseHandler.updateMarker(databaseHandler.getEvent(id),"none");
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         final String url="https://socupdate.herokuapp.com/events/"+id+"/mark/delete";
@@ -347,7 +366,11 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                     .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            deleteRequest(listInterestedEvents.get(position).getEventId());
+                            try {
+                                deleteRequest(listInterestedEvents.get(position).getEventId());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             listInterestedEvents.remove(position);
                             interestedEventsAdapter.notifyDataSetChanged();
                             if(listInterestedEvents.size()==0){
@@ -377,7 +400,11 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                     .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            deleteRequest(listGoingEvents.get(position).getEventId());
+                            try {
+                                deleteRequest(listGoingEvents.get(position).getEventId());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             listGoingEvents.remove(position);
                             goingEventsAdapter.notifyDataSetChanged();
                             if(listGoingEvents.size()==0){

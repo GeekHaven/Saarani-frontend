@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:defaultNavHost="true"
-            app:navGraph="@navigation/mobile_navigation" />
+             />
 <!--    </androidx.core.widget.NestedScrollView>-->
     </LinearLayout>
 

@@ -548,6 +548,13 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                             result = result.substring(cut + 1);
                                         }
                                     }
+
+//                                    if(result.length()>=23){
+//                                        String name=result.split(".")[0];
+//                                        String extension=result.split(".")[1];
+//                                        result=name.substring(16)+"...";
+//                                    }
+
                                     StringBuilder convertString = new StringBuilder(result);
                                     for(int x=0;x<result.length();x++){
                                         if(result.charAt(x)=='.'){
@@ -682,6 +689,11 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                         result = result.substring(cut + 1);
                                     }
                                 }
+//                                if(result.length()>=23){
+//                                    String name=result.split(".")[0];
+//                                    String extension=result.split(".")[1];
+//                                    result=name.substring(16)+"...";
+//                                }
                                 StringBuilder convertString = new StringBuilder(result);
                                 for(int x=0;x<result.length();x++){
                                     if(result.charAt(x)=='.'){
@@ -909,7 +921,9 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 intent.putExtra(Intent.EXTRA_EMAIL, subarray);
                 intent.putExtra(Intent.EXTRA_SUBJECT,eventName.getText().toString());
                 String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
-                intent.putExtra(Intent.EXTRA_TEXT, body);
+                ArrayList<String> body_text=new ArrayList<>();
+                body_text.add( body);
+                intent.putExtra(Intent.EXTRA_TEXT,body);
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.setType("vnd.android.cursor.dir/email");
                 ArrayList<Uri> uris=new ArrayList<Uri>();
@@ -1028,7 +1042,9 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             }
         }
         else{
-            startActivity(new Intent(this,MainActivity2.class));
+            Intent intent=new Intent(this,MainActivity2.class);
+            intent.putExtra("action","db");
+            startActivity(intent);
             finish();
         }
     }
