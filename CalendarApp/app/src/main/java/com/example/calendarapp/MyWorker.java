@@ -48,14 +48,10 @@ public class MyWorker extends Worker {
         context_i=context;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public Result doWork() {
         final DatabaseHandler databaseHandler=new DatabaseHandler(context_i);
-        try {
-            databaseHandler.deleteDatabase();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         HashMap<String,String> map_post=getPostObject();
 
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
@@ -64,8 +60,14 @@ public class MyWorker extends Worker {
 
         VolleySingleton.getmInstance(getApplicationContext()).addToRequestQueue(request);
         try {
+            try {
+                databaseHandler.deleteDatabase();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             JSONObject response = future.get(60, TimeUnit.SECONDS);
+
             Iterator<String> keys = response.keys();
             while(keys.hasNext()){
                 String eventId= keys.next();
@@ -117,30 +119,23 @@ public class MyWorker extends Worker {
             return Result.failure();
         }
     }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public HashMap<String,String> getPostObject() {
         final HashMap<String,String> mapToken=new HashMap<String, String>();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                @Override
-                public void onComplete(@NonNull Task<GetTokenResult> task) {
-                    try {
-                        Tasks.await(task);
-                        if(task.isSuccessful()){
-                            mapToken.put("token", Objects.requireNonNull(task.getResult()).getToken());
-                            Log.d("PostToken", Objects.requireNonNull(task.getResult().getToken()));
-                            Log.d("PostObject", String.valueOf(new JSONObject(mapToken)));
-
-                        }
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            Task<GetTokenResult> task = user.getIdToken(true);
+            try {
+                GetTokenResult result = Tasks.await(task);
+                mapToken.put("token", Objects.requireNonNull(result).getToken());
+                Log.d("PostToken", Objects.requireNonNull(Objects.requireNonNull(result).getToken()));
+                Log.d("PostObject", String.valueOf(new JSONObject(mapToken)));
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return mapToken;
     }

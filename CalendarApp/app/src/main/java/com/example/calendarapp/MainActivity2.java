@@ -150,6 +150,14 @@ public class MainActivity2 extends AppCompatActivity {
                 sendIdToken();
             }
         }
+        else if(intent.getExtras()==null){
+            SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+            if(prefs.getString("society", "false").equals("true")) {
+                visibility=true;
+            }
+            else
+                visibility=false;
+        }
         navController.setGraph(R.navigation.mobile_navigation,bundle);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -163,8 +171,14 @@ public class MainActivity2 extends AppCompatActivity {
                 swap.setVisible(false);
 
             }
-            else{
+            else if(intent.getExtras().getString("Fragment").equals("list")){
                 navController.navigate(R.id.navigation_nav_list);
+                SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+                if(prefs.getString("society", "false").equals("true")) {
+                    visibility=true;
+                }
+                else
+                    visibility=false;
             }
         }
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("back")){

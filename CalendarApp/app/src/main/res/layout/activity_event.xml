@@ -9,7 +9,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:background="@color/colorPrimary"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:layout_width="40dp"
@@ -140,7 +140,7 @@
                 android:id="@+id/star"
                 android:layout_width="21dp"
                 android:layout_height="20dp"
-                android:scaleType="fitXY"
+                android:scaleType="centerInside"
                 android:src="@drawable/star_img" />
 
             <TextView
@@ -156,12 +156,12 @@
 
             <ImageView
                 android:id="@+id/tick"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="6dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/tick" />
+                android:scaleType="centerInside"
+                android:src="@drawable/going_man" />
 
             <TextView
                 android:id="@+id/text_going"

@@ -194,6 +194,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[] {String.valueOf(listItems.getId())});
     }
 
+    public int updateSet(ListItems listItems,String id) throws JSONException {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME,listItems.getName());
+        values.put(KEY_DESC,listItems.getDesc());
+        values.put(KEY_BY,listItems.getByName());
+        values.put(KEY_DATE,listItems.getDate());
+        values.put(KEY_TIME,listItems.getTime());
+        values.put(KEY_VENUE,listItems.getVenue());
+        values.put(KEY_MARKER,listItems.getMarker());
+        values.put(KEY_EVENT_ID,listItems.getEventId());
+        values.put(KEY_PHOTO_URL,listItems.getPhotoUrl());
+        JSONObject json = new JSONObject();
+        json.put("attachmentList", new JSONArray(listItems.getArrayList()));
+        String arrayList = json.toString();
+        values.put(KEY_ATTACHMENT_LIST,arrayList);
+        JSONObject json1 = new JSONObject();
+        json1.put("attachmentNameList", new JSONArray(listItems.getNameList()));
+        String nameList = json1.toString();
+        values.put(KEY_ATTACHMENT_NAME_LIST,nameList);
+
+        return db.update(TABLE_EVENTS, values, KEY_ID + " = ?",
+                new String[] {String.valueOf(listItems.getId())});
+    }
+
     public void deleteEvent(ListItems listItem) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_EVENTS, KEY_ID + " = ?",

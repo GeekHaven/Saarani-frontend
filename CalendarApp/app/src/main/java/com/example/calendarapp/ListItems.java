@@ -15,6 +15,7 @@ public class ListItems {
     private String photoUrl;
     private Integer id;
     private boolean showMenu;
+    private boolean completed;
 
     public ListItems( String name,String desc,String byName,String date,String time,String venue,String marker,String eventId,ArrayList<String> arrayList){
         this.name=name;
@@ -48,6 +49,9 @@ public class ListItems {
     public boolean isShowMenu() {
         return showMenu;
     }
+
+    public void setState(Boolean completed){this.completed=completed;}
+    public boolean getState(){return completed;}
 
     public String getName(){
         return name;

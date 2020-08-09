@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -108,28 +109,29 @@ public class CustomAlertFragment extends DialogFragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 //    @Override
-//    public void onDismiss(DialogInterface dialog) {
-//        super.onDismiss(dialog);
-//        if (onDismissListener != null) {
-//            dialog.dismiss();
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
 //        }
 //    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.custom_alert_box, container, false);
-        return view;
-    }
+////    @Override
+////    public void onDismiss(DialogInterface dialog) {
+////        super.onDismiss(dialog);
+////        if (onDismissListener != null) {
+////            dialog.dismiss();
+////        }
+////    }
+//
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        View view= inflater.inflate(R.layout.custom_alert_box, container, false);
+//        setStyle(DialogFragment.STYLE_NO_FRAME, 0);
+//        return view;
+//    }
     public int confirmation(String msg){
         final int[] val = {0};
 
@@ -205,7 +207,6 @@ public class CustomAlertFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
-
         builder = new AlertDialog.Builder(getActivity());
         context=getActivity();
         LayoutInflater inflater = requireActivity().getLayoutInflater();
@@ -223,8 +224,8 @@ public class CustomAlertFragment extends DialogFragment {
         reminder=view.findViewById(R.id.reminder);
         eventName=getArguments().getString("name");
         eventDate=getArguments().getString("date");
-        eventTime=getArguments().getString("time");
-        eventVenue=getArguments().getString("venue");
+        eventTime=getArguments().getString("time").split(" ")[1];
+        eventVenue=getArguments().getString("venue").split(" ")[1];
         eventId=getArguments().getString("eventId");
         eventDesc=getArguments().getString("desc");
         byName=getArguments().getString("byName");

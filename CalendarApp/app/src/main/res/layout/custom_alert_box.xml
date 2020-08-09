@@ -1,43 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:background="@android:color/transparent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#626262">
+    android:background="@drawable/alert_box_background">
 
     <TextView
         android:id="@+id/eventTitle"
         android:layout_width="match_parent"
+        android:paddingHorizontal="16dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:fontFamily="@font/montserratmedium"
         android:gravity="center"
         android:text="Wall Painting"
-        android:textColor="#F5D22B"
+        android:textColor="#FFFFFF"
         android:textSize="28sp"
-        android:textStyle="bold"
+        android:textStyle="normal|bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/cancel"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginTop="11dp"
         android:layout_marginEnd="13dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/cross_yellow"
+        android:scaleType="centerInside"
+        android:src="@drawable/cross"
         android:layout_marginRight="13dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="23dp"
-        android:layout_height="30dp"
+        android:layout_width="13dp"
+        android:layout_height="20dp"
         android:layout_marginStart="56dp"
         android:layout_marginLeft="56dp"
         android:layout_marginTop="28dp"
@@ -57,15 +62,15 @@
         android:layout_marginTop="29dp"
         android:fontFamily="@font/montserratmedium"
         android:text="Pavillion"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:textColor="#BBBBBB"
+        android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:layout_constraintTop_toBottomOf="@+id/eventTitle" />
 
     <ImageView
         android:id="@+id/imageView4"
-        android:layout_width="27dp"
-        android:layout_height="30dp"
+        android:layout_width="17dp"
+        android:layout_height="20dp"
         android:layout_marginStart="56dp"
         android:layout_marginLeft="56dp"
         android:layout_marginTop="16dp"
@@ -83,15 +88,15 @@
         android:layout_marginTop="20dp"
         android:fontFamily="@font/montserratmedium"
         android:text="Thu, Dec 22 2020"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
+        android:textColor="#BBBBBB"
+        android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
         app:layout_constraintTop_toBottomOf="@+id/location" />
 
     <ImageView
         android:id="@+id/imageView5"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_marginStart="56dp"
         android:layout_marginLeft="56dp"
         android:layout_marginTop="22dp"
@@ -103,14 +108,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginLeft="26dp"
         android:layout_marginTop="17dp"
         android:fontFamily="@font/montserratmedium"
         android:text="12:00 am"
-        android:textColor="#FFFFFF"
+        android:textColor="#BBBBBB"
         android:id="@+id/time"
-        android:textSize="22sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/imageView5"
         app:layout_constraintTop_toBottomOf="@+id/date" />
 
@@ -118,19 +123,19 @@
         android:id="@+id/textView8"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_marginTop="39dp"
-        android:background="#CCFFFFFF"
+        android:layout_marginTop="16dp"
+        android:background="#33FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
     <ImageView
         android:id="@+id/edit"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginStart="37dp"
         android:layout_marginLeft="37dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="20dp"
         android:scaleType="fitXY"
         android:src="@drawable/pencil"
         app:layout_constraintStart_toStartOf="parent"
@@ -138,11 +143,11 @@
 
     <ImageView
         android:id="@+id/reminder"
-        android:layout_width="40dp"
-        android:layout_height="60dp"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
         android:layout_marginStart="70dp"
         android:layout_marginLeft="70dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="80dp"
         android:layout_marginRight="80dp"
         android:scaleType="fitXY"
@@ -153,9 +158,9 @@
 
     <ImageView
         android:id="@+id/delete"
-        android:layout_width="40dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="52dp"
+        android:layout_width="25dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="48dp"
         android:layout_marginRight="48dp"
         android:scaleType="fitXY"
@@ -165,10 +170,9 @@
 
     <LinearLayout
         android:id="@+id/layout"
-        android:paddingRight="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="32dp"
         android:gravity="center"
         android:orientation="horizontal"
@@ -180,9 +184,10 @@
 
         <LinearLayout
             android:layout_width="0dp"
+            android:paddingLeft="35dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:gravity="center">
+            android:paddingStart="35dp">
 
             <TextView
                 android:id="@+id/textView9"
@@ -190,8 +195,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserratmedium"
                 android:text="Edit"
-                android:textColor="#F5D22B"
-                android:textSize="22sp"
+                android:textColor="#BBBBBB"
+                android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -207,8 +212,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserratmedium"
                 android:text="Reminder"
-                android:textColor="#F5D22B"
-                android:textSize="22sp"
+                android:textColor="#BBBBBB"
+                android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -223,11 +228,12 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserratmedium"
                 android:text="Delete"
-                android:textColor="#F5D22B"
-                android:textSize="22sp"
+                android:textColor="#BBBBBB"
+                android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
