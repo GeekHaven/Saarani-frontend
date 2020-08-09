@@ -38,9 +38,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.Inflater;
 
 public class SocShowActivity extends AppCompatActivity {
@@ -49,8 +54,11 @@ public class SocShowActivity extends AppCompatActivity {
     Boolean k=false;
     ImageView imageView,instagram,facebook,mail,back_btn;
     RecyclerView recyclerView;
+    final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    Date date =new Date();
     LinearLayout linearLayout;
     LayoutInflater layoutInflater;
+    DatabaseHandler databaseHandler;
     RecyclerView.Adapter adapter;
     List<ListItems> listItems =new ArrayList<>();
     TextView soc_name,soc_desc,view_more,defaultText;
@@ -59,6 +67,7 @@ public class SocShowActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_soc_show);
+        databaseHandler=new DatabaseHandler(this);
         soc_name=findViewById(R.id.soc_name);
         imageView=findViewById(R.id.image);
         soc_desc=findViewById(R.id.soc_desc);
@@ -314,6 +323,7 @@ public class SocShowActivity extends AppCompatActivity {
         progressDialog.setMessage("Loading data....");
         progressDialog.show();
         StringRequest stringRequest =new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(String response) {
                 try {
@@ -333,15 +343,17 @@ public class SocShowActivity extends AppCompatActivity {
                                 attachmentNameList.add(name);
                             }
                         }
+                        String marker=databaseHandler.getEvent(key).getMarker();
                         ListItems items = new ListItems(
                                 jsonObject.getString("name"),
                                 jsonObject.getString("desc"),
                                 jsonObject.getString("byName"),
                                 "Date: "+jsonObject.getString("date"),
                                 "Time: "+jsonObject.getString("time"),
-                                "Venue: "+jsonObject.getString("venue"),"",key,attachmentsList
+                                "Venue: "+jsonObject.getString("venue"),marker,key,attachmentsList
                         );
                         items.setNameList(attachmentNameList);
+                        if(f.parse(f.format(date)).compareTo(f.parse(items.getDate().split(" ")[1]))<0||(f.parse(f.format(date)).compareTo(f.parse(items.getDate().split(" ")[1]))==0 && LocalTime.now().isBefore(LocalTime.parse(items.getTime().split(" ")[1]))))
                         listItems.add(items);
                     }
 
@@ -382,7 +394,7 @@ public class SocShowActivity extends AppCompatActivity {
                     }
                     recyclerView.setAdapter(adapter);
                     progressDialog.dismiss();
-                } catch (JSONException e) {
+                } catch (JSONException | ParseException e) {
                     e.printStackTrace();
                 }
             }

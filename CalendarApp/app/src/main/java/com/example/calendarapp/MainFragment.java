@@ -1,5 +1,6 @@
 package com.example.calendarapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.icu.text.Edits;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -48,6 +50,7 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -73,12 +76,14 @@ public class MainFragment extends Fragment {
             = new HashMap<>();
     HashMap<String,Integer> mapPosition =new HashMap<>();
     final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
+    final SimpleDateFormat time_sdf = new SimpleDateFormat("HH:mm",Locale.getDefault());
     private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM", Locale.getDefault());
     private SimpleDateFormat dateFormatYear =new SimpleDateFormat("YYYY",Locale.getDefault());
     public static MainFragment newInstance() {
         return new MainFragment();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -168,6 +173,7 @@ public class MainFragment extends Fragment {
 //
 //        }
 //    };
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void loadDatabase() throws JSONException {
         listItems=databaseHandler.getAllEvents();
         Log.d("db_list_size", String.valueOf(listItems.size()));
@@ -180,9 +186,14 @@ public class MainFragment extends Fragment {
                 Date d = f.parse(item.getDate());
                 assert d != null;
                 long milliseconds = d.getTime();
-
+                if(f.parse(f.format(date)).compareTo(d)==0 && LocalTime.now().isAfter(LocalTime.parse(item.getTime().split(" ")[1]))){
+                    item.setState(true);
+                }
+                else
+                    item.setState(false);
                 Event eventx;
                 eventx = new Event(Color.rgb(240, 212, 83), milliseconds);
+                if(f.parse(f.format(date)).compareTo(d)<=0)
                 compactCalendar.addEvent(eventx);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -302,6 +313,7 @@ public class MainFragment extends Fragment {
                                         }
                                         Log.d("size",String.valueOf(listItems.size()));
                                         showRecyclerView(date);
+                                        databaseHandler.close();
                                     }
                                 },
                                 new Response.ErrorListener() {

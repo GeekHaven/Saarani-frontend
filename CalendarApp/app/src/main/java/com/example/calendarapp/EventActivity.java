@@ -186,7 +186,7 @@ public class EventActivity extends AppCompatActivity {
                         star.setImageResource(star_yellow);
                         if ((Integer) tick_mark.getTag() == tick_yellow) {
                             tick_mark.setTag(tick);
-                            tick_mark.setImageResource(R.drawable.tick);
+                            tick_mark.setImageResource(R.drawable.going_man);
                         }
                         try {
                             databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"interested");
@@ -217,7 +217,7 @@ public class EventActivity extends AppCompatActivity {
                         star.setImageResource(star_yellow);
                         if ((Integer) tick_mark.getTag() == tick_yellow) {
                             tick_mark.setTag(tick);
-                            tick_mark.setImageResource(R.drawable.tick);
+                            tick_mark.setImageResource(R.drawable.going_man);
                         }
                         try {
                             databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"interested");
@@ -235,7 +235,7 @@ public class EventActivity extends AppCompatActivity {
                     if (tag != null && (Integer) tag == tick_yellow) {
                         Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
                         tick_mark.setTag(tick);
-                        tick_mark.setImageResource(R.drawable.tick);
+                        tick_mark.setImageResource(R.drawable.going_man);
                         try {
                             databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
                         } catch (JSONException e) {
@@ -245,7 +245,7 @@ public class EventActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
                         tick_mark.setTag(tick_yellow);
-                        tick_mark.setImageResource(R.drawable.tick_yellow);
+                        tick_mark.setImageResource(R.drawable.going_man_yellow);
                         if ((Integer) star.getTag() == star_yellow) {
                             star.setTag(R.drawable.star_img);
                             star.setImageResource(R.drawable.star_img);
@@ -266,7 +266,7 @@ public class EventActivity extends AppCompatActivity {
                     if (tag != null && (Integer) tag == tick_yellow) {
                         Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
                         tick_mark.setTag(tick);
-                        tick_mark.setImageResource(R.drawable.tick);
+                        tick_mark.setImageResource(R.drawable.going_man);
                         try {
                             databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
                         } catch (JSONException e) {
@@ -276,7 +276,7 @@ public class EventActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
                         tick_mark.setTag(tick_yellow);
-                        tick_mark.setImageResource(R.drawable.tick_yellow);
+                        tick_mark.setImageResource(R.drawable.going_man_yellow);
                         if ((Integer) star.getTag() == star_yellow) {
                             star.setTag(R.drawable.star_img);
                             star.setImageResource(R.drawable.star_img);
@@ -379,7 +379,7 @@ public class EventActivity extends AppCompatActivity {
             star.setTag(star_yellow);
         }
         else if(marker.equals("going")){
-            tick_mark.setImageResource(R.drawable.tick_yellow);
+            tick_mark.setImageResource(R.drawable.going_man_yellow);
             tick_mark.setTag(tick_yellow);
             Log.d("set","true");
         }

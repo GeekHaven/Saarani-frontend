@@ -42,6 +42,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -52,6 +53,8 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
@@ -88,6 +91,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
     public Button addEvent,addAttachment;
     TextView spinnerTime, heading;
     CalendarView calendarView;
+    ConstraintLayout constraintLayout;
     String date,eventId,hourSelect="00", minuteSelect="00",requestType="post";
     ImageButton mailItem;
     LinearLayout attachmentParent,addEmailLayout;
@@ -120,6 +124,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
         date=dateFormat.format(dateToday);
         Log.d("date",date);
         heading=findViewById(R.id.textView3);
+        constraintLayout=findViewById(R.id.layout);
         addEmailLayout=findViewById(R.id.addEmailLayout);
         attachmentParent=findViewById(R.id.attachmentLayout);
         addAttachment=findViewById(R.id.attachment);
@@ -187,7 +192,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             minuteSelect=split[1];
             hour[0]= Integer.parseInt(split[0]);
             minute[0]=Integer.parseInt(split[1]);
-            String dateString=intent.getExtras().getString("date").split(" ")[1];
+            String dateString=intent.getExtras().getString("date");
             date=dateString;
             Log.d("dateToParse",dateString);
             try {
@@ -328,17 +333,17 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             @Override
             public void onClick(View v) {
                 if(eventName.getText().toString().isEmpty()){
-                    Toast.makeText(AddEventActivity.this,"Please enter event name",Toast.LENGTH_SHORT).show();
+                    Snackbar.make(constraintLayout,"Please enter event name", Snackbar.LENGTH_LONG).show();
                 }
                 else if(eventDesc.getText().toString().isEmpty())
-                    Toast.makeText(AddEventActivity.this,"Please enter event description",Toast.LENGTH_SHORT).show();
+                    Snackbar.make(constraintLayout,"Please enter event description", Snackbar.LENGTH_LONG).show();
                 else if(eventVenue.getText().toString().isEmpty())
-                    Toast.makeText(AddEventActivity.this,"Please enter event venue",Toast.LENGTH_SHORT).show();
+                    Snackbar.make(constraintLayout,"Please enter event venue",Snackbar.LENGTH_LONG).show();
                 else if(hourSelect.equals("00")&&minuteSelect.equals("00"))
-                    Toast.makeText(AddEventActivity.this,"Please enter event time",Toast.LENGTH_SHORT).show();
+                    Snackbar.make(constraintLayout,"Please enter event time",Snackbar.LENGTH_LONG).show();
                 else {
                     if(!uriMap.isEmpty()) {
-                        Toast.makeText(AddEventActivity.this,"Uploading....",Toast.LENGTH_SHORT).show();
+                        Snackbar.make(constraintLayout,"Uploading....",Snackbar.LENGTH_INDEFINITE).show();
                         Iterator iterator = uriMap.entrySet().iterator();
                         int x = 0;
                         while (iterator.hasNext()) {
@@ -360,7 +365,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             @Override
             public void onClick(View v) {
                 if(sendTo.getText().toString().isEmpty()){
-                    Toast.makeText(AddEventActivity.this,"Enter recipients",Toast.LENGTH_SHORT).show();
+                    Snackbar.make(constraintLayout,"Enter recipients",Snackbar.LENGTH_LONG).show();
                 }
                 else{
                     final LinearLayout attachLayout= new LinearLayout(AddEventActivity.this);
@@ -480,7 +485,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
 
     @Override
     public void onBackPressed(){
-            startActivity(new Intent(AddEventActivity.this,MainActivity2.class));
+            super.onBackPressed();
     }
 
     public Long sizeOfFile(Uri uri){
@@ -655,7 +660,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                 }
                             }
                             else {
-                                Toast.makeText(AddEventActivity.this,"Size limit exceeded",Toast.LENGTH_SHORT).show();
+                                Snackbar.make(constraintLayout,"Size limit exceeded",Snackbar.LENGTH_LONG).show();
                                 size=prev;
                             }
                         } else {
@@ -787,7 +792,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                 });
                             }
                             else{
-                                Toast.makeText(AddEventActivity.this,"Size limit exceeded",Toast.LENGTH_SHORT).show();
+                                Snackbar.make(constraintLayout,"Size limit exceeded",Snackbar.LENGTH_LONG).show();
                                 size=prev;
                             }
                         }
@@ -813,8 +818,8 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             else if (requestType.equals("put"))
                 sendEventPut(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
         }
-        else
-            Toast.makeText(AddEventActivity.this,"Loading Data...",Toast.LENGTH_SHORT).show();
+//        else
+//            Toast.makeText(AddEventActivity.this,"Loading Data...",Toast.LENGTH_SHORT).show();
     }
 
     public void uploadFile(Uri uri, final String ids){
@@ -848,7 +853,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                             addAttachmnetUrl(downloadUrl,ids);
 //                        jsonAttachments.put(downloadUrl[0]);
                 } else {
-                    Toast.makeText(AddEventActivity.this,"Upload Failed",Toast.LENGTH_LONG).show();
+                    Snackbar.make(constraintLayout,"Upload Failed",Snackbar.LENGTH_LONG).show();
                     // Handle failures
                     // ...
                 }
@@ -891,7 +896,46 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                     new Response.Listener<JSONObject>() {
                                         @Override
                                         public void onResponse(JSONObject response) {
-
+                                            Toast.makeText(AddEventActivity.this,"Event Added",Toast.LENGTH_SHORT).show();
+                                            if(to.size()!=0) {
+                                                String[] subarray = new String[to.size()];
+                                                int z = 0;
+                                                for (int i = 0; i < to.size(); i++) {
+                                                    subarray[i] = to.get(i);
+                                                }
+                                                try {
+                                                    Intent intent = new Intent();
+                                                    intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    intent.putExtra(Intent.EXTRA_EMAIL, subarray);
+                                                    intent.putExtra(Intent.EXTRA_SUBJECT,eventName.getText().toString());
+                                                    String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
+                                                    ArrayList<String> body_text=new ArrayList<>();
+                                                    body_text.add( body);
+                                                    intent.putExtra(Intent.EXTRA_TEXT,body);
+                                                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                                    intent.setType("vnd.android.cursor.dir/email");
+                                                    ArrayList<Uri> uris=new ArrayList<Uri>();
+                                                    if (uriMap.size()!=0) {
+                                                        Iterator i= uriMap.entrySet().iterator();
+                                                        while(i.hasNext()){
+                                                            Map.Entry mapElement = (Map.Entry) i.next();
+                                                            uris.add((Uri)mapElement.getValue());
+                                                        }
+                                                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
+                                                    }
+                                                    intent.setPackage("com.google.android.gm");
+                                                    startActivityForResult(intent, 101);
+                                                } catch (Throwable t) {
+                                                    Toast.makeText(AddEventActivity.this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
+                                                    startActivity(new Intent(AddEventActivity.this,MainActivity2.class));
+                                                    finish();
+                                                }
+                                            }
+                                            else{
+                                                startActivity(new Intent(AddEventActivity.this,MainActivity2.class));
+                                                finish();
+                                            }
                                         }
                                     },
                                     new Response.ErrorListener() {
@@ -902,51 +946,13 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                     }
                             );
                             requstQueue.add(jsonobj);
+
                         }
                     }
                 }
             });
         }
-        Toast.makeText(this,"Event Added",Toast.LENGTH_SHORT).show();
-        if(to.size()!=0) {
-            String[] subarray = new String[to.size()];
-            int z = 0;
-            for (int i = 0; i < to.size(); i++) {
-                subarray[i] = to.get(i);
-            }
-            try {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_SEND_MULTIPLE);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(Intent.EXTRA_EMAIL, subarray);
-                intent.putExtra(Intent.EXTRA_SUBJECT,eventName.getText().toString());
-                String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
-                ArrayList<String> body_text=new ArrayList<>();
-                body_text.add( body);
-                intent.putExtra(Intent.EXTRA_TEXT,body);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.setType("vnd.android.cursor.dir/email");
-                ArrayList<Uri> uris=new ArrayList<Uri>();
-                if (uriMap.size()!=0) {
-                    Iterator i= uriMap.entrySet().iterator();
-                    while(i.hasNext()){
-                        Map.Entry mapElement = (Map.Entry) i.next();
-                        uris.add((Uri)mapElement.getValue());
-                    }
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
-                }
-                intent.setPackage("com.google.android.gm");
-                startActivityForResult(intent, 101);
-            } catch (Throwable t) {
-                Toast.makeText(this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
-                startActivity(new Intent(this,MainActivity2.class));
-                finish();
-            }
-        }
-        else{
-            startActivity(new Intent(this,MainActivity2.class));
-            finish();
-        }
+
     }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void sendEventPut(final String name, final String desc, final String venue, final String time, final String date) {
@@ -979,7 +985,44 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                     new Response.Listener<JSONObject>() {
                                         @Override
                                         public void onResponse(JSONObject response) {
-
+                                            Toast.makeText(AddEventActivity.this,"Event Updated",Toast.LENGTH_SHORT).show();
+                                            if(to.size()!=0) {
+                                                String[] subarray = new String[to.size()];
+                                                int z = 0;
+                                                for (int i = 0; i < to.size(); i++) {
+                                                    subarray[i] = to.get(i);
+                                                }
+                                                try {
+                                                    Intent intent = new Intent();
+                                                    intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    intent.putExtra(Intent.EXTRA_EMAIL, subarray);
+                                                    intent.putExtra(Intent.EXTRA_SUBJECT,eventName.getText().toString());
+                                                    String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
+//                intent.putExtra(Intent.EXTRA_TEXT, body);
+                                                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                                    intent.setType("vnd.android.cursor.dir/email");
+                                                    ArrayList<Uri> uris=new ArrayList<Uri>();
+                                                    if (uriMap.size()!=0) {
+                                                        Iterator i= uriMap.entrySet().iterator();
+                                                        while(i.hasNext()){
+                                                            Map.Entry mapElement = (Map.Entry) i.next();
+                                                            uris.add((Uri)mapElement.getValue());
+                                                        }
+                                                        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
+                                                    }
+                                                    intent.setPackage("com.google.android.gm");
+                                                    startActivityForResult(intent, 101);
+                                                } catch (Throwable t) {
+                                                    Toast.makeText(AddEventActivity.this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                            else{
+                                                Intent intent=new Intent(AddEventActivity.this,MainActivity2.class);
+                                                intent.putExtra("action","db");
+                                                startActivity(intent);
+                                                finish();
+                                            }
                                         }
                                     },
                                     new Response.ErrorListener() {
@@ -1009,44 +1052,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 }
             });
         }
-        Toast.makeText(this,"Event Updated",Toast.LENGTH_SHORT).show();
-        if(to.size()!=0) {
-            String[] subarray = new String[to.size()];
-            int z = 0;
-            for (int i = 0; i < to.size(); i++) {
-                subarray[i] = to.get(i);
-            }
-            try {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_SEND_MULTIPLE);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(Intent.EXTRA_EMAIL, subarray);
-                intent.putExtra(Intent.EXTRA_SUBJECT,eventName.getText().toString());
-                String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
-                intent.putExtra(Intent.EXTRA_TEXT, body);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.setType("vnd.android.cursor.dir/email");
-                ArrayList<Uri> uris=new ArrayList<Uri>();
-                if (uriMap.size()!=0) {
-                    Iterator i= uriMap.entrySet().iterator();
-                    while(i.hasNext()){
-                        Map.Entry mapElement = (Map.Entry) i.next();
-                        uris.add((Uri)mapElement.getValue());
-                    }
-                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
-                }
-                intent.setPackage("com.google.android.gm");
-                startActivityForResult(intent, 101);
-            } catch (Throwable t) {
-                Toast.makeText(this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
-            }
-        }
-        else{
-            Intent intent=new Intent(this,MainActivity2.class);
-            intent.putExtra("action","db");
-            startActivity(intent);
-            finish();
-        }
+
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -1064,7 +1070,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-        Toast.makeText(this,"You will not be able to upload attachments!",Toast.LENGTH_SHORT).show();
+        Snackbar.make(constraintLayout,"You will not be able to upload attachments!",Snackbar.LENGTH_LONG).show();
     }
 }
 

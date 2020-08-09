@@ -1,10 +1,12 @@
 package com.example.calendarapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -37,7 +39,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,6 +65,7 @@ public class ListFragment extends Fragment {
     List<ListItems> listItems,recylerViewList,recyclerViewListTom;
     private RecyclerView recyclerViewToday,recyclerViewTom;
     private CardView cardView;
+    Date dateX=new Date();
     private RecyclerView.Adapter adapter,adapter2;
     private String tomorrowDate;
     DatabaseHandler databaseHandler;
@@ -79,6 +84,7 @@ public class ListFragment extends Fragment {
         return new ListFragment();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -120,7 +126,11 @@ public class ListFragment extends Fragment {
         tomorrow_text.setText(Html.fromHtml(to));
 //        addEventsToCal();
         Date d=new Date();
-        addDataToRV(f.format(d),tomorrowDate);
+        try {
+            addDataToRV(f.format(d),tomorrowDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         addEvents(listItems);
         return view;
     }
@@ -131,7 +141,8 @@ public class ListFragment extends Fragment {
         mViewModel = ViewModelProviders.of(this).get(ListViewModel.class);
         // TODO: Use the ViewModel
     }
-    public void addDataToRV(String dateSelected,String dateTomSelected){
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void addDataToRV(String dateSelected, String dateTomSelected) throws ParseException {
         default_text1.setVisibility(View.GONE);
         default_text2.setVisibility(View.GONE);
         recylerViewList=new ArrayList<>();
@@ -142,6 +153,12 @@ public class ListFragment extends Fragment {
             ListItems item= listItems.get(i);
             if(item.getDate().equals(dateSelected)){
                 Log.d("match","yes");
+                Date d= f.parse(item.getDate());
+                if(f.parse(f.format(dateX)).compareTo(d)==0 && LocalTime.now().isAfter(LocalTime.parse(item.getTime().split(" ")[1]))){
+                    item.setState(true);
+                }
+                else
+                    item.setState(false);
                 recylerViewList.add(item);
                 Log.d("length",String.valueOf(recylerViewList.size()));
             }
@@ -208,8 +225,12 @@ public class ListFragment extends Fragment {
                 Log.d("length", String.valueOf(temp.size()));
                 List<CalendarEvent> event = new ArrayList<>();
                 for(int i=0;i<temp.size();i++) {
-                    if (f.format(date.getTime()).equals(temp.get(i).getDate())) {
-                        event.add(new CalendarEvent(Color.rgb(240, 212, 83)));
+                    try {
+                        if (f.format(date.getTime()).equals(temp.get(i).getDate())&&f.parse(f.format(dateX)).compareTo(f.parse(temp.get(i).getDate()))<=0) {
+                            event.add(new CalendarEvent(Color.rgb(240, 212, 83)));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
                 }
                 return event;
@@ -224,6 +245,7 @@ public class ListFragment extends Fragment {
                 .build();
         progressDialog.dismiss();
         horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onDateSelected(Calendar date, int position) {
                 date_setUp.setText(Selected[date.get(Calendar.MONTH)]+", " +date.get(Calendar.YEAR));
@@ -256,7 +278,11 @@ public class ListFragment extends Fragment {
                     today_text.setText(selectedDateDay+", "+selectedDateDate+" "+selectedDateMonth);
                     tomorrow_text.setText(selectedDateTomDay+", "+selectedDateTomDate+" "+selectedDateTomMonth);
                 }
-                addDataToRV(selectedDate,selectedDateD);
+                try {
+                    addDataToRV(selectedDate,selectedDateD);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -291,6 +317,7 @@ public class ListFragment extends Fragment {
                         Log.d("PostObject", String.valueOf(new JSONObject(mapToken)));
                         final JsonObjectRequest jsonobj = new JsonObjectRequest(Request.Method.POST, urlPost,new JSONObject(mapToken),
                                 new Response.Listener<JSONObject>() {
+                                    @RequiresApi(api = Build.VERSION_CODES.O)
                                     @Override
                                     public void onResponse(JSONObject response) {
                                         Iterator<String> keys = response.keys();
@@ -327,7 +354,11 @@ public class ListFragment extends Fragment {
                                                 temp.add(item);
                                                 listItems.add(item);
                                                 Date d=new Date();
-                                                addDataToRV(f.format(d),tomorrowDate);
+                                                try {
+                                                    addDataToRV(f.format(d),tomorrowDate);
+                                                } catch (ParseException e) {
+                                                    e.printStackTrace();
+                                                }
 
                                             } catch (JSONException e) {
                                                 e.printStackTrace();

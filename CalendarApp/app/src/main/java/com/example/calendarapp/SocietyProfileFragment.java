@@ -1,5 +1,6 @@
 package com.example.calendarapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -10,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -41,6 +43,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -56,6 +61,7 @@ public class SocietyProfileFragment extends Fragment  {
     ImageView imageView;
     String key,displayName;
     private RecyclerView recyclerView;
+    final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
     private CardView cardView;
     private RecyclerView.Adapter adapter;
     final Date date = new Date();
@@ -66,6 +72,7 @@ public class SocietyProfileFragment extends Fragment  {
         return new SocietyProfileFragment();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -116,6 +123,7 @@ public class SocietyProfileFragment extends Fragment  {
             for(int i=0;i<allEvents.size();i++){
                 ListItems item=allEvents.get(i);
                 if(item.getByName().equals(displayName)){
+                    if(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))<0||(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))==0&&(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))==0 && LocalTime.now().isBefore(LocalTime.parse(item.getTime().split(" ")[1])))))
                     listItems.add(item);
                 }
             }
@@ -131,7 +139,7 @@ public class SocietyProfileFragment extends Fragment  {
                 }
             }, getContext(),"alertDialog");
             recyclerView.setAdapter(adapter);
-        } catch (JSONException e) {
+        } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
 

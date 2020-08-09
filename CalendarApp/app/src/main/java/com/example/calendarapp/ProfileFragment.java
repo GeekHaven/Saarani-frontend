@@ -1,5 +1,7 @@
 package com.example.calendarapp;
 
+import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -44,6 +46,7 @@ import com.android.volley.toolbox.Volley;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,11 +59,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
@@ -75,8 +81,11 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
     ActionBar toolbar;
     DatabaseHandler databaseHandler;
     ImageView imgProfileUserPhoto;
+    ConstraintLayout constraintLayout;
     TextView tvUserName,tvUserEmailID, tvNoEvent;
     TabLayout tabLayout;
+    Date date=new Date();
+    final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     RecyclerView rcvInterestedEvents, rcvGoingEvents;
     RecyclerView.Adapter interestedEventsAdapter, goingEventsAdapter;
     RecyclerView.LayoutManager interestedEventsLayoutManager, goingEventsLayoutManager;
@@ -86,12 +95,14 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
         return new ProfileFragment();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
         View view=inflater.inflate(R.layout.profile_fragment, container, false);
         databaseHandler=new DatabaseHandler(getContext());
+        constraintLayout=view.findViewById(R.id.layout);
         imgProfileUserPhoto=view.findViewById(R.id.imgProfileFragmentUserPhoto);
         tvUserName=view.findViewById(R.id.tvProfileFragmentUserName);
         tvUserEmailID=view.findViewById(R.id.tvProfileFragmentUserEmailID);
@@ -141,14 +152,15 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
             List<ListItems> allEvents=databaseHandler.getAllEvents();
             for(int i=0;i<allEvents.size();i++){
                 ListItems item= allEvents.get(i);
-                if(item.getMarker().equals("going")){
-                    listGoingEvents.add(item);
+                if(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))<0 ||(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))==0&&LocalTime.now().isBefore(LocalTime.parse(item.getTime().split(" ")[1])))) {
+                    if (item.getMarker().equals("going")) {
+                        listGoingEvents.add(item);
+                    } else if (item.getMarker().equals("interested"))
+                        listInterestedEvents.add(item);
                 }
-                else if(item.getMarker().equals("interested"))
-                    listInterestedEvents.add(item);
             }
             loadRecyclerView();
-        } catch (JSONException e) {
+        } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
 
@@ -323,6 +335,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
     }
     public void deleteRequest(String id) throws JSONException {
         databaseHandler.updateMarker(databaseHandler.getEvent(id),"none");
+        Snackbar.make(constraintLayout,"Unmarked",Snackbar.LENGTH_LONG).show();
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         final String url="https://socupdate.herokuapp.com/events/"+id+"/mark/delete";
@@ -383,7 +396,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                     .setNegativeButton("NO", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(getActivity(),"Event Deletion Cancelled",Toast.LENGTH_SHORT).show();
+                            Snackbar.make(constraintLayout,"Event Deletion Cancelled",Snackbar.LENGTH_SHORT).show();
                         }
                     });
 
@@ -416,7 +429,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                     .setNegativeButton("NO", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(getActivity(),"Event Deletion Cancelled",Toast.LENGTH_SHORT).show();
+                            Snackbar.make(constraintLayout,"Event Deletion Cancelled",Snackbar.LENGTH_LONG).show();
                         }
                     });
 
