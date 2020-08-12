@@ -123,7 +123,7 @@ public class SocietyProfileFragment extends Fragment  {
             for(int i=0;i<allEvents.size();i++){
                 ListItems item=allEvents.get(i);
                 if(item.getByName().equals(displayName)){
-                    if(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))<0||(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))==0&&(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))==0 && LocalTime.now().isBefore(LocalTime.parse(item.getTime().split(" ")[1])))))
+                    if(!item.getState().equals("cancelled")&&(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))<0||(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))==0&&(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))==0 && LocalTime.now().isBefore(LocalTime.parse(item.getTime().split(" ")[1]))))))
                     listItems.add(item);
                 }
             }

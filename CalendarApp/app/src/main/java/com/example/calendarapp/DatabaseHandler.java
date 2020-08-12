@@ -5,17 +5,26 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
+    Date date=new Date();
+    final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "eventStorage";
     private static final String TABLE_EVENTS = "events";
@@ -31,6 +40,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_PHOTO_URL="photo_url";
     private static final String KEY_ATTACHMENT_LIST="attachment_list";
     private static final String KEY_ATTACHMENT_NAME_LIST="attachment_name_list";
+    private static final String KEY_STATE="state";
 
     public DatabaseHandler(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -40,7 +50,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_EVENTS + "("+KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_NAME + " TEXT," + KEY_DESC + " TEXT,"
-                + KEY_BY + " TEXT," + KEY_DATE + " TEXT," + KEY_TIME + " TEXT," + KEY_VENUE + " TEXT," + KEY_MARKER +" TEXT," + KEY_EVENT_ID+" TEXT," + KEY_PHOTO_URL+" TEXT," + KEY_ATTACHMENT_LIST +" TEXT," + KEY_ATTACHMENT_NAME_LIST+" TEXT"+")";
+                + KEY_BY + " TEXT," + KEY_DATE + " TEXT," + KEY_TIME + " TEXT," + KEY_VENUE + " TEXT," + KEY_MARKER +" TEXT," + KEY_EVENT_ID+" TEXT," + KEY_PHOTO_URL+" TEXT," + KEY_ATTACHMENT_LIST +" TEXT," + KEY_ATTACHMENT_NAME_LIST+" TEXT,"+ KEY_STATE +" TEXT" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
 
@@ -63,14 +73,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_MARKER,listItems.getMarker());
         values.put(KEY_EVENT_ID,listItems.getEventId());
         values.put(KEY_PHOTO_URL,listItems.getPhotoUrl());
-        JSONObject json = new JSONObject();
-        json.put("attachmentList", new JSONArray(listItems.getArrayList()));
-        String arrayList = json.toString();
-        values.put(KEY_ATTACHMENT_LIST,arrayList);
-        JSONObject json1 = new JSONObject();
-        json1.put("attachmentNameList", new JSONArray(listItems.getNameList()));
-        String nameList = json1.toString();
-        values.put(KEY_ATTACHMENT_NAME_LIST,nameList);
+
+        if(listItems.getArrayList()!=null) {
+            JSONObject json = new JSONObject();
+            json.put("attachmentList", new JSONArray(listItems.getArrayList()));
+            String arrayList = json.toString();
+            values.put(KEY_ATTACHMENT_LIST, arrayList);
+        }
+
+        if(listItems.getNameList()!=null) {
+            JSONObject json1 = new JSONObject();
+            json1.put("attachmentNameList", new JSONArray(listItems.getNameList()));
+            String nameList = json1.toString();
+            values.put(KEY_ATTACHMENT_NAME_LIST, nameList);
+        }
+
+        values.put(KEY_STATE,listItems.getState());
 
         db.insert(TABLE_EVENTS, null, values);
         db.close();
@@ -78,48 +96,48 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     ListItems getEvent(String id) throws JSONException {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_EVENTS, new String[] { KEY_ID,KEY_NAME,
-                        KEY_DESC, KEY_BY,KEY_DATE, KEY_TIME,KEY_VENUE,KEY_MARKER,KEY_EVENT_ID,KEY_PHOTO_URL,KEY_ATTACHMENT_LIST,KEY_ATTACHMENT_NAME_LIST }, KEY_EVENT_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_EVENTS + " WHERE " + KEY_EVENT_ID + "=?",new String[] {id});
         if (cursor != null)
             cursor.moveToFirst();
-        JSONObject json_attach_list = null;
-        if (cursor != null) {
-            json_attach_list = new JSONObject(cursor.getString(10));
-        }
-        JSONArray attach_list = null;
-        if (json_attach_list != null) {
-            attach_list = json_attach_list.optJSONArray("attachmentList");
-        }
+
         ArrayList<String> attachment_list=new ArrayList<>();
-        if (attach_list != null) {
-            for (int i = 0; i < attach_list.length(); i++) {
-                String str_value=attach_list.optString(i);
-                attachment_list.add(str_value);
+        if (cursor != null && cursor.getString(10)!=null ) {
+            JSONObject json_attach_list = null;
+            json_attach_list = new JSONObject(cursor.getString(10));
+            JSONArray attach_list = null;
+            attach_list = json_attach_list.optJSONArray("attachmentList");
+
+            if (attach_list != null) {
+                for (int i = 0; i < attach_list.length(); i++) {
+                    String str_value=attach_list.optString(i);
+                    attachment_list.add(str_value);
+                }
             }
         }
 
-        JSONObject json_attach_name_list = null;
-        if (cursor != null) {
-            json_attach_name_list = new JSONObject(cursor.getString(11));
-        }
-        JSONArray attach_name_list = null;
-        if (json_attach_name_list != null) {
-            attach_name_list = json_attach_name_list.optJSONArray("attachmentNameList");
-        }
         ArrayList<String> attachment_name_list =new ArrayList<>();
-        if (attach_name_list != null) {
-            for (int i = 0; i < attach_name_list.length(); i++) {
-                String str_value=attach_name_list.optString(i);
-                attachment_name_list.add(str_value);
+        if (cursor != null && cursor.getString(11)!=null) {
+            JSONObject json_attach_name_list = null;
+            json_attach_name_list = new JSONObject(cursor.getString(11));
+            JSONArray attach_name_list = null;
+            attach_name_list = json_attach_name_list.optJSONArray("attachmentNameList");
+            if (attach_name_list != null) {
+                for (int i = 0; i < attach_name_list.length(); i++) {
+                    String str_value=attach_name_list.optString(i);
+                    attachment_name_list.add(str_value);
+                }
             }
         }
+
 
         ListItems item = new ListItems(cursor.getString(1),
                 cursor.getString(2), cursor.getString(3),cursor.getString(4),cursor.getString(5),cursor.getString(6),cursor.getString(7),cursor.getString(8),attachment_list);
         item.setId(Integer.parseInt(cursor.getString(0)));
         item.setPhotoUrl(cursor.getString(9));
         item.setNameList(attachment_name_list);
+        item.setState(cursor.getString(12));
+        cursor.close();
+        db.close();
         return item;
     }
 
@@ -132,27 +150,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                JSONObject json_attach_list = null;
-                json_attach_list = new JSONObject(cursor.getString(10));
-                JSONArray attach_list = null;
-                attach_list = json_attach_list.optJSONArray("attachmentList");
                 ArrayList<String> attachment_list=new ArrayList<>();
-                if (attach_list != null) {
-                    for (int i = 0; i < attach_list.length(); i++) {
-                        String str_value=attach_list.optString(i);
-                        attachment_list.add(str_value);
+                if (cursor.getString(10)!=null ) {
+                    JSONObject json_attach_list = null;
+                    json_attach_list = new JSONObject(cursor.getString(10));
+                    JSONArray attach_list = null;
+                    attach_list = json_attach_list.optJSONArray("attachmentList");
+
+                    if (attach_list != null) {
+                        for (int i = 0; i < attach_list.length(); i++) {
+                            String str_value=attach_list.optString(i);
+                            attachment_list.add(str_value);
+                        }
                     }
                 }
 
-                JSONObject json_attach_name_list = null;
-                json_attach_name_list = new JSONObject(cursor.getString(11));
-                JSONArray attach_name_list = null;
-                attach_name_list = json_attach_name_list.optJSONArray("attachmentNameList");
                 ArrayList<String> attachment_name_list =new ArrayList<>();
-                if (attach_name_list != null) {
-                    for (int i = 0; i < attach_name_list.length(); i++) {
-                        String str_value=attach_name_list.optString(i);
-                        attachment_name_list.add(str_value);
+                if (cursor.getString(11)!=null) {
+                    JSONObject json_attach_name_list = null;
+                    json_attach_name_list = new JSONObject(cursor.getString(11));
+                    JSONArray attach_name_list = null;
+                    attach_name_list = json_attach_name_list.optJSONArray("attachmentNameList");
+                    if (attach_name_list != null) {
+                        for (int i = 0; i < attach_name_list.length(); i++) {
+                            String str_value=attach_name_list.optString(i);
+                            attachment_name_list.add(str_value);
+                        }
                     }
                 }
 
@@ -161,10 +184,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setId(Integer.valueOf(cursor.getString(0)));
                 item.setNameList(attachment_name_list);
                 item.setPhotoUrl(cursor.getString(9));
+                item.setState(cursor.getString(12));
                 listItems.add(item);
             } while (cursor.moveToNext());
         }
-
+        cursor.close();
+        db.close();
         return listItems;
     }
 
@@ -181,20 +206,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_MARKER,marker);
         values.put(KEY_EVENT_ID,listItems.getEventId());
         values.put(KEY_PHOTO_URL,listItems.getPhotoUrl());
-        JSONObject json = new JSONObject();
-        json.put("attachmentList", new JSONArray(listItems.getArrayList()));
-        String arrayList = json.toString();
-        values.put(KEY_ATTACHMENT_LIST,arrayList);
-        JSONObject json1 = new JSONObject();
-        json1.put("attachmentNameList", new JSONArray(listItems.getNameList()));
-        String nameList = json1.toString();
-        values.put(KEY_ATTACHMENT_NAME_LIST,nameList);
+        if(listItems.getArrayList()!=null) {
+            JSONObject json = new JSONObject();
+            json.put("attachmentList", new JSONArray(listItems.getArrayList()));
+            String arrayList = json.toString();
+            values.put(KEY_ATTACHMENT_LIST, arrayList);
+        }
+        if(listItems.getNameList()!=null) {
+            JSONObject json1 = new JSONObject();
+            json1.put("attachmentNameList", new JSONArray(listItems.getNameList()));
+            String nameList = json1.toString();
+            values.put(KEY_ATTACHMENT_NAME_LIST, nameList);
+        }
+        values.put(KEY_STATE,listItems.getState());
 
         return db.update(TABLE_EVENTS, values, KEY_ID + " = ?",
                 new String[] {String.valueOf(listItems.getId())});
     }
 
-    public int updateSet(ListItems listItems,String id) throws JSONException {
+    public int updateState(ListItems listItems,String state) throws JSONException {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -207,14 +237,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_MARKER,listItems.getMarker());
         values.put(KEY_EVENT_ID,listItems.getEventId());
         values.put(KEY_PHOTO_URL,listItems.getPhotoUrl());
-        JSONObject json = new JSONObject();
-        json.put("attachmentList", new JSONArray(listItems.getArrayList()));
-        String arrayList = json.toString();
-        values.put(KEY_ATTACHMENT_LIST,arrayList);
-        JSONObject json1 = new JSONObject();
-        json1.put("attachmentNameList", new JSONArray(listItems.getNameList()));
-        String nameList = json1.toString();
-        values.put(KEY_ATTACHMENT_NAME_LIST,nameList);
+        if(listItems.getArrayList()!=null) {
+            JSONObject json = new JSONObject();
+            json.put("attachmentList", new JSONArray(listItems.getArrayList()));
+            String arrayList = json.toString();
+            values.put(KEY_ATTACHMENT_LIST, arrayList);
+        }
+        if(listItems.getNameList()!=null) {
+            JSONObject json1 = new JSONObject();
+            json1.put("attachmentNameList", new JSONArray(listItems.getNameList()));
+            String nameList = json1.toString();
+            values.put(KEY_ATTACHMENT_NAME_LIST, nameList);
+        }
+        values.put(KEY_STATE,state);
 
         return db.update(TABLE_EVENTS, values, KEY_ID + " = ?",
                 new String[] {String.valueOf(listItems.getId())});
@@ -235,9 +270,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // return count
         return cursor.getCount();
     }
-    public void deleteDatabase() throws JSONException {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void deleteDatabase() throws JSONException, ParseException {
         List<ListItems> allEvents =getAllEvents();
         for(int i=0;i<allEvents.size();i++){
+            if((f.parse(f.format(date.getTime())).compareTo(f.parse(allEvents.get(i).getDate()))>0)||(allEvents.get(i).getState().equals("upcoming")&& LocalTime.now().isBefore(LocalTime.parse(allEvents.get(i).getTime().split(" ")[1]))&&f.parse(f.format(date.getTime())).compareTo(f.parse(allEvents.get(i).getDate()))==0)||(allEvents.get(i).getState().equals("upcoming")&&f.parse(f.format(date.getTime())).compareTo(f.parse(allEvents.get(i).getDate()))<0))
             deleteEvent(allEvents.get(i));
         }
     }

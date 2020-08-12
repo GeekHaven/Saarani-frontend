@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -40,6 +42,7 @@ import java.util.concurrent.TimeoutException;
 
 public class MyWorker extends Worker {
     Context context_i;
+    String value,eventId;
     private static String url="https://socupdate.herokuapp.com/events/marked";
     public MyWorker(
             @NonNull Context context,
@@ -51,6 +54,12 @@ public class MyWorker extends Worker {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public Result doWork() {
+        value=getInputData().getString("del");
+        eventId=getInputData().getString("eventId");
+        if (value != null) {
+            Log.d("value_notif",value);
+            Log.d("eventId_notif",eventId);
+        }
         final DatabaseHandler databaseHandler=new DatabaseHandler(context_i);
         HashMap<String,String> map_post=getPostObject();
 
@@ -58,17 +67,37 @@ public class MyWorker extends Worker {
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(map_post), future, future);
 
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         VolleySingleton.getmInstance(getApplicationContext()).addToRequestQueue(request);
         try {
             try {
-                databaseHandler.deleteDatabase();
+                if(value.equals("1")) {
+                    List<ListItems> allEvents=databaseHandler.getAllEvents();
+                    for(int i=0;i<allEvents.size();i++){
+                        if(allEvents.get(i).getEventId().equals(eventId)){
+                            databaseHandler.updateState(allEvents.get(i), "cancelled");
+                        }
+                    }
+
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    databaseHandler.deleteDatabase();
+                }
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
 
             JSONObject response = future.get(60, TimeUnit.SECONDS);
 
             Iterator<String> keys = response.keys();
+
+
             while(keys.hasNext()){
                 String eventId= keys.next();
                 try {
@@ -98,6 +127,7 @@ public class MyWorker extends Worker {
                     );
                     item.setNameList(attachmentNameList);
                     item.setPhotoUrl(jsonObject.getString("photoURL"));
+                    item.setState("upcoming");
                     databaseHandler.addEvent(item);
                 } catch (JSONException e) {
                     e.printStackTrace();

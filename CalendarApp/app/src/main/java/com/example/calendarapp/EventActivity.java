@@ -34,6 +34,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -48,6 +49,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
@@ -86,6 +88,7 @@ public class EventActivity extends AppCompatActivity {
     String eventId;
     ImageView download_url,button_back;
     String screen;
+    ConstraintLayout constraintLayout;
     String marker="";
     LinearLayout layout_attachment;
     ArrayList<String> arrayList=new ArrayList<>();
@@ -108,6 +111,7 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         databaseHandler=new DatabaseHandler(this);
+        constraintLayout=findViewById(R.id.layout);
         eventName=findViewById(R.id.name);
         desc=findViewById(R.id.desc);
         date=findViewById(R.id.date);
@@ -171,7 +175,7 @@ public class EventActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Object tag = star.getTag();
                     if (tag != null && (Integer) tag == star_yellow) {
-                        Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
                         star.setTag(R.drawable.star_img);
                         star.setImageResource(R.drawable.star_img);
                         try {
@@ -181,7 +185,7 @@ public class EventActivity extends AppCompatActivity {
                         }
                         deleteRequest();
                     } else {
-                        Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(constraintLayout, "Marked as interested.", Snackbar.LENGTH_LONG).show();
                         star.setTag(star_yellow);
                         star.setImageResource(star_yellow);
                         if ((Integer) tick_mark.getTag() == tick_yellow) {
@@ -202,7 +206,7 @@ public class EventActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Object tag = star.getTag();
                     if (tag != null && (Integer) tag == star_yellow) {
-                        Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
                         star.setTag(R.drawable.star_img);
                         star.setImageResource(R.drawable.star_img);
                         try {
@@ -212,7 +216,7 @@ public class EventActivity extends AppCompatActivity {
                         }
                         deleteRequest();
                     } else {
-                        Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(constraintLayout, "Marked as interested", Snackbar.LENGTH_LONG).show();
                         star.setTag(star_yellow);
                         star.setImageResource(star_yellow);
                         if ((Integer) tick_mark.getTag() == tick_yellow) {
@@ -233,7 +237,7 @@ public class EventActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Object tag = tick_mark.getTag();
                     if (tag != null && (Integer) tag == tick_yellow) {
-                        Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
                         tick_mark.setTag(tick);
                         tick_mark.setImageResource(R.drawable.going_man);
                         try {
@@ -243,7 +247,7 @@ public class EventActivity extends AppCompatActivity {
                         }
                         deleteRequest();
                     } else {
-                        Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(constraintLayout, "Marked as going.", Snackbar.LENGTH_LONG).show();
                         tick_mark.setTag(tick_yellow);
                         tick_mark.setImageResource(R.drawable.going_man_yellow);
                         if ((Integer) star.getTag() == star_yellow) {
@@ -264,7 +268,7 @@ public class EventActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Object tag = tick_mark.getTag();
                     if (tag != null && (Integer) tag == tick_yellow) {
-                        Toast.makeText(EventActivity.this, "Unmarked", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
                         tick_mark.setTag(tick);
                         tick_mark.setImageResource(R.drawable.going_man);
                         try {
@@ -274,7 +278,7 @@ public class EventActivity extends AppCompatActivity {
                         }
                         deleteRequest();
                     } else {
-                        Toast.makeText(EventActivity.this, "Marked", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(constraintLayout, "Marked as going.", Snackbar.LENGTH_LONG).show();
                         tick_mark.setTag(tick_yellow);
                         tick_mark.setImageResource(R.drawable.going_man_yellow);
                         if ((Integer) star.getTag() == star_yellow) {
