@@ -276,15 +276,15 @@ public class MainActivity2 extends AppCompatActivity {
                                 HashMap<String,String> map=new HashMap<String, String>();
                                 map.put("token",token[0]);
                                 final ProgressDialog progressDialog = new ProgressDialog(MainActivity2.this);
-                                progressDialog.setMessage("Loading data....");
+                                progressDialog.setMessage("Checking user...");
                                 progressDialog.show();
                                 RequestQueue requstQueue = Volley.newRequestQueue(MainActivity2.this);
+                                progressDialog.dismiss();
 
                                 JsonObjectRequest jsonobj = new JsonObjectRequest(Request.Method.POST, url,new JSONObject(map),
                                         new Response.Listener<JSONObject>() {
                                             @Override
                                             public void onResponse(JSONObject response) {
-                                                progressDialog.dismiss();
                                                 try {
 //                                                    textView.setText(response.getString("society"));
                                                     if(response.getString("society").equals("true")){
@@ -307,7 +307,7 @@ public class MainActivity2 extends AppCompatActivity {
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
-
+                                                Toast.makeText(MainActivity2.this,"Society check failed!",Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                 );

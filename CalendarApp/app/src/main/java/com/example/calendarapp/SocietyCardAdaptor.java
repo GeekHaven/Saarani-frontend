@@ -88,6 +88,7 @@ public class SocietyCardAdaptor extends RecyclerView.Adapter<SocietyCardAdaptor.
         @Override
         public void onClick(View v) {
             if(clickAction.equals("alertDialog")) {
+
                 ListItems items = listItems.get(getAdapterPosition());
 
                 Bundle bundle = new Bundle();

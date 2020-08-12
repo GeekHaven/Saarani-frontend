@@ -2,6 +2,7 @@ package com.example.calendarapp;
 
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.ProgressDialog;
@@ -11,6 +12,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.icu.text.Edits;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -28,6 +31,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -39,6 +43,7 @@ import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
@@ -63,6 +68,7 @@ public class MainFragment extends Fragment {
     private MainViewModel mViewModel;
     TextView month,year,today,textLay,default_text;
     CompactCalendarView compactCalendar;
+    ConstraintLayout constraintLayout;
     int x=0;
     private RecyclerView recyclerView;
     String loadDataFrom;
@@ -89,6 +95,7 @@ public class MainFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.main_fragment, container, false);
         Bundle bundle=getArguments();
+
         if (bundle != null) {
             loadDataFrom=bundle.getString("loadFrom");
         }
@@ -101,6 +108,10 @@ public class MainFragment extends Fragment {
         final String[] Selected = new String[]{"January", "February", "March", "April",
                 "May", "June", "July", "August", "September", "October", "November", "December"};
         default_text=view.findViewById(R.id.default_text);
+        constraintLayout=view.findViewById(R.id.layout);
+        if(!isOnline()){
+            Snackbar.make(constraintLayout,"Not connected to network! Changes will not be saved.",Snackbar.LENGTH_LONG);
+        }
         recyclerView=view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
@@ -119,7 +130,7 @@ public class MainFragment extends Fragment {
         if(loadDataFrom!=null&&loadDataFrom.equals("server")) {
             try {
                 loadRecyclerViewData();
-            } catch (JSONException e) {
+            } catch (JSONException | ParseException e) {
                 e.printStackTrace();
             }
         }
@@ -153,7 +164,7 @@ public class MainFragment extends Fragment {
         showRecyclerView(date);
         return view;
     }
-    
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -173,6 +184,13 @@ public class MainFragment extends Fragment {
 //
 //        }
 //    };
+@RequiresApi(api = Build.VERSION_CODES.KITKAT)
+public boolean isOnline() {
+    ConnectivityManager cm =
+            (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo netInfo = cm.getActiveNetworkInfo();
+    return netInfo != null && netInfo.isConnected();
+}
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void loadDatabase() throws JSONException {
         listItems=databaseHandler.getAllEvents();
@@ -187,10 +205,9 @@ public class MainFragment extends Fragment {
                 assert d != null;
                 long milliseconds = d.getTime();
                 if(f.parse(f.format(date)).compareTo(d)==0 && LocalTime.now().isAfter(LocalTime.parse(item.getTime().split(" ")[1]))){
-                    item.setState(true);
+                    item.setState("completed");
+                    databaseHandler.updateState(item,"completed");
                 }
-                else
-                    item.setState(false);
                 Event eventx;
                 eventx = new Event(Color.rgb(240, 212, 83), milliseconds);
                 if(f.parse(f.format(date)).compareTo(d)<=0)
@@ -239,7 +256,8 @@ public class MainFragment extends Fragment {
             default_text.setVisibility(View.VISIBLE);
         }
     }
-    public void loadRecyclerViewData() throws JSONException {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void loadRecyclerViewData() throws JSONException, ParseException {
         databaseHandler.deleteDatabase();
         final String urlPost = "https://socupdate.herokuapp.com/events/marked";
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -259,9 +277,9 @@ public class MainFragment extends Fragment {
                         Log.d("PostObject", String.valueOf(new JSONObject(mapToken)));
                         JsonObjectRequest jsonobj = new JsonObjectRequest(Request.Method.POST, urlPost,new JSONObject(mapToken),
                                 new Response.Listener<JSONObject>() {
+
                                     @Override
                                     public void onResponse(JSONObject response) {
-                                        progressDialog.dismiss();
                                         Iterator<String> keys = response.keys();
                                         int position=0;
                                         while(keys.hasNext()){
@@ -293,6 +311,7 @@ public class MainFragment extends Fragment {
                                                 );
                                                 item.setNameList(attachmentNameList);
                                                 item.setPhotoUrl(jsonObject.getString("photoURL"));
+                                                item.setState("upcoming");
                                                 listItems.add(item);
                                                 databaseHandler.addEvent(item);
                                                 mapPosition.put(eventId,position);
@@ -309,20 +328,27 @@ public class MainFragment extends Fragment {
                                                 }
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
+
                                             }
                                         }
                                         Log.d("size",String.valueOf(listItems.size()));
                                         showRecyclerView(date);
                                         databaseHandler.close();
+                                        progressDialog.dismiss();
                                     }
                                 },
                                 new Response.ErrorListener() {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
-
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getContext(),"Event fetch failed",Toast.LENGTH_SHORT).show();
                                     }
                                 }
                         );
+                        jsonobj.setRetryPolicy(new DefaultRetryPolicy(
+                                0,
+                                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                         requstQueue.add(jsonobj);
                         //Log.d("size",String.valueOf(listItems.size()));
                     }

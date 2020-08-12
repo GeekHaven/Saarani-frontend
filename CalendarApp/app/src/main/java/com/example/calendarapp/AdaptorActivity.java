@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -90,9 +94,13 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         holder.date.setText(listItem.getDate());
         holder.time.setText(listItem.getTime());
         eventId=listItem.getEventId();
-        if(listItem.getState()){
+        if(listItem.getState().equals("completed")){
             holder.set.setText("Completed");
             holder.set.setBackgroundResource(R.drawable.completed_background);
+        }
+        else if(listItem.getState().equals("cancelled")){
+            holder.set.setText("Cancelled");
+            holder.set.setBackgroundResource(R.drawable.cancelled_background);
         }
         map.put(position,eventId);
         marker=listItem.getMarker();
@@ -259,7 +267,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
 //        }
         @Override
         public void onClick(View v) {
-            if(!listItems.get(getAdapterPosition()).getState()) {
+            if(listItems.get(getAdapterPosition()).getState().equals("upcoming") ) {
                 if (v.getId() == star.getId() || v.getId() == interested.getId()) {
                     if (prefs.getString("society", "false").equals("false")) {
                         Object tag = star.getTag();
@@ -323,8 +331,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                     startIntent(this.getAdapterPosition());
                 }
             }
-            else{
+            else if(listItems.get(getAdapterPosition()).getState().equals("completed")){
                 Snackbar.make(v, "This event has finished!", Snackbar.LENGTH_LONG).show();
+            }
+            else{
+                Snackbar.make(v, "This event has been cancelled!", Snackbar.LENGTH_LONG).show();
             }
         }
 

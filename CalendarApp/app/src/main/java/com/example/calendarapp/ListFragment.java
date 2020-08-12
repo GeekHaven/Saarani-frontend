@@ -128,7 +128,7 @@ public class ListFragment extends Fragment {
         Date d=new Date();
         try {
             addDataToRV(f.format(d),tomorrowDate);
-        } catch (ParseException e) {
+        } catch (ParseException | JSONException e) {
             e.printStackTrace();
         }
         addEvents(listItems);
@@ -142,7 +142,7 @@ public class ListFragment extends Fragment {
         // TODO: Use the ViewModel
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void addDataToRV(String dateSelected, String dateTomSelected) throws ParseException {
+    public void addDataToRV(String dateSelected, String dateTomSelected) throws ParseException, JSONException {
         default_text1.setVisibility(View.GONE);
         default_text2.setVisibility(View.GONE);
         recylerViewList=new ArrayList<>();
@@ -155,10 +155,9 @@ public class ListFragment extends Fragment {
                 Log.d("match","yes");
                 Date d= f.parse(item.getDate());
                 if(f.parse(f.format(dateX)).compareTo(d)==0 && LocalTime.now().isAfter(LocalTime.parse(item.getTime().split(" ")[1]))){
-                    item.setState(true);
+                    item.setState("completed");
+                    databaseHandler.updateState(item,"completed");
                 }
-                else
-                    item.setState(false);
                 recylerViewList.add(item);
                 Log.d("length",String.valueOf(recylerViewList.size()));
             }
@@ -280,7 +279,7 @@ public class ListFragment extends Fragment {
                 }
                 try {
                     addDataToRV(selectedDate,selectedDateD);
-                } catch (ParseException e) {
+                } catch (ParseException | JSONException e) {
                     e.printStackTrace();
                 }
             }

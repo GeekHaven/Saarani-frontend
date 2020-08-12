@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.work.Constraints;
+import androidx.work.Data;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -52,7 +53,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         sendNotification(remoteMessage);
-        scheduleJob();
+        Map<String, String> data = remoteMessage.getData();
+        String value=data.get("del");
+        String eventId=data.get("eventID");
+        assert value != null;
+        Log.d("onMR",value);
+        scheduleJob(value,eventId);
     }
     public Bitmap getBitmapfromUrl(String imageUrl) {
         try {
@@ -114,13 +120,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     /**
      * Schedule async work using WorkManager.
      */
-    private void scheduleJob() {
+    private void scheduleJob(String value,String eventId) {
         // [START dispatch_job]
+        Data.Builder data = new Data.Builder();
+        data.putString("del",value);
+        data.putString("eventId",eventId);
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
         OneTimeWorkRequest work = new OneTimeWorkRequest.Builder(MyWorker.class)
                 .setConstraints(constraints)
+                .setInputData(data.build())
                 .build();
         WorkManager.getInstance().beginWith(work).enqueue();
         // [END dispatch_job]
@@ -187,7 +197,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setContentTitle(data.get("title"))
                             .setSubText(data.get("subtext"))
                             .setContentText(data.get("body"))
-                            .setAutoCancel(true)
+                            .setAutoCancel(false)
                             .setSound(defaultSoundUri)
                             .setContentIntent(pendingIntent)
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(data.get("body")))
@@ -210,7 +220,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             .setContentTitle(data.get("title"))
                             .setSubText(data.get("subtext"))
                             .setContentText(data.get("body"))
-                            .setAutoCancel(true)
+                            .setAutoCancel(false)
                             .setSound(defaultSoundUri)
                             .setDefaults(NotificationCompat.DEFAULT_ALL)
                             .setPriority(NotificationCompat.PRIORITY_HIGH)

@@ -4,11 +4,14 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.support.v4.os.IResultReceiver;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
@@ -44,6 +48,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -180,13 +185,13 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             heading.setText("Edit Event");
             eventName.setText(intent.getExtras().getString("name"));
             eventDesc.setText(intent.getExtras().getString("desc"));
-            eventVenue.setText(intent.getExtras().getString("venue").split(" ")[1]);
-            spinnerTime.setText(intent.getExtras().getString("time").split(" ")[1]);
+            eventVenue.setText(intent.getExtras().getString("venue"));
+            spinnerTime.setText(intent.getExtras().getString("time"));
             eventId=intent.getExtras().getString("eventId");
             attachmentList=intent.getExtras().getStringArrayList("attachments");
             attachmentNameList=intent.getExtras().getStringArrayList("attachments_name");
             Log.d("Attachment_Size",attachmentList+"/"+attachmentNameList);
-            String time=intent.getExtras().getString("time").split(" ")[1];
+            String time=intent.getExtras().getString("time");
             String[] split=time.split(":");
             hourSelect=split[0];
             minuteSelect=split[1];
@@ -332,31 +337,34 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
-                if(eventName.getText().toString().isEmpty()){
-                    Snackbar.make(constraintLayout,"Please enter event name", Snackbar.LENGTH_LONG).show();
-                }
-                else if(eventDesc.getText().toString().isEmpty())
-                    Snackbar.make(constraintLayout,"Please enter event description", Snackbar.LENGTH_LONG).show();
-                else if(eventVenue.getText().toString().isEmpty())
-                    Snackbar.make(constraintLayout,"Please enter event venue",Snackbar.LENGTH_LONG).show();
-                else if(hourSelect.equals("00")&&minuteSelect.equals("00"))
-                    Snackbar.make(constraintLayout,"Please enter event time",Snackbar.LENGTH_LONG).show();
-                else {
-                    if(!uriMap.isEmpty()) {
-                        Snackbar.make(constraintLayout,"Uploading....",Snackbar.LENGTH_INDEFINITE).show();
-                        Iterator iterator = uriMap.entrySet().iterator();
-                        int x = 0;
-                        while (iterator.hasNext()) {
-                            Map.Entry mapElement = (Map.Entry) iterator.next();
-                            uploadFile((Uri) mapElement.getValue(), (String) mapElement.getKey());
+                if (isOnline()) {
+                    if (eventName.getText().toString().isEmpty()) {
+                        Snackbar.make(constraintLayout, "Please enter event name", Snackbar.LENGTH_LONG).show();
+                    } else if (eventDesc.getText().toString().isEmpty())
+                        Snackbar.make(constraintLayout, "Please enter event description", Snackbar.LENGTH_LONG).show();
+                    else if (eventVenue.getText().toString().isEmpty())
+                        Snackbar.make(constraintLayout, "Please enter event venue", Snackbar.LENGTH_LONG).show();
+                    else if (hourSelect.equals("00") && minuteSelect.equals("00"))
+                        Snackbar.make(constraintLayout, "Please enter event time", Snackbar.LENGTH_LONG).show();
+                    else {
+                        if (!uriMap.isEmpty()) {
+                            Snackbar.make(constraintLayout, "Uploading...", Snackbar.LENGTH_INDEFINITE).show();
+                            Iterator iterator = uriMap.entrySet().iterator();
+                            int x = 0;
+                            while (iterator.hasNext()) {
+                                Map.Entry mapElement = (Map.Entry) iterator.next();
+                                uploadFile((Uri) mapElement.getValue(), (String) mapElement.getKey());
+                            }
+                        } else {
+                            if (requestType.equals("post"))
+                                sendEvent(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
+                            else if (requestType.equals("put"))
+                                sendEventPut(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
                         }
                     }
-                    else {
-                        if(requestType.equals("post"))
-                            sendEvent(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
-                        else if (requestType.equals("put"))
-                            sendEventPut(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
-                    }
+                }
+                else{
+                    Snackbar.make(constraintLayout,"Not connected to internet! Cannot create event.",Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -798,8 +806,6 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                         }
                         }
                     }
-
-
                 break;
         }
     }
@@ -911,7 +917,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                                     intent.putExtra(Intent.EXTRA_SUBJECT,eventName.getText().toString());
                                                     String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
                                                     ArrayList<String> body_text=new ArrayList<>();
-                                                    body_text.add( body);
+                                                    body_text.add(body);
                                                     intent.putExtra(Intent.EXTRA_TEXT,body);
                                                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                                     intent.setType("vnd.android.cursor.dir/email");
@@ -925,7 +931,8 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                                         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
                                                     }
                                                     intent.setPackage("com.google.android.gm");
-                                                    startActivityForResult(intent, 101);
+                                                    startActivity(intent);
+                                                    finish();
                                                 } catch (Throwable t) {
                                                     Toast.makeText(AddEventActivity.this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
                                                     startActivity(new Intent(AddEventActivity.this,MainActivity2.class));
@@ -941,10 +948,16 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                     new Response.ErrorListener() {
                                         @Override
                                         public void onErrorResponse(VolleyError error) {
-
+                                            Snackbar.make(constraintLayout,"Event creation failed! Please try again later",Snackbar.LENGTH_LONG);
+                                            startActivity(new Intent(AddEventActivity.this,MainActivity2.class));
+                                            finish();
                                         }
                                     }
                             );
+                            jsonobj.setRetryPolicy(new DefaultRetryPolicy(
+                                    0,
+                                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                             requstQueue.add(jsonobj);
 
                         }
@@ -953,6 +966,13 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
             });
         }
 
+    }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
     }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void sendEventPut(final String name, final String desc, final String venue, final String time, final String date) {
@@ -967,6 +987,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                         if (task.getResult().getToken() != null) {
                             JSONObject jsonObject =new JSONObject();
                             try {
+                                Snackbar.make(constraintLayout,"Updating event!",Snackbar.LENGTH_INDEFINITE).show();
                                 jsonObject.put("token", task.getResult().getToken());
                                 jsonObject.put("name", name);
                                 jsonObject.put("desc", desc);
@@ -999,7 +1020,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                                     intent.putExtra(Intent.EXTRA_EMAIL, subarray);
                                                     intent.putExtra(Intent.EXTRA_SUBJECT,eventName.getText().toString());
                                                     String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
-//                intent.putExtra(Intent.EXTRA_TEXT, body);
+                                                    intent.putExtra(Intent.EXTRA_TEXT, body);
                                                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                                     intent.setType("vnd.android.cursor.dir/email");
                                                     ArrayList<Uri> uris=new ArrayList<Uri>();
@@ -1012,7 +1033,8 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                                         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM,uris);
                                                     }
                                                     intent.setPackage("com.google.android.gm");
-                                                    startActivityForResult(intent, 101);
+                                                    startActivity(intent);
+                                                    finish();
                                                 } catch (Throwable t) {
                                                     Toast.makeText(AddEventActivity.this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
                                                 }
@@ -1020,6 +1042,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                             else{
                                                 Intent intent=new Intent(AddEventActivity.this,MainActivity2.class);
                                                 intent.putExtra("action","db");
+                                                Log.d("home_intent","yes");
                                                 startActivity(intent);
                                                 finish();
                                             }
@@ -1028,7 +1051,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                     new Response.ErrorListener() {
                                         @Override
                                         public void onErrorResponse(VolleyError error) {
-
+                                            Toast.makeText(AddEventActivity.this,error.toString(),Toast.LENGTH_SHORT).show();
                                         }
                                     }
 
@@ -1045,6 +1068,10 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                     return "application/json";
                                 }
                             };
+                            jsonobj.setRetryPolicy(new DefaultRetryPolicy(
+                                    0,
+                                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                             requstQueue.add(jsonobj);
 
                         }

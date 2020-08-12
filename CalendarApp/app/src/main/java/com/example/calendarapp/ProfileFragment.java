@@ -16,6 +16,8 @@ import android.content.IntentFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -152,7 +154,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
             List<ListItems> allEvents=databaseHandler.getAllEvents();
             for(int i=0;i<allEvents.size();i++){
                 ListItems item= allEvents.get(i);
-                if(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))<0 ||(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))==0&&LocalTime.now().isBefore(LocalTime.parse(item.getTime().split(" ")[1])))) {
+                if(!item.getState().equals("cancelled")&&(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))<0 ||(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))==0&&LocalTime.now().isBefore(LocalTime.parse(item.getTime().split(" ")[1]))))) {
                     if (item.getMarker().equals("going")) {
                         listGoingEvents.add(item);
                     } else if (item.getMarker().equals("interested"))
@@ -368,73 +370,84 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
             });
         }
     }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
+    }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, final int position) {
-        if(eventType==EVENT_INTERESTED){
-            interestedEventsAdapter.notifyDataSetChanged();
+        if (isOnline()) {
+            if (eventType == EVENT_INTERESTED) {
+                interestedEventsAdapter.notifyDataSetChanged();
 
-            AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-            builder.setTitle("Event Deletion Confirmation")
-                    .setMessage("Are you sure you want to Delete "+listInterestedEvents.get(position).getName().toUpperCase()+" from your list of Interested Events")
-                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                deleteRequest(listInterestedEvents.get(position).getEventId());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Event Deletion Confirmation")
+                        .setMessage("Are you sure you want to Delete " + listInterestedEvents.get(position).getName().toUpperCase() + " from your list of Interested Events")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    deleteRequest(listInterestedEvents.get(position).getEventId());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                listInterestedEvents.remove(position);
+                                interestedEventsAdapter.notifyDataSetChanged();
+                                if (listInterestedEvents.size() == 0) {
+                                    tvNoEvent.setVisibility(View.VISIBLE);
+                                }
+                                tabLayout.getTabAt(0).setText("Interested (" + listInterestedEvents.size() + ")");
+
                             }
-                            listInterestedEvents.remove(position);
-                            interestedEventsAdapter.notifyDataSetChanged();
-                            if(listInterestedEvents.size()==0){
-                                tvNoEvent.setVisibility(View.VISIBLE);
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Snackbar.make(constraintLayout, "Event Deletion Cancelled", Snackbar.LENGTH_SHORT).show();
                             }
-                            tabLayout.getTabAt(0).setText("Interested ("+listInterestedEvents.size()+")");
+                        });
 
-                        }
-                    })
-                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Snackbar.make(constraintLayout,"Event Deletion Cancelled",Snackbar.LENGTH_SHORT).show();
-                        }
-                    });
+                AlertDialog dialog = builder.create();
+                dialog.show();
 
-            AlertDialog dialog=builder.create();
-            dialog.show();
+            } else {
+                goingEventsAdapter.notifyDataSetChanged();
 
-        }
-        else {
-            goingEventsAdapter.notifyDataSetChanged();
-
-            AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-            builder.setTitle("Event Deletion Confirmation")
-                    .setMessage("Are you sure you want to Delete "+listGoingEvents.get(position).getName().toUpperCase()+" from your list of Going Events")
-                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                deleteRequest(listGoingEvents.get(position).getEventId());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Event Deletion Confirmation")
+                        .setMessage("Are you sure you want to Delete " + listGoingEvents.get(position).getName().toUpperCase() + " from your list of Going Events")
+                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    deleteRequest(listGoingEvents.get(position).getEventId());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                listGoingEvents.remove(position);
+                                goingEventsAdapter.notifyDataSetChanged();
+                                if (listGoingEvents.size() == 0) {
+                                    tvNoEvent.setVisibility(View.VISIBLE);
+                                }
+                                tabLayout.getTabAt(1).setText("Going (" + listGoingEvents.size() + ")");
                             }
-                            listGoingEvents.remove(position);
-                            goingEventsAdapter.notifyDataSetChanged();
-                            if(listGoingEvents.size()==0){
-                                tvNoEvent.setVisibility(View.VISIBLE);
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Snackbar.make(constraintLayout, "Event Deletion Cancelled", Snackbar.LENGTH_LONG).show();
                             }
-                            tabLayout.getTabAt(1).setText("Going ("+listGoingEvents.size()+")");
-                        }
-                    })
-                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Snackbar.make(constraintLayout,"Event Deletion Cancelled",Snackbar.LENGTH_LONG).show();
-                        }
-                    });
+                        });
 
-            AlertDialog dialog=builder.create();
-            dialog.show();
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        } else {
+            Snackbar.make(constraintLayout,"Network not available! Cannot proceed request.",Snackbar.LENGTH_LONG).show();
         }
     }
 }

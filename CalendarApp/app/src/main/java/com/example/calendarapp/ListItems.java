@@ -14,8 +14,7 @@ public class ListItems {
     private ArrayList<String> arrayList,nameList;
     private String photoUrl;
     private Integer id;
-    private boolean showMenu;
-    private boolean completed;
+    private String state;
 
     public ListItems( String name,String desc,String byName,String date,String time,String venue,String marker,String eventId,ArrayList<String> arrayList){
         this.name=name;
@@ -27,8 +26,6 @@ public class ListItems {
         this.marker=marker;
         this.eventId=eventId;
         this.arrayList=arrayList;
-        this.showMenu=false;
-
     }
 
     public String getPhotoUrl() {
@@ -40,18 +37,12 @@ public class ListItems {
         this.photoUrl = photoUrl;
     }
     public void setId(Integer id){this.id=id;}
+
     public Integer getId(){return id;}
     public void setNameList(ArrayList<String> nameList){this.nameList=nameList;}
 
-    public void setShowMenu(boolean showMenu) {
-        this.showMenu = showMenu;
-    }
-    public boolean isShowMenu() {
-        return showMenu;
-    }
-
-    public void setState(Boolean completed){this.completed=completed;}
-    public boolean getState(){return completed;}
+    public void setState(String state){this.state=state;}
+    public String getState(){return state;}
 
     public String getName(){
         return name;
