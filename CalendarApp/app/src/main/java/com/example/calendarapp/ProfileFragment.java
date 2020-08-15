@@ -384,12 +384,16 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
             if (eventType == EVENT_INTERESTED) {
                 interestedEventsAdapter.notifyDataSetChanged();
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Event Deletion Confirmation")
-                        .setMessage("Are you sure you want to Delete " + listInterestedEvents.get(position).getName().toUpperCase() + " from your list of Interested Events")
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.DialogTheme);
+                builder.setMessage("Are you sure you want to Delete " + "\"" + listInterestedEvents.get(position).getName() + "\"" + " from your list of Interested Events")
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    databaseHandler.updateCount(listInterestedEvents.get(position),"-","interested");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                                 try {
                                     deleteRequest(listInterestedEvents.get(position).getEventId());
                                 } catch (JSONException e) {
@@ -407,7 +411,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                         .setNegativeButton("NO", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Snackbar.make(constraintLayout, "Event Deletion Cancelled", Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(constraintLayout, "Marker Deletion Cancelled", Snackbar.LENGTH_SHORT).show();
                             }
                         });
 
@@ -417,12 +421,16 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
             } else {
                 goingEventsAdapter.notifyDataSetChanged();
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Event Deletion Confirmation")
-                        .setMessage("Are you sure you want to Delete " + listGoingEvents.get(position).getName().toUpperCase() + " from your list of Going Events")
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.DialogTheme);
+                builder.setMessage("Are you sure you want to Delete " + "\"" + listGoingEvents.get(position).getName() + "\"" +" from your list of Going Events")
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    databaseHandler.updateCount(listInterestedEvents.get(position),"-","going");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                                 try {
                                     deleteRequest(listGoingEvents.get(position).getEventId());
                                 } catch (JSONException e) {
@@ -439,7 +447,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                         .setNegativeButton("NO", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Snackbar.make(constraintLayout, "Event Deletion Cancelled", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(constraintLayout, "Marker Deletion Cancelled", Snackbar.LENGTH_LONG).show();
                             }
                         });
 

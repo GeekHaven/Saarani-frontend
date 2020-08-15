@@ -158,6 +158,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         }
     }
     public void startIntent(int position){
+        Toast.makeText(context,listItems.get(position).getInterested()+" " +listItems.get(position).getGoing(),Toast.LENGTH_LONG).show();
         Intent intent =new Intent(context,EventActivity.class);
         ListItems items = listItems.get(position);
         intent.putExtra("name",items.getName());
@@ -274,6 +275,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                         if (tag != null && (Integer) tag == star_yellow) {
                             Snackbar.make(v, "Unmarked", Snackbar.LENGTH_LONG).show();
                             star.setTag(R.drawable.star_img);
+                            try {
+                                databaseHandler.updateCount(listItems.get(getAdapterPosition()),"-","interested");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             star.setImageResource(R.drawable.star_img);
                             try {
                                 deleteRequest(this.getAdapterPosition());
@@ -288,7 +294,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                                 going.setTag(tick);
                                 going.setImageResource(R.drawable.going_man);
                             }
-
+                            try {
+                                databaseHandler.updateCount(listItems.get(getAdapterPosition()),"interested","-");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             try {
                                 addMarker(this.getAdapterPosition(), "interested");
                             } catch (JSONException e) {
@@ -306,6 +316,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             going.setTag(tick);
                             going.setImageResource(R.drawable.going_man);
                             try {
+                                databaseHandler.updateCount(listItems.get(getAdapterPosition()),"-","going");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            try {
                                 deleteRequest(this.getAdapterPosition());
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -317,6 +332,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             if ((Integer) star.getTag() == star_yellow) {
                                 star.setTag(R.drawable.star_img);
                                 star.setImageResource(R.drawable.star_img);
+                            }
+                            try {
+                                databaseHandler.updateCount(listItems.get(getAdapterPosition()),"going","-");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                             try {
                                 addMarker(this.getAdapterPosition(), "going");

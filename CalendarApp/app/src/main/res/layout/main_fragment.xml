@@ -14,7 +14,34 @@
     android:paddingBottom="32dp"
     android:layout_height="wrap_content"
     >
-
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/avi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/AVLoadingIndicatorView"
+        android:visibility="invisible"
+        android:elevation="2dp"
+        android:translationZ="2dp"
+        app:indicatorName="PacmanIndicator"
+        app:indicatorColor="#FFFFFF"
+    />
+    <com.tomer.fadingtextview.FadingTextView
+        android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:id="@+id/fading_text_view"
+        android:textColor="#FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/avi"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserratmedium"
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,6 +69,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="fill_parent"
         android:layout_height="350dp"
+        android:id="@+id/cardView"
         android:background="#2C2B2B"
         android:layout_marginTop="116dp"
         android:elevation="0dp"
@@ -111,7 +139,7 @@
         android:text="No Event Found"
         android:textColor="#9D9D9D"
         android:textSize="16sp"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

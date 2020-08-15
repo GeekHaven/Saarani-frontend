@@ -41,6 +41,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ATTACHMENT_LIST="attachment_list";
     private static final String KEY_ATTACHMENT_NAME_LIST="attachment_name_list";
     private static final String KEY_STATE="state";
+    private static final String KEY_COUNT_INTERESTED="interested";
+    private static final String KEY_COUNT_GOING="going";
 
     public DatabaseHandler(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -50,7 +52,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_EVENTS + "("+KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_NAME + " TEXT," + KEY_DESC + " TEXT,"
-                + KEY_BY + " TEXT," + KEY_DATE + " TEXT," + KEY_TIME + " TEXT," + KEY_VENUE + " TEXT," + KEY_MARKER +" TEXT," + KEY_EVENT_ID+" TEXT," + KEY_PHOTO_URL+" TEXT," + KEY_ATTACHMENT_LIST +" TEXT," + KEY_ATTACHMENT_NAME_LIST+" TEXT,"+ KEY_STATE +" TEXT" + ")";
+                + KEY_BY + " TEXT," + KEY_DATE + " TEXT," + KEY_TIME + " TEXT," + KEY_VENUE + " TEXT," + KEY_MARKER +" TEXT," + KEY_EVENT_ID+" TEXT," + KEY_PHOTO_URL+" TEXT," + KEY_ATTACHMENT_LIST +" TEXT," + KEY_ATTACHMENT_NAME_LIST+" TEXT,"+ KEY_STATE +" TEXT," + KEY_COUNT_GOING + " INTEGER," + KEY_COUNT_INTERESTED + " INTEGER" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
 
@@ -89,6 +91,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         values.put(KEY_STATE,listItems.getState());
+        values.put(KEY_COUNT_INTERESTED,listItems.getInterested());
+        values.put(KEY_COUNT_GOING,listItems.getGoing());
 
         db.insert(TABLE_EVENTS, null, values);
         db.close();
@@ -136,6 +140,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         item.setPhotoUrl(cursor.getString(9));
         item.setNameList(attachment_name_list);
         item.setState(cursor.getString(12));
+        item.setGoing(cursor.getInt(13));
+        item.setInterested(cursor.getInt(14));
         cursor.close();
         db.close();
         return item;
@@ -185,6 +191,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setNameList(attachment_name_list);
                 item.setPhotoUrl(cursor.getString(9));
                 item.setState(cursor.getString(12));
+                item.setGoing(cursor.getInt(13));
+                item.setInterested(cursor.getInt(14));
                 listItems.add(item);
             } while (cursor.moveToNext());
         }
@@ -219,6 +227,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put(KEY_ATTACHMENT_NAME_LIST, nameList);
         }
         values.put(KEY_STATE,listItems.getState());
+        values.put(KEY_COUNT_INTERESTED,listItems.getInterested());
+        values.put(KEY_COUNT_GOING,listItems.getGoing());
 
         return db.update(TABLE_EVENTS, values, KEY_ID + " = ?",
                 new String[] {String.valueOf(listItems.getId())});
@@ -250,7 +260,57 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put(KEY_ATTACHMENT_NAME_LIST, nameList);
         }
         values.put(KEY_STATE,state);
+        values.put(KEY_COUNT_INTERESTED,listItems.getInterested());
+        values.put(KEY_COUNT_GOING,listItems.getGoing());
 
+        return db.update(TABLE_EVENTS, values, KEY_ID + " = ?",
+                new String[] {String.valueOf(listItems.getId())});
+    }
+
+    public int updateCount(ListItems listItems,String state,String prev) throws JSONException {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME,listItems.getName());
+        values.put(KEY_DESC,listItems.getDesc());
+        values.put(KEY_BY,listItems.getByName());
+        values.put(KEY_DATE,listItems.getDate());
+        values.put(KEY_TIME,listItems.getTime());
+        values.put(KEY_VENUE,listItems.getVenue());
+        values.put(KEY_MARKER,listItems.getMarker());
+        values.put(KEY_EVENT_ID,listItems.getEventId());
+        values.put(KEY_PHOTO_URL,listItems.getPhotoUrl());
+        if(listItems.getArrayList()!=null) {
+            JSONObject json = new JSONObject();
+            json.put("attachmentList", new JSONArray(listItems.getArrayList()));
+            String arrayList = json.toString();
+            values.put(KEY_ATTACHMENT_LIST, arrayList);
+        }
+        if(listItems.getNameList()!=null) {
+            JSONObject json1 = new JSONObject();
+            json1.put("attachmentNameList", new JSONArray(listItems.getNameList()));
+            String nameList = json1.toString();
+            values.put(KEY_ATTACHMENT_NAME_LIST, nameList);
+        }
+        values.put(KEY_STATE,listItems.getState());
+        if(state.equals("going")) {
+            values.put(KEY_COUNT_INTERESTED, listItems.getInterested());
+            values.put(KEY_COUNT_GOING, listItems.getGoing()+1);
+        }
+        else if(state.equals("interested")){
+            values.put(KEY_COUNT_INTERESTED, listItems.getInterested()+1);
+            values.put(KEY_COUNT_GOING, listItems.getGoing());
+        }
+        else{
+            if(prev.equals("going")){
+                values.put(KEY_COUNT_INTERESTED, listItems.getInterested());
+                values.put(KEY_COUNT_GOING, listItems.getGoing()-1);
+            }
+            else{
+                values.put(KEY_COUNT_INTERESTED, listItems.getInterested()-1);
+                values.put(KEY_COUNT_GOING, listItems.getGoing());
+            }
+        }
         return db.update(TABLE_EVENTS, values, KEY_ID + " = ?",
                 new String[] {String.valueOf(listItems.getId())});
     }

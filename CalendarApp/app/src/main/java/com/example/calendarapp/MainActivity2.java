@@ -5,16 +5,19 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -92,6 +95,8 @@ public class MainActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                new IntentFilter("toolbar-visibility"));
         mAuth=FirebaseAuth.getInstance();
         Intent intent =getIntent();
 //        if(Objects.requireNonNull(intent.getExtras()).containsKey("Fragment")){
@@ -158,6 +163,7 @@ public class MainActivity2 extends AppCompatActivity {
             else
                 visibility=false;
         }
+//        toolbar.setVisibility(View.INVISIBLE);
         navController.setGraph(R.navigation.mobile_navigation,bundle);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -232,6 +238,21 @@ public class MainActivity2 extends AppCompatActivity {
             }
         });
     }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String message = intent.getStringExtra("message");
+            if(message.equals("true")){
+                toolbar.setVisibility(View.VISIBLE);
+            }
+            else{
+                toolbar.setVisibility(View.INVISIBLE);
+            }
+        }
+    };
+
     public void subscribeToTopic(){
         FirebaseMessaging.getInstance().subscribeToTopic("Event")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

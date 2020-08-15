@@ -156,7 +156,7 @@ public class CustomAlertFragment extends DialogFragment {
         final String url="https://socupdate.herokuapp.com/events/"+eventId+"/"+msg;
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        final ProgressDialog progressDialog = new ProgressDialog(getContext(),R.style.ProgressDialogTheme);
         if(msg.equals("delete"))
             progressDialog.setMessage("Deleting Event...");
         else
@@ -269,7 +269,7 @@ public class CustomAlertFragment extends DialogFragment {
             public void onClick(View v) {
                 if (isOnline()) {
 
-                    final AlertDialog.Builder build = new AlertDialog.Builder(context);
+                    final AlertDialog.Builder build = new AlertDialog.Builder(context,R.style.DialogTheme);
                     build.setMessage("Are you sure, you want to delete this event?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
@@ -297,7 +297,7 @@ public class CustomAlertFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (isOnline()) {
-                    final AlertDialog.Builder build = new AlertDialog.Builder(context);
+                    final AlertDialog.Builder build = new AlertDialog.Builder(context,R.style.DialogTheme);
                     build.setMessage("Are you sure, you want to send reminder for this event now ?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
@@ -322,7 +322,7 @@ public class CustomAlertFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (isOnline()) {
-                    final AlertDialog.Builder build = new AlertDialog.Builder(context);
+                    final AlertDialog.Builder build = new AlertDialog.Builder(context,R.style.DialogTheme);
                     build.setMessage("Are you sure, you want to edit this event ?")
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {

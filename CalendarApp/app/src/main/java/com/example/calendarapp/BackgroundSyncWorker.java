@@ -1,8 +1,6 @@
 package com.example.calendarapp;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
 
@@ -13,13 +11,8 @@ import androidx.work.WorkerParameters;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
-import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,7 +24,6 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -40,26 +32,19 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class MyWorker extends Worker {
+public class BackgroundSyncWorker extends Worker {
     Context context_i;
-    String value,eventId;
     private static String url="https://socupdate.herokuapp.com/events/marked";
-    public MyWorker(
-            @NonNull Context context,
-            @NonNull WorkerParameters params) {
-        super(context, params);
+    public BackgroundSyncWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
         context_i=context;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @NonNull
     @Override
     public Result doWork() {
-        value=getInputData().getString("del");
-        eventId=getInputData().getString("eventId");
-        if (value != null) {
-            Log.d("value_notif",value);
-            Log.d("eventId_notif",eventId);
-        }
+
         final DatabaseHandler databaseHandler=new DatabaseHandler(context_i);
         HashMap<String,String> map_post=getPostObject();
 
@@ -74,29 +59,12 @@ public class MyWorker extends Worker {
 
         VolleySingleton.getmInstance(getApplicationContext()).addToRequestQueue(request);
         try {
-            try {
-                if(value.equals("1")) {
-                    List<ListItems> allEvents=databaseHandler.getAllEvents();
-                    for(int i=0;i<allEvents.size();i++){
-                        if(allEvents.get(i).getEventId().equals(eventId)){
-                            databaseHandler.updateState(allEvents.get(i), "cancelled");
-                        }
-                    }
-
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    databaseHandler.deleteDatabase();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
             JSONObject response = future.get(60, TimeUnit.SECONDS);
 
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                databaseHandler.deleteDatabase();
+            }
             Iterator<String> keys = response.keys();
-
 
             while(keys.hasNext()){
                 String eventId= keys.next();
@@ -117,6 +85,20 @@ public class MyWorker extends Worker {
                             attachmentNameList.add(name_of_attachment);
                         }
                     }
+                    Integer going_count=0;
+                    Integer interested_count=0;
+                    if(jsonObject.has("markedBy")) {
+                        JSONObject markings = jsonObject.getJSONObject("markedBy");
+                        Iterator<String> k = markings.keys();
+                        while (k.hasNext()) {
+                            String user = k.next();
+                            if (markings.getString(user).equals("going")) {
+                                going_count++;
+                            } else {
+                                interested_count++;
+                            }
+                        }
+                    }
                     ListItems item =new ListItems(
                             jsonObject.getString("name"),
                             jsonObject.getString("desc"),
@@ -128,8 +110,9 @@ public class MyWorker extends Worker {
                     item.setNameList(attachmentNameList);
                     item.setPhotoUrl(jsonObject.getString("photoURL"));
                     item.setState("upcoming");
-                    item.setInterested(0);
-                    item.setGoing(0);
+                    item.setGoing(going_count);
+                    item.setInterested(interested_count);
+                    //databaseHandler.updateCount(item,"going",)
                     databaseHandler.addEvent(item);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -147,6 +130,12 @@ public class MyWorker extends Worker {
             return Result.failure();
             // exception handling
         } catch (TimeoutException e) {
+            e.printStackTrace();
+            return Result.failure();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return Result.failure();
+        } catch (JSONException e) {
             e.printStackTrace();
             return Result.failure();
         }

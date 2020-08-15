@@ -47,6 +47,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+import com.tomer.fadingtextview.FadingTextView;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,10 +78,12 @@ public class MainFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     final Date date = new Date();
     DatabaseHandler databaseHandler;
+    FadingTextView fadingTextView;
     private List<ListItems> listItems,recylerViewList;
     private static String URL_DATA="https://socupdate.herokuapp.com/events";
     HashMap<String, Integer> map
             = new HashMap<>();
+    AVLoadingIndicatorView av;
     HashMap<String,Integer> mapPosition =new HashMap<>();
     final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
     final SimpleDateFormat time_sdf = new SimpleDateFormat("HH:mm",Locale.getDefault());
@@ -107,6 +111,19 @@ public class MainFragment extends Fragment {
         final DateFormat yearFormat= new SimpleDateFormat("YYYY",Locale.getDefault());
         final String[] Selected = new String[]{"January", "February", "March", "April",
                 "May", "June", "July", "August", "September", "October", "November", "December"};
+        av=view.findViewById(R.id.avi);
+        fadingTextView=view.findViewById(R.id.fading_text_view);
+        String[] texts = {"Gathering Resources",
+                "Checking All the Dates",
+                "Marking the Calendar",
+                "Generating Buttons",
+                "Entering Cheat Codes",
+                "Downloading Hacks",
+                "Leaking Nuclear Codes"};
+        fadingTextView.setTexts(texts);
+        fadingTextView.setTimeout(1,FadingTextView.SECONDS);
+        fadingTextView.pause();
+        cardView=view.findViewById(R.id.cardView);
         default_text=view.findViewById(R.id.default_text);
         constraintLayout=view.findViewById(R.id.layout);
         if(!isOnline()){
@@ -256,15 +273,34 @@ public boolean isOnline() {
             default_text.setVisibility(View.VISIBLE);
         }
     }
+    private void sendMessage(String msg) {
+        Log.d("sender", "Broadcasting message");
+        Intent intent = new Intent("toolbar-visibility");
+        // You can also include some extra data.
+        intent.putExtra("message", msg);
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+    }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void loadRecyclerViewData() throws JSONException, ParseException {
         databaseHandler.deleteDatabase();
         final String urlPost = "https://socupdate.herokuapp.com/events/marked";
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Loading data....");
-        progressDialog.show();
+//        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+//        progressDialog.setMessage("Loading data....");
+//        progressDialog.show();
+        sendMessage("false");
+
+        av.show();
+        fadingTextView.resume();
+        av.setVisibility(View.VISIBLE);
+        cardView.setVisibility(View.INVISIBLE);
+        default_text.setVisibility(View.INVISIBLE);
+        default_text.setText(" ");
+        textLay.setVisibility(View.INVISIBLE);
+        month.setVisibility(View.INVISIBLE);
+        year.setVisibility(View.INVISIBLE);
+        today.setVisibility(View.INVISIBLE);
         if (user != null) {
             user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                 @Override
@@ -312,6 +348,22 @@ public boolean isOnline() {
                                                 item.setNameList(attachmentNameList);
                                                 item.setPhotoUrl(jsonObject.getString("photoURL"));
                                                 item.setState("upcoming");
+                                                Integer going_count=0;
+                                                Integer interested_count=0;
+                                                if(jsonObject.has("markedBy")) {
+                                                    JSONObject markings = jsonObject.getJSONObject("markedBy");
+                                                    Iterator<String> k = markings.keys();
+                                                    while (k.hasNext()) {
+                                                        String user = k.next();
+                                                        if (markings.getString(user).equals("going")) {
+                                                            going_count++;
+                                                        } else {
+                                                            interested_count++;
+                                                        }
+                                                    }
+                                                }
+                                                item.setGoing(going_count);
+                                                item.setInterested(interested_count);
                                                 listItems.add(item);
                                                 databaseHandler.addEvent(item);
                                                 mapPosition.put(eventId,position);
@@ -334,14 +386,26 @@ public boolean isOnline() {
                                         Log.d("size",String.valueOf(listItems.size()));
                                         showRecyclerView(date);
                                         databaseHandler.close();
-                                        progressDialog.dismiss();
+//                                        progressDialog.dismiss();
+                                        cardView.setVisibility(View.VISIBLE);
+                                        today.setVisibility(View.VISIBLE);
+                                        default_text.setVisibility(View.VISIBLE);
+                                        textLay.setVisibility(View.VISIBLE);
+                                        month.setVisibility(View.VISIBLE);
+                                        year.setVisibility(View.VISIBLE);
+                                        sendMessage("true");
+                                        av.hide();
+                                        fadingTextView.stop();
+                                        default_text.setText("No Event Found");
                                     }
                                 },
                                 new Response.ErrorListener() {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(getContext(),"Event fetch failed",Toast.LENGTH_SHORT).show();
+//                                        progressDialog.dismiss();
+                                        av.hide();
+                                        fadingTextView.stop();
+                                        Toast.makeText(getContext(),"Event fetch failed!",Toast.LENGTH_SHORT).show();
                                     }
                                 }
                         );
