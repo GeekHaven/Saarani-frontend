@@ -15,6 +15,8 @@ public class ListItems {
     private String photoUrl;
     private Integer id;
     private String state;
+    private Integer interested;
+    private Integer going;
 
     public ListItems( String name,String desc,String byName,String date,String time,String venue,String marker,String eventId,ArrayList<String> arrayList){
         this.name=name;
@@ -27,6 +29,12 @@ public class ListItems {
         this.eventId=eventId;
         this.arrayList=arrayList;
     }
+
+    public Integer getInterested(){return interested;}
+    public void setInterested(Integer interested){this.interested=interested;}
+
+    public Integer getGoing(){return going;}
+    public void setGoing(Integer going){this.going=going;}
 
     public String getPhotoUrl() {
         return photoUrl;

@@ -95,6 +95,14 @@ public class TechnicalFragment extends Fragment implements View.OnClickListener 
         tesla_btn.setOnClickListener(this);
         tesla_btn.setContentDescription("tesla");
 
+        gravity=view.findViewById(R.id.gravity);
+        gravity.setOnClickListener(this);
+        gravity.setContentDescription("gravity");
+
+        gravity_btn=view.findViewById(R.id.g_btn);
+        gravity_btn.setOnClickListener(this);
+        gravity_btn.setContentDescription("gravity");
+
         checkSub();
         return view;
     }
@@ -149,6 +157,7 @@ public class TechnicalFragment extends Fragment implements View.OnClickListener 
             Intent intent =new Intent(getContext(),SocShowActivity.class);
             intent.putExtra("id",(String) v.getContentDescription());
             startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
     }
 }

@@ -36,13 +36,25 @@ public class ButtonReceiver extends BroadcastReceiver {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onReceive(final Context context, final Intent intent) {
+        DatabaseHandler databaseHandler=new DatabaseHandler(context);
         if(intent.getExtras().getString("action").equals("going")||intent.getExtras().getString("action").equals("interested")){
             final String url;
+            String eventId=intent.getExtras().getString("eventId");
             final String mark=intent.getExtras().getString("action");
             String temp="https://socupdate.herokuapp.com/events/";
             url=temp+intent.getExtras().getString("eventId")+"/mark";
             String msg="Marked as " + intent.getExtras().getString("action");
             Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
+            try {
+                databaseHandler.updateMarker(databaseHandler.getEvent(eventId),mark);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                databaseHandler.updateCount(databaseHandler.getEvent(eventId),mark,"-");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             mAuth=FirebaseAuth.getInstance();
             final FirebaseUser user= mAuth.getCurrentUser();
             if(user!=null){

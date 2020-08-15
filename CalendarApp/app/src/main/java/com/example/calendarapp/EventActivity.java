@@ -179,6 +179,11 @@ public class EventActivity extends AppCompatActivity {
                         star.setTag(R.drawable.star_img);
                         star.setImageResource(R.drawable.star_img);
                         try {
+                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"-","interested");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
                             databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -191,6 +196,11 @@ public class EventActivity extends AppCompatActivity {
                         if ((Integer) tick_mark.getTag() == tick_yellow) {
                             tick_mark.setTag(tick);
                             tick_mark.setImageResource(R.drawable.going_man);
+                        }
+                        try {
+                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"interested","-");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                         try {
                             databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"interested");
@@ -210,6 +220,11 @@ public class EventActivity extends AppCompatActivity {
                         star.setTag(R.drawable.star_img);
                         star.setImageResource(R.drawable.star_img);
                         try {
+                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"-","interested");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
                             databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -222,6 +237,11 @@ public class EventActivity extends AppCompatActivity {
                         if ((Integer) tick_mark.getTag() == tick_yellow) {
                             tick_mark.setTag(tick);
                             tick_mark.setImageResource(R.drawable.going_man);
+                        }
+                        try {
+                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"interested","-");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                         try {
                             databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"interested");
@@ -241,6 +261,11 @@ public class EventActivity extends AppCompatActivity {
                         tick_mark.setTag(tick);
                         tick_mark.setImageResource(R.drawable.going_man);
                         try {
+                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"-","going");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
                             databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -253,6 +278,11 @@ public class EventActivity extends AppCompatActivity {
                         if ((Integer) star.getTag() == star_yellow) {
                             star.setTag(R.drawable.star_img);
                             star.setImageResource(R.drawable.star_img);
+                        }
+                        try {
+                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"going","-");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                         try {
                             databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"going");
@@ -272,6 +302,11 @@ public class EventActivity extends AppCompatActivity {
                         tick_mark.setTag(tick);
                         tick_mark.setImageResource(R.drawable.going_man);
                         try {
+                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"-","going");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
                             databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -284,6 +319,11 @@ public class EventActivity extends AppCompatActivity {
                         if ((Integer) star.getTag() == star_yellow) {
                             star.setTag(R.drawable.star_img);
                             star.setImageResource(R.drawable.star_img);
+                        }
+                        try {
+                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"going","-");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                         try {
                             databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"going");

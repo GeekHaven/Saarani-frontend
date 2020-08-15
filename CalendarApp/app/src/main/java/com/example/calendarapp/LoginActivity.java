@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -30,8 +31,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
+import fr.castorflex.android.circularprogressbar.CircularProgressDrawable;
+
 public class LoginActivity extends AppCompatActivity {
     Button studentSignIn;
+    ConstraintLayout constraintLayout;
+    CircularProgressBar circularProgressBar;
     private static final int RC_SIGN_IN = 234;
     private static final String TAG = "simplifiedcoding";
     GoogleSignInClient mGoogleSignInClient;
@@ -41,9 +47,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        circularProgressBar=findViewById(R.id.loader);
         studentSignIn=findViewById(R.id.studentSignIn);
+        constraintLayout=findViewById(R.id.layout);
         mAuth = FirebaseAuth.getInstance();
-        progressDialog=new ProgressDialog(this);
+//        progressDialog=new ProgressDialog(this);
+
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("271594298370-jmsnpsmnhm1ahm6viiag2gi2dnpqn0lg.apps.googleusercontent.com")
@@ -55,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         studentSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                constraintLayout.setVisibility(View.INVISIBLE);
                 Auth.GoogleSignInApi.signOut(mGoogleSignInClient.asGoogleApiClient());
                 signIn();
             }
@@ -64,12 +74,12 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (mAuth.getCurrentUser() != null) {
-            finish();
-            Intent intent=new Intent(this, MainActivity2.class);
-            intent.putExtra("action","db");
-            startActivity(intent);
-        }
+//        if (mAuth.getCurrentUser() != null) {
+//            finish();
+//            Intent intent=new Intent(this, MainActivity2.class);
+//            intent.putExtra("action","db");
+//            startActivity(intent);
+//        }
     }
 
     @Override
@@ -86,7 +96,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
-            progressDialog.dismiss();
+//            progressDialog.dismiss();
+            ((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).stop();
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
@@ -96,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 //                else
 //                    Toast.makeText(LoginActivity.this,"Please Sign in using your College ID",Toast.LENGTH_LONG).show();
             } catch (ApiException e) {
+                constraintLayout.setVisibility(View.VISIBLE);
                 Toast.makeText(LoginActivity.this, "Sign In Cancelled", Toast.LENGTH_SHORT).show();
             }
         }
@@ -104,9 +116,10 @@ public class LoginActivity extends AppCompatActivity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        progressDialog.setTitle("Loading...");
-        progressDialog.setMessage("Signing In Using Google");
-        progressDialog.show();
+        ((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).start();
+//        progressDialog.setTitle("Loading...");
+//        progressDialog.setMessage("Signing In Using Google");
+//        progressDialog.show();
 
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -123,18 +136,22 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            ((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).stop();
+                            constraintLayout.setVisibility(View.VISIBLE);
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
 
                         }
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                     }
                 });
     }
     private void signIn() {
-        progressDialog.setTitle("Loading...");
-        progressDialog.setMessage("Opening Google Sign-In Options");
-        progressDialog.show();
+//        progressDialog.setTitle("Loading...");
+//        progressDialog.setMessage("Opening Google Sign-In Options");
+//        progressDialog.show();
+        circularProgressBar.setVisibility(View.VISIBLE);
+        ((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).start();
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }

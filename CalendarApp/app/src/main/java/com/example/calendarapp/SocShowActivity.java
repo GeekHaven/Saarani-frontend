@@ -23,6 +23,7 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +34,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.tomer.fadingtextview.FadingTextView;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,6 +59,9 @@ public class SocShowActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     Date date =new Date();
+    FadingTextView fadingTextView;
+    AVLoadingIndicatorView av;
+    ConstraintLayout constraintLayout;
     LinearLayout linearLayout;
     LayoutInflater layoutInflater;
     DatabaseHandler databaseHandler;
@@ -68,6 +74,23 @@ public class SocShowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_soc_show);
         databaseHandler=new DatabaseHandler(this);
+        constraintLayout=findViewById(R.id.layout_constraint);
+        fadingTextView=findViewById(R.id.fading_text_view);
+        av=findViewById(R.id.avi);
+        String[] texts = {"Gathering Resources",
+                "Checking All the Dates",
+                "Marking the Calendar",
+                "Generating Buttons",
+                "Entering Cheat Codes",
+                "Downloading Hacks",
+                "Leaking Nuclear Codes"};
+//        fadingTextView.pause();
+        constraintLayout.setVisibility(View.INVISIBLE);
+        constraintLayout.animate().alpha(0.0f);
+        av.show();
+        fadingTextView.setTexts(texts);
+        fadingTextView.setTimeout(1,FadingTextView.SECONDS);
+
         soc_name=findViewById(R.id.soc_name);
         imageView=findViewById(R.id.image);
         soc_desc=findViewById(R.id.soc_desc);
@@ -158,6 +181,7 @@ public class SocShowActivity extends AppCompatActivity {
         addBackImage(imageView);
         getEventData();
         getCordiData();
+
     }
     public void goToFb(String x){
         Uri uri = Uri.parse(x);
@@ -244,6 +268,10 @@ public class SocShowActivity extends AppCompatActivity {
             imageView.setImageResource(R.drawable.tesla_background);
             soc_desc.setTextSize(TypedValue.COMPLEX_UNIT_PT, (float) 15.75);
         }
+
+        if(id.equals("gravity")){
+            imageView.setImageResource(R.drawable.gravity);
+        }
     }
     public void addCordisToView(ArrayList<String> arrayList){
         for(i=0;i<arrayList.size();i++){
@@ -262,12 +290,13 @@ public class SocShowActivity extends AppCompatActivity {
             }
         }
 
+
     }
     public void getCordiData(){
         String url = "https://socupdate.herokuapp.com/societies";
-        final ProgressDialog progressDialog = new ProgressDialog(SocShowActivity.this);
-        progressDialog.setMessage("Loading data....");
-        progressDialog.show();
+//        final ProgressDialog progressDialog = new ProgressDialog(SocShowActivity.this);
+//        progressDialog.setMessage("Loading data....");
+//        progressDialog.show();
         StringRequest stringRequest =new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -303,7 +332,7 @@ public class SocShowActivity extends AppCompatActivity {
                         }
                     }
                     addCordisToView(cordis);
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -319,9 +348,9 @@ public class SocShowActivity extends AppCompatActivity {
     }
     public void getEventData(){
         String url = "https://socupdate.herokuapp.com/societies/"+id+"/events";
-        final ProgressDialog progressDialog = new ProgressDialog(SocShowActivity.this);
-        progressDialog.setMessage("Loading data....");
-        progressDialog.show();
+//        final ProgressDialog progressDialog = new ProgressDialog(SocShowActivity.this);
+//        progressDialog.setMessage("Loading data....");
+//        progressDialog.show();
         StringRequest stringRequest =new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -393,15 +422,25 @@ public class SocShowActivity extends AppCompatActivity {
                         }, SocShowActivity.this,"eventPage");
                     }
                     recyclerView.setAdapter(adapter);
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
                 } catch (JSONException | ParseException e) {
                     e.printStackTrace();
                 }
+                av.hide();
+                fadingTextView.stop();
+                fadingTextView.setElevation(0);
+//                constraintLayout.setVisibility(View.VISIBLE);
+                constraintLayout.animate().alpha(1.0f);
+                constraintLayout.setVisibility(View.VISIBLE);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("SocShow_volley_error", String.valueOf(error));
+                fadingTextView.setVisibility(View.INVISIBLE);
+                fadingTextView.stop();
+                av.hide();
+                constraintLayout.setVisibility(View.VISIBLE);
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(SocShowActivity.this);

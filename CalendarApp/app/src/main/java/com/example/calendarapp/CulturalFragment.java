@@ -241,6 +241,7 @@ public class CulturalFragment extends Fragment implements View.OnClickListener {
             Intent intent =new Intent(getContext(),SocShowActivity.class);
             intent.putExtra("id",(String) v.getContentDescription());
             startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
     }
 }

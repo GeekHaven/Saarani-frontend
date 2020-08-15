@@ -19,10 +19,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.concurrent.TimeUnit;
 
 public class SubscribeActivity extends AppCompatActivity {
     int value;
@@ -34,6 +43,13 @@ public class SubscribeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        setAnimation();
         setContentView(R.layout.activity_subscribe);
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+        PeriodicWorkRequest work = new PeriodicWorkRequest.Builder(BackgroundSyncWorker.class,15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build();
+        WorkManager.getInstance().enqueueUniquePeriodicWork("work",ExistingPeriodicWorkPolicy.KEEP,work);
         btn_next = findViewById(R.id.extended_fab);
         Intent intent = getIntent();
         value = intent.getExtras().getInt("val");
