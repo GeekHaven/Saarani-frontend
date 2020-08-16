@@ -179,7 +179,7 @@ public class ListFragment extends Fragment {
                 public void onLongClicked(int position) {
 
                 }
-            }, getContext(),"list");
+            }, getContext(),"list",getActivity());
             recyclerViewToday.setAdapter(adapter);
         }
         else{
@@ -200,7 +200,7 @@ public class ListFragment extends Fragment {
                 public void onLongClicked(int position) {
 
                 }
-            }, getContext(),"list");
+            }, getContext(),"list",getActivity());
             recyclerViewTom.setAdapter(adapter2);
         }
         else{

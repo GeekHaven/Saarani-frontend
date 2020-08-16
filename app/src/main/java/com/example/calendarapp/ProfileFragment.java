@@ -427,7 +427,7 @@ public class ProfileFragment extends Fragment implements RecyclerItemTouchHelper
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
-                                    databaseHandler.updateCount(listInterestedEvents.get(position),"-","going");
+                                    databaseHandler.updateCount(listGoingEvents.get(position),"-","going");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

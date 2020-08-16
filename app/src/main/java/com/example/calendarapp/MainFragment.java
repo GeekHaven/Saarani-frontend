@@ -265,7 +265,7 @@ public boolean isOnline() {
                 public void onLongClicked(int position) {
 
                 }
-            }, getContext(),"home");
+            }, getContext(),"home",getActivity());
             recyclerView.setAdapter(adapter);
         }
         else{

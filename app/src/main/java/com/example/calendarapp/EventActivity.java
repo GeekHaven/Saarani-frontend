@@ -193,12 +193,14 @@ public class EventActivity extends AppCompatActivity {
                         Snackbar.make(constraintLayout, "Marked as interested.", Snackbar.LENGTH_LONG).show();
                         star.setTag(star_yellow);
                         star.setImageResource(star_yellow);
+                        String x="-";
                         if ((Integer) tick_mark.getTag() == tick_yellow) {
                             tick_mark.setTag(tick);
                             tick_mark.setImageResource(R.drawable.going_man);
+                            x="going";
                         }
                         try {
-                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"interested","-");
+                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"interested",x);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -234,12 +236,14 @@ public class EventActivity extends AppCompatActivity {
                         Snackbar.make(constraintLayout, "Marked as interested", Snackbar.LENGTH_LONG).show();
                         star.setTag(star_yellow);
                         star.setImageResource(star_yellow);
+                        String x="-";
                         if ((Integer) tick_mark.getTag() == tick_yellow) {
                             tick_mark.setTag(tick);
                             tick_mark.setImageResource(R.drawable.going_man);
+                            x="going";
                         }
                         try {
-                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"interested","-");
+                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"interested",x);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -275,12 +279,14 @@ public class EventActivity extends AppCompatActivity {
                         Snackbar.make(constraintLayout, "Marked as going.", Snackbar.LENGTH_LONG).show();
                         tick_mark.setTag(tick_yellow);
                         tick_mark.setImageResource(R.drawable.going_man_yellow);
+                        String x="-";
                         if ((Integer) star.getTag() == star_yellow) {
                             star.setTag(R.drawable.star_img);
                             star.setImageResource(R.drawable.star_img);
+                            x="interested";
                         }
                         try {
-                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"going","-");
+                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"going",x);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -316,12 +322,14 @@ public class EventActivity extends AppCompatActivity {
                         Snackbar.make(constraintLayout, "Marked as going.", Snackbar.LENGTH_LONG).show();
                         tick_mark.setTag(tick_yellow);
                         tick_mark.setImageResource(R.drawable.going_man_yellow);
+                        String x="-";
                         if ((Integer) star.getTag() == star_yellow) {
                             star.setTag(R.drawable.star_img);
                             star.setImageResource(R.drawable.star_img);
+                            x="interested";
                         }
                         try {
-                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"going","-");
+                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"going",x);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -541,7 +549,7 @@ public class EventActivity extends AppCompatActivity {
                         final HashMap<String,String> mapToken=new HashMap<String, String>();
                         mapToken.put("token",task.getResult().getToken());
                         Log.d("PostToken",task.getResult().getToken());
-                        final ProgressDialog progressDialog = new ProgressDialog(EventActivity.this);
+                        final ProgressDialog progressDialog = new ProgressDialog(EventActivity.this,R.style.ProgressDialogTheme);
                         progressDialog.setMessage("Loading data....");
                         progressDialog.show();
                         RequestQueue requstQueue = Volley.newRequestQueue(EventActivity.this);
