@@ -294,19 +294,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         values.put(KEY_STATE,listItems.getState());
         if(state.equals("going")) {
-            values.put(KEY_COUNT_INTERESTED, listItems.getInterested());
+            if(prev.equals("interested")){
+                values.put(KEY_COUNT_INTERESTED, listItems.getInterested()-1);
+            }
+            else {
+                values.put(KEY_COUNT_INTERESTED, listItems.getInterested());
+            }
             values.put(KEY_COUNT_GOING, listItems.getGoing()+1);
         }
-        else if(state.equals("interested")){
-            values.put(KEY_COUNT_INTERESTED, listItems.getInterested()+1);
-            values.put(KEY_COUNT_GOING, listItems.getGoing());
+        else if(state.equals("interested")) {
+            if(prev.equals("going")){
+                values.put(KEY_COUNT_INTERESTED, listItems.getInterested() + 1);
+                values.put(KEY_COUNT_GOING, listItems.getGoing()-1);
+            }
+            else{
+                values.put(KEY_COUNT_INTERESTED, listItems.getInterested() + 1);
+                values.put(KEY_COUNT_GOING, listItems.getGoing());
+            }
         }
         else{
             if(prev.equals("going")){
                 values.put(KEY_COUNT_INTERESTED, listItems.getInterested());
                 values.put(KEY_COUNT_GOING, listItems.getGoing()-1);
             }
-            else{
+            else if(prev.equals("interested")){
                 values.put(KEY_COUNT_INTERESTED, listItems.getInterested()-1);
                 values.put(KEY_COUNT_GOING, listItems.getGoing());
             }

@@ -1,5 +1,6 @@
 package com.example.calendarapp;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -56,6 +57,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     private List<ListItems> listItems,listUpdated;
     private final ClickListener listener;
     private Context context;
+    private Activity activity;
     private String eventId,marker,backFragment;
     private HashMap<Integer, String> map= new HashMap<Integer, String>();
     private HashMap<Integer, String> mapMarker= new HashMap<Integer, String>();
@@ -63,11 +65,12 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     SharedPreferences prefs ;
 
 
-    AdaptorActivity(List<ListItems> listItems, ClickListener listener, Context context,String backFragment) {
+    AdaptorActivity(List<ListItems> listItems, ClickListener listener, Context context,String backFragment,Activity activity) {
         this.listItems = listItems;
         this.listener = listener;
         this.context = context;
         this.backFragment=backFragment;
+        this.activity=activity;
     }
 
     @NonNull
@@ -174,6 +177,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         intent.putStringArrayListExtra("attachments", items.getArrayList());
         intent.putStringArrayListExtra("attachments_name",items.getNameList());
         context.startActivity(intent);
+        //activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
     public void deleteRequest(int position) throws JSONException {
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
@@ -277,6 +281,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             star.setTag(R.drawable.star_img);
                             try {
                                 databaseHandler.updateCount(listItems.get(getAdapterPosition()),"-","interested");
+                                listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()-1);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -290,12 +295,16 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             Snackbar.make(v, "Marked as interested", Snackbar.LENGTH_LONG).show();
                             star.setTag(star_yellow);
                             star.setImageResource(star_yellow);
+                            String x="-";
                             if ((Integer) going.getTag() == tick_yellow) {
                                 going.setTag(tick);
                                 going.setImageResource(R.drawable.going_man);
+                                x="going";
                             }
                             try {
-                                databaseHandler.updateCount(listItems.get(getAdapterPosition()),"interested","-");
+                                databaseHandler.updateCount(listItems.get(getAdapterPosition()),"interested",x);
+                                listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()+1);
+                                listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -317,6 +326,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             going.setImageResource(R.drawable.going_man);
                             try {
                                 databaseHandler.updateCount(listItems.get(getAdapterPosition()),"-","going");
+                                listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -329,12 +339,16 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             Snackbar.make(v, "Marked as going.", Snackbar.LENGTH_LONG).show();
                             going.setTag(tick_yellow);
                             going.setImageResource(R.drawable.going_man_yellow);
+                            String x="-";
                             if ((Integer) star.getTag() == star_yellow) {
                                 star.setTag(R.drawable.star_img);
                                 star.setImageResource(R.drawable.star_img);
+                                x="interested";
                             }
                             try {
-                                databaseHandler.updateCount(listItems.get(getAdapterPosition()),"going","-");
+                                databaseHandler.updateCount(listItems.get(getAdapterPosition()),"going",x);
+                                listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()-1);
+                                listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()+1);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
