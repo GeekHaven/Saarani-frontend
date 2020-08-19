@@ -56,6 +56,7 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.sackcentury.shinebuttonlib.ShineButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -90,10 +91,10 @@ public class EventActivity extends AppCompatActivity {
     String screen;
     ConstraintLayout constraintLayout;
     String marker="";
+    ShineButton shineButtonInt,shineButtonGo;
     LinearLayout layout_attachment;
     ArrayList<String> arrayList=new ArrayList<>();
     ArrayList<String> nameList =new ArrayList<>();
-    ImageView star,tick_mark;
     TextView interested,going,attachment_text;
     private ProgressDialog pDialog;
     DatabaseHandler databaseHandler;
@@ -112,13 +113,20 @@ public class EventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event);
         databaseHandler=new DatabaseHandler(this);
         constraintLayout=findViewById(R.id.layout);
+
+        shineButtonInt = (ShineButton) findViewById(R.id.shine_button_int);
+        shineButtonInt.init(this);
+
+        shineButtonGo=findViewById(R.id.shine_button_go);
+        shineButtonGo.init(this);
+
         eventName=findViewById(R.id.name);
         desc=findViewById(R.id.desc);
         date=findViewById(R.id.date);
         venue=findViewById(R.id.venue);
         byName=findViewById(R.id.society_name);
-        star=findViewById(R.id.star);
-        tick_mark=findViewById(R.id.tick);
+//        star=findViewById(R.id.star);
+//        tick_mark=findViewById(R.id.tick);
         interested=findViewById(R.id.text_interested);
         going=findViewById(R.id.text_going);
         button_back=findViewById(R.id.button);
@@ -170,14 +178,16 @@ public class EventActivity extends AppCompatActivity {
         }
         SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
         if(prefs.getString("society", "false").equals("false")) {
-            star.setOnClickListener(new View.OnClickListener() {
+            shineButtonInt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Object tag = star.getTag();
+                    Object tag = shineButtonInt.getTag();
                     if (tag != null && (Integer) tag == star_yellow) {
                         Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
-                        star.setTag(R.drawable.star_img);
-                        star.setImageResource(R.drawable.star_img);
+//                        star.setTag(R.drawable.star_img);
+//                        star.setImageResource(R.drawable.star_img);
+                        shineButtonInt.setChecked(false,true);
+                        shineButtonInt.setTag(star_img);
                         try {
                             databaseHandler.updateCount(databaseHandler.getEvent(eventId),"-","interested");
                         } catch (JSONException e) {
@@ -191,12 +201,16 @@ public class EventActivity extends AppCompatActivity {
                         deleteRequest();
                     } else {
                         Snackbar.make(constraintLayout, "Marked as interested.", Snackbar.LENGTH_LONG).show();
-                        star.setTag(star_yellow);
-                        star.setImageResource(star_yellow);
+//                        star.setTag(star_yellow);
+//                        star.setImageResource(star_yellow);
+                        shineButtonInt.setTag(star_yellow);
+                        shineButtonInt.setChecked(true,true);
                         String x="-";
-                        if ((Integer) tick_mark.getTag() == tick_yellow) {
-                            tick_mark.setTag(tick);
-                            tick_mark.setImageResource(R.drawable.going_man);
+                        if ((Integer) shineButtonGo.getTag() == tick_yellow) {
+//                            tick_mark.setTag(tick);
+//                            tick_mark.setImageResource(R.drawable.going_man);
+                            shineButtonGo.setTag(tick);
+                            shineButtonGo.setChecked(false);
                             x="going";
                         }
                         try {
@@ -216,11 +230,13 @@ public class EventActivity extends AppCompatActivity {
             interested.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Object tag = star.getTag();
+                    Object tag = shineButtonInt.getTag();
                     if (tag != null && (Integer) tag == star_yellow) {
                         Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
-                        star.setTag(R.drawable.star_img);
-                        star.setImageResource(R.drawable.star_img);
+//                        star.setTag(R.drawable.star_img);
+//                        star.setImageResource(R.drawable.star_img);
+                        shineButtonInt.setChecked(false,true);
+                        shineButtonInt.setTag(star_img);
                         try {
                             databaseHandler.updateCount(databaseHandler.getEvent(eventId),"-","interested");
                         } catch (JSONException e) {
@@ -234,12 +250,16 @@ public class EventActivity extends AppCompatActivity {
                         deleteRequest();
                     } else {
                         Snackbar.make(constraintLayout, "Marked as interested", Snackbar.LENGTH_LONG).show();
-                        star.setTag(star_yellow);
-                        star.setImageResource(star_yellow);
+//                        star.setTag(star_yellow);
+//                        star.setImageResource(star_yellow);
+                        shineButtonInt.setTag(star_yellow);
+                        shineButtonInt.setChecked(true,true);
                         String x="-";
-                        if ((Integer) tick_mark.getTag() == tick_yellow) {
-                            tick_mark.setTag(tick);
-                            tick_mark.setImageResource(R.drawable.going_man);
+                        if ((Integer) shineButtonGo.getTag() == tick_yellow) {
+//                            tick_mark.setTag(tick);
+//                            tick_mark.setImageResource(R.drawable.going_man);
+                            shineButtonGo.setTag(tick);
+                            shineButtonGo.setChecked(false);
                             x="going";
                         }
                         try {
@@ -256,14 +276,16 @@ public class EventActivity extends AppCompatActivity {
                     }
                 }
             });
-            tick_mark.setOnClickListener(new View.OnClickListener() {
+            shineButtonGo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Object tag = tick_mark.getTag();
+                    Object tag = shineButtonGo.getTag();
                     if (tag != null && (Integer) tag == tick_yellow) {
                         Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
-                        tick_mark.setTag(tick);
-                        tick_mark.setImageResource(R.drawable.going_man);
+//                        tick_mark.setTag(tick);
+//                        tick_mark.setImageResource(R.drawable.going_man);
+                        shineButtonGo.setTag(tick);
+                        shineButtonGo.setChecked(false,true);
                         try {
                             databaseHandler.updateCount(databaseHandler.getEvent(eventId),"-","going");
                         } catch (JSONException e) {
@@ -277,12 +299,16 @@ public class EventActivity extends AppCompatActivity {
                         deleteRequest();
                     } else {
                         Snackbar.make(constraintLayout, "Marked as going.", Snackbar.LENGTH_LONG).show();
-                        tick_mark.setTag(tick_yellow);
-                        tick_mark.setImageResource(R.drawable.going_man_yellow);
+//                        tick_mark.setTag(tick_yellow);
+//                        tick_mark.setImageResource(R.drawable.going_man_yellow);
+                        shineButtonGo.setTag(tick_yellow);
+                        shineButtonGo.setChecked(true,true);
                         String x="-";
-                        if ((Integer) star.getTag() == star_yellow) {
-                            star.setTag(R.drawable.star_img);
-                            star.setImageResource(R.drawable.star_img);
+                        if ((Integer) shineButtonInt.getTag() == star_yellow) {
+//                            star.setTag(R.drawable.star_img);
+//                            star.setImageResource(R.drawable.star_img);
+                            shineButtonInt.setTag(star_img);
+                            shineButtonInt.setChecked(false);
                             x="interested";
                         }
                         try {
@@ -302,11 +328,13 @@ public class EventActivity extends AppCompatActivity {
             going.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Object tag = tick_mark.getTag();
+                    Object tag = shineButtonGo.getTag();
                     if (tag != null && (Integer) tag == tick_yellow) {
                         Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
-                        tick_mark.setTag(tick);
-                        tick_mark.setImageResource(R.drawable.going_man);
+//                        tick_mark.setTag(tick);
+//                        tick_mark.setImageResource(R.drawable.going_man);
+                        shineButtonGo.setTag(tick);
+                        shineButtonGo.setChecked(false,true);
                         try {
                             databaseHandler.updateCount(databaseHandler.getEvent(eventId),"-","going");
                         } catch (JSONException e) {
@@ -320,12 +348,16 @@ public class EventActivity extends AppCompatActivity {
                         deleteRequest();
                     } else {
                         Snackbar.make(constraintLayout, "Marked as going.", Snackbar.LENGTH_LONG).show();
-                        tick_mark.setTag(tick_yellow);
-                        tick_mark.setImageResource(R.drawable.going_man_yellow);
+//                        tick_mark.setTag(tick_yellow);
+//                        tick_mark.setImageResource(R.drawable.going_man_yellow);
+                        shineButtonGo.setTag(tick_yellow);
+                        shineButtonGo.setChecked(true,true);
                         String x="-";
-                        if ((Integer) star.getTag() == star_yellow) {
-                            star.setTag(R.drawable.star_img);
-                            star.setImageResource(R.drawable.star_img);
+                        if ((Integer) shineButtonInt.getTag() == star_yellow) {
+//                            star.setTag(R.drawable.star_img);
+//                            star.setImageResource(R.drawable.star_img);
+                            shineButtonInt.setChecked(false);
+                            shineButtonInt.setTag(star_img);
                             x="interested";
                         }
                         try {
@@ -344,10 +376,12 @@ public class EventActivity extends AppCompatActivity {
             });
         }
         else{
-            star.setVisibility(View.GONE);
+//            star.setVisibility(View.GONE);
+            shineButtonInt.setVisibility(View.GONE);
             interested.setVisibility(View.GONE);
             going.setVisibility(View.GONE);
-            tick_mark.setVisibility(View.GONE);
+//            tick_mark.setVisibility(View.GONE);
+            shineButtonGo.setVisibility(View.GONE);
         }
 
     }
@@ -427,17 +461,23 @@ public class EventActivity extends AppCompatActivity {
     public void setIcon(){
         Log.d("markxxx",marker);
         if(marker.equals("interested")){
-            star.setImageResource(star_yellow);
-            star.setTag(star_yellow);
+//            star.setImageResource(star_yellow);
+//            star.setTag(star_yellow);
+            shineButtonInt.setTag(star_yellow);
+            shineButtonInt.setChecked(true);
         }
         else if(marker.equals("going")){
-            tick_mark.setImageResource(R.drawable.going_man_yellow);
-            tick_mark.setTag(tick_yellow);
+//            tick_mark.setImageResource(R.drawable.going_man_yellow);
+//            tick_mark.setTag(tick_yellow);
+            shineButtonGo.setTag(tick_yellow);
+            shineButtonGo.setChecked(true);
             Log.d("set","true");
         }
         else{
-            star.setTag(star_img);
-            tick_mark.setTag(tick);
+//            star.setTag(star_img);
+            shineButtonInt.setTag(star_img);
+//            tick_mark.setTag(tick);
+            shineButtonGo.setTag(tick);
         }
         if(arrayList.size()!=0) {
             layout_attachment.setVisibility(View.VISIBLE);

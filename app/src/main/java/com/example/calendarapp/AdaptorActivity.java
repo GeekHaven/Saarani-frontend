@@ -33,6 +33,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+import com.sackcentury.shinebuttonlib.ShineButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -110,11 +111,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         mapMarker.put(position,listItem.getMarker());
         Log.d("mark",listItem.getMarker());
         if(listItem.getMarker().equals("interested")){
-            holder.star.setImageResource(star_yellow);
+            holder.star.setChecked(true);
             holder.star.setTag(star_yellow);
         }
         else if(listItem.getMarker().equals("going")){
-            holder.going.setImageResource(R.drawable.going_man_yellow);
+            holder.going.setChecked(true);
             holder.going.setTag(tick_yellow);
             Log.d("set","true");
         }
@@ -228,8 +229,8 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         TextView venue;
         TextView date;
         TextView time;
-        ImageView star;
-        ImageView going;
+        ShineButton star;
+        ShineButton going;
         TextView interested;
         TextView markAsGoing;
         TextView set;
@@ -285,7 +286,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                            star.setImageResource(R.drawable.star_img);
+                            star.setChecked(false,true);
                             try {
                                 deleteRequest(this.getAdapterPosition());
                             } catch (JSONException e) {
@@ -294,11 +295,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                         } else {
                             Snackbar.make(v, "Marked as interested", Snackbar.LENGTH_LONG).show();
                             star.setTag(star_yellow);
-                            star.setImageResource(star_yellow);
+                            star.setChecked(true,true);
                             String x="-";
                             if ((Integer) going.getTag() == tick_yellow) {
                                 going.setTag(tick);
-                                going.setImageResource(R.drawable.going_man);
+                                going.setChecked(false);
                                 x="going";
                             }
                             try {
@@ -323,7 +324,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                         if (tag != null && (Integer) tag == tick_yellow) {
                             Snackbar.make(v, "Unmarked", Snackbar.LENGTH_LONG).show();
                             going.setTag(tick);
-                            going.setImageResource(R.drawable.going_man);
+                            going.setChecked(false,true);
                             try {
                                 databaseHandler.updateCount(listItems.get(getAdapterPosition()),"-","going");
                                 listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
@@ -338,11 +339,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                         } else {
                             Snackbar.make(v, "Marked as going.", Snackbar.LENGTH_LONG).show();
                             going.setTag(tick_yellow);
-                            going.setImageResource(R.drawable.going_man_yellow);
+                            going.setChecked(true,true);
                             String x="-";
                             if ((Integer) star.getTag() == star_yellow) {
                                 star.setTag(R.drawable.star_img);
-                                star.setImageResource(R.drawable.star_img);
+                                star.setChecked(false);
                                 x="interested";
                             }
                             try {

@@ -115,14 +115,24 @@
         android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         >
-    <ImageView
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:id="@+id/mark"
-        android:src="@drawable/star_img"
-        android:scaleType="fitXY"
-        android:layout_marginRight="6dp"
-        />
+<!--    <ImageView-->
+<!--        android:layout_width="15dp"-->
+<!--        android:layout_height="15dp"-->
+<!--        android:id="@+id/mark"-->
+<!--        android:src="@drawable/star_img"-->
+<!--        android:scaleType="fitXY"-->
+<!--        android:layout_marginRight="6dp"-->
+<!--        />-->
+        <com.sackcentury.shinebuttonlib.ShineButton
+            android:layout_width="15dp"
+            android:id="@+id/mark"
+            android:layout_height="15dp"
+            card_view:enable_flashing="true"
+            android:scaleType="centerInside"
+            app:siShape="@raw/star_raw"
+            app:btn_fill_color="#F0D453"
+            android:layout_marginRight="6dp"
+            app:btn_color="#7C7C7C"/>
     <TextView
         android:id="@+id/text_interested"
         android:layout_width="wrap_content"
@@ -134,14 +144,24 @@
         android:textStyle="bold"
         android:textSize="10sp"
     />
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/going_man"
-            android:id="@+id/going"
-            android:scaleType="centerInside"
+<!--        <ImageView-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:src="@drawable/going_man"-->
+<!--            android:id="@+id/going"-->
+<!--            android:scaleType="centerInside"-->
+<!--            android:layout_marginRight="6dp"-->
+<!--            />-->
+        <com.sackcentury.shinebuttonlib.ShineButton
+            android:layout_width="15dp"
             android:layout_marginRight="6dp"
-            />
+            android:id="@+id/going"
+            android:layout_height="15dp"
+            android:scaleType="centerInside"
+            card_view:enable_flashing="true"
+            app:siShape="@raw/man_go"
+            app:btn_fill_color="#F0D453"
+            app:btn_color="#7C7C7C"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
