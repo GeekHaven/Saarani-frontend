@@ -138,6 +138,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="INTERESTED"
+        card_view:layout_constraintStart_toEndOf="@id/mark"
         android:textColor="#7C7C7C"
         android:layout_marginRight="25dp"
         android:fontFamily="@font/montserratmedium"

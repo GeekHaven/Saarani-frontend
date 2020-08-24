@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
@@ -21,6 +22,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +32,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,6 +105,11 @@ public class MainActivity2 extends AppCompatActivity {
 //        if(Objects.requireNonNull(intent.getExtras()).containsKey("Fragment")){
 //            frag="profile";
 //        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("271594298370-jmsnpsmnhm1ahm6viiag2gi2dnpqn0lg.apps.googleusercontent.com")
                 .requestEmail()
@@ -163,10 +171,15 @@ public class MainActivity2 extends AppCompatActivity {
             else
                 visibility=false;
         }
+        if(intent.getExtras()!=null&&intent.getExtras().containsKey("date")){
+            bundle.putString("date",intent.getExtras().getString("date"));
+        }
 //        toolbar.setVisibility(View.INVISIBLE);
         navController.setGraph(R.navigation.mobile_navigation,bundle);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+
 
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("Fragment")){
             if(intent.getExtras().getString("Fragment").equals("profile")) {
@@ -178,7 +191,11 @@ public class MainActivity2 extends AppCompatActivity {
 
             }
             else if(intent.getExtras().getString("Fragment").equals("list")){
-                navController.navigate(R.id.navigation_nav_list);
+                Bundle b=new Bundle();
+                if(intent.getExtras()!=null&&intent.getExtras().containsKey("date")){
+                    b.putString("date",intent.getExtras().getString("date"));
+                }
+                navController.navigate(R.id.navigation_nav_list,b);
                 SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
                 if(prefs.getString("society", "false").equals("true")) {
                     visibility=true;
@@ -190,7 +207,6 @@ public class MainActivity2 extends AppCompatActivity {
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("back")){
             navController.navigate(R.id.navigation_nav_soc_profile);
         }
-
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -205,8 +221,9 @@ public class MainActivity2 extends AppCompatActivity {
                             SharedPreferences preferences =getSharedPreferences("user",MODE_PRIVATE);
                             if(preferences.getString("society", "false").equals("true"))
                                 addEvent.setVisible(true);
-                            if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_main&&navController.getCurrentDestination().getId()!=R.id.navigation_nav_list)
-                                navController.navigate(R.id.navigation_nav_main);
+                            if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_main&&navController.getCurrentDestination().getId()!=R.id.navigation_nav_list){
+                                    navController.navigate(R.id.navigation_nav_main);
+                            }
                             break;
                         }
                         case R.id.nav_profile: {
@@ -346,6 +363,7 @@ public class MainActivity2 extends AppCompatActivity {
         menuInflater.inflate(R.menu.menu, menu);
         addEvent=menu.findItem(R.id.add_event);
         swap=menu.findItem(R.id.calendar);
+
         if(getIntent().getExtras()!=null && getIntent().getExtras().containsKey("Fragment")){
             if(getIntent().getExtras().getString("Fragment").equals("profile")){
                 addEvent.setVisible(false);

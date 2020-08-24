@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -63,11 +64,13 @@
                     android:id="@+id/card_view_inner"
                     android:layout_width="match_parent"
                     android:layout_height="144pt"
+                    android:theme="@android:style/ThemeOverlay.Material.Dark"
                     android:layout_gravity="center"
                     android:layout_marginTop="-30dp"
                     app:cardBackgroundColor="@android:color/transparent"
                     app:cardCornerRadius="40dp"
-                    app:cardElevation="16dp">
+                    app:cardElevation="16dp"
+                    card_view:targetApi="lollipop">
 
                     <ImageView
                         android:id="@+id/image"
@@ -81,6 +84,8 @@
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_marginStart="24dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:foreground="?selectableItemBackground"
                         android:layout_marginLeft="24dp"
                         android:layout_marginTop="70dp"
                         android:scaleType="fitXY"
