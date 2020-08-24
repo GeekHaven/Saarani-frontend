@@ -88,7 +88,7 @@ public class EventActivity extends AppCompatActivity {
     TextView eventName,desc,date,venue,byName;
     String eventId;
     ImageView download_url,button_back;
-    String screen;
+    String screen,date_event;
     ConstraintLayout constraintLayout;
     String marker="";
     ShineButton shineButtonInt,shineButtonGo;
@@ -163,6 +163,7 @@ public class EventActivity extends AppCompatActivity {
             String venue_event = intent.getExtras().getString("venue");
             String time_event = intent.getExtras().getString("time");
             String dateEvent = intent.getExtras().getString("date");
+            date_event=dateEvent;
             Date date_event = null;
             try {
                 date_event = dateFormat.parse(dateEvent);
@@ -491,6 +492,7 @@ public class EventActivity extends AppCompatActivity {
         if(screen.equals("home")) {
             Intent intent=new Intent(EventActivity.this, MainActivity2.class);
             intent.putExtra("action","db");
+            intent.putExtra("date",date_event);
             startActivity(intent);
         }
         else if(screen.equals("profile")){
@@ -501,6 +503,7 @@ public class EventActivity extends AppCompatActivity {
         else if(screen.equals("list")){
             Intent intent= new Intent(EventActivity.this,MainActivity2.class);
             intent.putExtra("Fragment","list");
+            intent.putExtra("date",date_event);
             startActivity(intent);
         }
         else
@@ -609,6 +612,7 @@ public class EventActivity extends AppCompatActivity {
                                                     String venue_event = jsonObject.getString("venue");
                                                     String time_event = jsonObject.getString("time");
                                                     String dateEvent = jsonObject.getString("date");
+                                                    date_event=dateEvent;
                                                     if(jsonObject.has("markedAs")){
                                                         marker=jsonObject.getString("markedAs");
                                                         Log.d("xx",marker);

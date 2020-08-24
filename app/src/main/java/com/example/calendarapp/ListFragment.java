@@ -67,7 +67,7 @@ public class ListFragment extends Fragment {
     private CardView cardView;
     Date dateX=new Date();
     private RecyclerView.Adapter adapter,adapter2;
-    private String tomorrowDate;
+    private String tomorrowDate,dateClick;
     DatabaseHandler databaseHandler;
     final DateFormat dateFormat = new SimpleDateFormat("MM", Locale.getDefault());
     final SimpleDateFormat sdf = new SimpleDateFormat("EEEE",Locale.getDefault());
@@ -89,6 +89,10 @@ public class ListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.list_fragment, container, false);
+        Bundle bundle=getArguments();
+        if(bundle!=null&&bundle.getString("date")!=null){
+            dateClick=bundle.getString("date");
+        }
         listItems=new ArrayList<>();
         databaseHandler=new DatabaseHandler(getContext());
         try {
@@ -209,9 +213,6 @@ public class ListFragment extends Fragment {
         }
     }
     public void addEvents(final List<ListItems> temp){
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Loading data....");
-        progressDialog.show();
         Calendar startDate = Calendar.getInstance();
         startDate.add(Calendar.MONTH,0);
         startDate.add(Calendar.DATE,-5);
@@ -242,7 +243,6 @@ public class ListFragment extends Fragment {
                 .showTopText(false)
                 .end()
                 .build();
-        progressDialog.dismiss();
         horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -294,6 +294,15 @@ public class ListFragment extends Fragment {
                 return true;
             }
         });
+//        if(dateClick!=null) {
+//            try {
+//                Calendar cal=Calendar.getInstance();
+//                cal.setTime(f.parse(dateClick));
+//                horizontalCalendar.selectDate(cal,true);
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        }
         horizontalCalendar.refresh();
     }
     public void addEventsToCal(){

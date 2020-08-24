@@ -73,7 +73,7 @@ public class MainFragment extends Fragment {
     ConstraintLayout constraintLayout;
     int x=0;
     private RecyclerView recyclerView;
-    String loadDataFrom;
+    String loadDataFrom,dateClick;
     private CardView cardView;
     private RecyclerView.Adapter adapter;
     final Date date = new Date();
@@ -102,6 +102,7 @@ public class MainFragment extends Fragment {
 
         if (bundle != null) {
             loadDataFrom=bundle.getString("loadFrom");
+            dateClick=bundle.getString("date");
         }
         databaseHandler = new DatabaseHandler(getContext());
         listItems=new ArrayList<>();
@@ -158,6 +159,22 @@ public class MainFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+        if(dateClick!=null){
+            try {
+                Date dateClicked = f.parse(dateClick);
+                compactCalendar.setCurrentDate(dateClicked);
+                if(dateFormat1.format(date).equals(dateFormat1.format(dateClicked))&&dateFormat.format(date).equals(dateFormat.format(dateClicked))&&yearFormat.format(date).equals(yearFormat.format(dateClicked))){
+                    today.setVisibility(View.VISIBLE);
+                }
+                else
+                    today.setVisibility(View.GONE);
+                textLay.setText(sdf.format(dateClicked).substring(0,3)+", "+dateFormat1.format(dateClicked)+" "+Selected[Integer.parseInt(dateFormat.format(dateClicked))-1]);
+                showRecyclerView(dateClicked);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
@@ -178,6 +195,7 @@ public class MainFragment extends Fragment {
 
 
     });
+        if(dateClick==null)
         showRecyclerView(date);
         return view;
     }

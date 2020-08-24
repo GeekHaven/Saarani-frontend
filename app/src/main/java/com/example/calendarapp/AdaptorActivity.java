@@ -316,6 +316,8 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             }
                         }
                     } else {
+                        going.setChecked(false);
+                        star.setChecked(false);
                         Snackbar.make(v, "This feature is not available for societies", Snackbar.LENGTH_LONG).show();
                     }
                 } else if (v.getId() == going.getId() || v.getId() == markAsGoing.getId()) {
@@ -360,6 +362,8 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             }
                         }
                     } else {
+                        going.setChecked(false);
+                        star.setChecked(false);
                         Snackbar.make(v, "This feature is not available for societies", Snackbar.LENGTH_LONG).show();
                     }
                 } else {

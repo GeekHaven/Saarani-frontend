@@ -11,6 +11,7 @@ import android.transition.Slide;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -49,6 +50,11 @@ public class SubscribeActivity extends AppCompatActivity {
         PeriodicWorkRequest work = new PeriodicWorkRequest.Builder(BackgroundSyncWorker.class,15, TimeUnit.MINUTES)
                 .setConstraints(constraints)
                 .build();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
         WorkManager.getInstance().enqueueUniquePeriodicWork("work",ExistingPeriodicWorkPolicy.KEEP,work);
         btn_next = findViewById(R.id.extended_fab);
         Intent intent = getIntent();
