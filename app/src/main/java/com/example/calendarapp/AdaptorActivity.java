@@ -33,6 +33,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+import com.ramotion.foldingcell.FoldingCell;
+import com.ramotion.foldingcell.views.FoldingCellView;
 import com.sackcentury.shinebuttonlib.ShineButton;
 
 import org.json.JSONException;
@@ -78,7 +80,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.single_event, parent, false);
+                .inflate(R.layout.foldable_single_event, parent, false);
         prefs=context.getSharedPreferences("user", MODE_PRIVATE);
         databaseHandler=new DatabaseHandler(context);
         return new ViewHolder(v);
@@ -98,12 +100,14 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         holder.date.setText(listItem.getDate());
         holder.time.setText(listItem.getTime());
         eventId=listItem.getEventId();
+        holder.int_count.setText(String.valueOf(listItem.getInterested()));
+        holder.going_count.setText(String.valueOf(listItem.getGoing()));
         if(listItem.getState().equals("completed")){
-            holder.set.setText("Completed");
+            holder.set.setText("COMPLETED");
             holder.set.setBackgroundResource(R.drawable.completed_background);
         }
         else if(listItem.getState().equals("cancelled")){
-            holder.set.setText("Cancelled");
+            holder.set.setText("CANCELLED");
             holder.set.setBackgroundResource(R.drawable.cancelled_background);
         }
         map.put(position,eventId);
@@ -128,9 +132,13 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         databaseHandler.updateMarker(listItems.get(position),mark);
+        Log.d("updated",mark);
+        Log.d("up",listItems.get(position).getMarker());
         marker=mark;
         mapMarker.put(position,mark);
-        final String url="https://socupdate.herokuapp.com/events/"+map.get(position)+"/mark";
+        listItems.get(position).setMarker(mark);
+        //listItems.get(position).set
+        final String url="https://socupdate.herokuapp.com/events/"+listItems.get(position).getEventId()+"/mark";
         if(user!=null){
             user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                 @Override
@@ -162,7 +170,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         }
     }
     public void startIntent(int position){
-        Toast.makeText(context,listItems.get(position).getInterested()+" " +listItems.get(position).getGoing(),Toast.LENGTH_LONG).show();
+        //Toast.makeText(context,listItems.get(position).getInterested()+" " +listItems.get(position).getGoing(),Toast.LENGTH_LONG).show();
         Intent intent =new Intent(context,EventActivity.class);
         ListItems items = listItems.get(position);
         intent.putExtra("name",items.getName());
@@ -171,8 +179,8 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         intent.putExtra("time",items.getTime());
         intent.putExtra("venue",items.getVenue());
         intent.putExtra("date",items.getDate());
-        intent.putExtra("marker",mapMarker.get(position));
-        intent.putExtra("eventId",map.get(position));
+        intent.putExtra("marker",items.getMarker());
+        intent.putExtra("eventId",items.getEventId());
         intent.putExtra("type","event");
         intent.putExtra("screen",backFragment);
         intent.putStringArrayListExtra("attachments", items.getArrayList());
@@ -185,8 +193,9 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         FirebaseUser user = mAuth.getCurrentUser();
         databaseHandler.updateMarker(listItems.get(position),"none");
         marker="none";
+        listItems.get(position).setMarker("none");
         mapMarker.put(position,"none");
-        final String url="https://socupdate.herokuapp.com/events/"+map.get(position)+"/mark/delete";
+        final String url="https://socupdate.herokuapp.com/events/"+listItems.get(position).getEventId()+"/mark/delete";
         if(user!=null){
             user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                 @Override
@@ -234,6 +243,9 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         TextView interested;
         TextView markAsGoing;
         TextView set;
+        TextView int_count;
+        TextView going_count;
+        FoldingCell foldingCell;
 
 
         ViewHolder(@NonNull View itemView) {
@@ -249,6 +261,9 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             going=itemView.findViewById(R.id.going);
             interested=itemView.findViewById(R.id.text_interested);
             markAsGoing=itemView.findViewById(R.id.text_going);
+            foldingCell=itemView.findViewById(R.id.folding_cell);
+            int_count=itemView.findViewById(R.id.interested_count);
+            going_count=itemView.findViewById(R.id.going_count);
                 interested.setOnClickListener(this);
                 markAsGoing.setOnClickListener(this);
                 star.setOnClickListener(this);
@@ -280,6 +295,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                         if (tag != null && (Integer) tag == star_yellow) {
                             Snackbar.make(v, "Unmarked", Snackbar.LENGTH_LONG).show();
                             star.setTag(R.drawable.star_img);
+                            int_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getInterested()-1));
                             try {
                                 databaseHandler.updateCount(listItems.get(getAdapterPosition()),"-","interested");
                                 listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()-1);
@@ -296,16 +312,20 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             Snackbar.make(v, "Marked as interested", Snackbar.LENGTH_LONG).show();
                             star.setTag(star_yellow);
                             star.setChecked(true,true);
+                            listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()+1);
+                            int_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getInterested()));
                             String x="-";
                             if ((Integer) going.getTag() == tick_yellow) {
                                 going.setTag(tick);
                                 going.setChecked(false);
+                                listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
+                                going_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getGoing()));
                                 x="going";
                             }
                             try {
                                 databaseHandler.updateCount(listItems.get(getAdapterPosition()),"interested",x);
-                                listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()+1);
-                                listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
+                                //listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()+1);
+                                //listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -327,9 +347,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             Snackbar.make(v, "Unmarked", Snackbar.LENGTH_LONG).show();
                             going.setTag(tick);
                             going.setChecked(false,true);
+                            listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
+                            going_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getGoing()));
                             try {
                                 databaseHandler.updateCount(listItems.get(getAdapterPosition()),"-","going");
-                                listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
+                                //listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -343,15 +365,19 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             going.setTag(tick_yellow);
                             going.setChecked(true,true);
                             String x="-";
+                            listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()+1);
+                            going_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getGoing()));
                             if ((Integer) star.getTag() == star_yellow) {
                                 star.setTag(R.drawable.star_img);
                                 star.setChecked(false);
                                 x="interested";
+                                listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()-1);
+                                int_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getInterested()));
                             }
                             try {
                                 databaseHandler.updateCount(listItems.get(getAdapterPosition()),"going",x);
-                                listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()-1);
-                                listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()+1);
+                                //listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()-1);
+                                //listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()+1);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -367,7 +393,8 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                         Snackbar.make(v, "This feature is not available for societies", Snackbar.LENGTH_LONG).show();
                     }
                 } else {
-                    startIntent(this.getAdapterPosition());
+                    //startIntent(this.getAdapterPosition());
+                    foldingCell.toggle(false);
                 }
             }
             else if(listItems.get(getAdapterPosition()).getState().equals("completed")){

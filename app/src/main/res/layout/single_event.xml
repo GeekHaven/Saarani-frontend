@@ -6,7 +6,7 @@
     android:id="@+id/menu_item_card_view"
     android:layout_width="match_parent"
     android:background="#2C2B2B"
-    android:layout_height="100dp"
+    android:layout_height="110dp"
     android:orientation="vertical"
     android:layout_marginBottom="16dp"
     card_view:cardCornerRadius="8dp">
@@ -17,7 +17,7 @@
         android:orientation="horizontal">
     <TextView
         android:layout_width="6dp"
-        android:layout_height="100dp"
+        android:layout_height="110dp"
         android:background="@drawable/round_left_strip"
         />
     <LinearLayout
@@ -51,10 +51,10 @@
          android:layout_height="wrap_content"
          android:layout_marginLeft="5.4pt"
          android:id="@+id/set"
-         android:text="Upcoming"
+         android:text="UPCOMING"
          android:textColor="#2C2B2B"
          android:layout_gravity="center"
-         android:textStyle="bold"
+         android:textStyle="normal|bold"
          android:paddingHorizontal="2.7pt"
          android:fontFamily="@font/montserratmedium"
          android:textSize="3.6pt"
@@ -87,7 +87,7 @@
             android:textStyle="bold"
             android:fontFamily="@font/montserratmedium"
             android:textColor="#9D9D9D"
-            android:textSize="9sp"
+            android:textSize="10sp"
             android:id="@+id/time"/>
     <TextView
         android:layout_width="wrap_content"
@@ -99,7 +99,7 @@
         android:textStyle="bold"
         android:fontFamily="@font/montserratmedium"
         android:textColor="#9D9D9D"
-        android:textSize="9sp"
+        android:textSize="10sp"
         android:id="@+id/venue"/>
     <TextView
         android:layout_width="match_parent"
@@ -111,8 +111,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        card_view:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center_vertical"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="1dp"
         android:orientation="horizontal"
         >
 <!--    <ImageView-->
@@ -124,9 +125,9 @@
 <!--        android:layout_marginRight="6dp"-->
 <!--        />-->
         <com.sackcentury.shinebuttonlib.ShineButton
-            android:layout_width="15dp"
+            android:layout_width="20dp"
             android:id="@+id/mark"
-            android:layout_height="15dp"
+            android:layout_height="20dp"
             card_view:enable_flashing="true"
             android:scaleType="centerInside"
             app:siShape="@raw/star_raw"
@@ -140,11 +141,25 @@
         android:text="INTERESTED"
         card_view:layout_constraintStart_toEndOf="@id/mark"
         android:textColor="#7C7C7C"
-        android:layout_marginRight="25dp"
         android:fontFamily="@font/montserratmedium"
         android:textStyle="bold"
-        android:textSize="10sp"
+        android:textSize="11sp"
     />
+    <TextView
+        android:layout_width="25dp"
+        android:id="@+id/interested_count"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginLeft="3dp"
+        android:background="@drawable/count_background"
+        android:fontFamily="@font/montserratmedium"
+        android:textSize="7sp"
+        android:textStyle="normal|bold"
+        android:layout_marginRight="25dp"
+        android:textColor="#2C2B2B"
+        android:text="30"
+        />
 <!--        <ImageView-->
 <!--            android:layout_width="20dp"-->
 <!--            android:layout_height="20dp"-->
@@ -154,10 +169,10 @@
 <!--            android:layout_marginRight="6dp"-->
 <!--            />-->
         <com.sackcentury.shinebuttonlib.ShineButton
-            android:layout_width="15dp"
+            android:layout_width="20dp"
             android:layout_marginRight="6dp"
             android:id="@+id/going"
-            android:layout_height="15dp"
+            android:layout_height="20dp"
             android:scaleType="centerInside"
             card_view:enable_flashing="true"
             app:siShape="@raw/man_go"
@@ -171,9 +186,22 @@
         android:textColor="#7C7C7C"
         android:fontFamily="@font/montserratmedium"
         android:textStyle="bold"
-        android:textSize="10sp"
+        android:textSize="11sp"
     />
+        <TextView
+            android:layout_width="25dp"
+            android:id="@+id/going_count"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginLeft="3dp"
+            android:background="@drawable/count_background"
+            android:fontFamily="@font/montserratmedium"
+            android:textSize="7sp"
+            android:textColor="#2C2B2B"
+            android:text="100"
+            />
     </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>

@@ -52,6 +52,8 @@ public class ListItems {
     public void setState(String state){this.state=state;}
     public String getState(){return state;}
 
+    public void setMarker(String marker){this.marker=marker;}
+
     public String getName(){
         return name;
     }
