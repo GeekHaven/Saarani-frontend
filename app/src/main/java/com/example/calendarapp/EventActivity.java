@@ -111,6 +111,10 @@ public class EventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+        final SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("newEvent",false);
+        editor.apply();
         databaseHandler=new DatabaseHandler(this);
         constraintLayout=findViewById(R.id.layout);
 

@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.example.calendarapp.R.drawable.abc_btn_check_to_on_mtrl_000;
 import static com.example.calendarapp.R.drawable.star_img;
 import static com.example.calendarapp.R.drawable.star_yellow;
 import static com.example.calendarapp.R.drawable.tick;
@@ -128,6 +129,12 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             holder.going.setTag(tick);
         }
     }
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
+    }
     public void addMarker(int position, final String mark) throws JSONException {
         FirebaseAuth mAuth= FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -169,6 +176,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             });
         }
     }
+
     public void startIntent(int position){
         //Toast.makeText(context,listItems.get(position).getInterested()+" " +listItems.get(position).getGoing(),Toast.LENGTH_LONG).show();
         Intent intent =new Intent(context,EventActivity.class);
@@ -291,49 +299,62 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             if(listItems.get(getAdapterPosition()).getState().equals("upcoming") ) {
                 if (v.getId() == star.getId() || v.getId() == interested.getId()) {
                     if (prefs.getString("society", "false").equals("false")) {
-                        Object tag = star.getTag();
-                        if (tag != null && (Integer) tag == star_yellow) {
-                            Snackbar.make(v, "Unmarked", Snackbar.LENGTH_LONG).show();
-                            star.setTag(R.drawable.star_img);
-                            int_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getInterested()-1));
-                            try {
-                                databaseHandler.updateCount(listItems.get(getAdapterPosition()),"-","interested");
-                                listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()-1);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                        String action="none";
+                        if(isOnline()) {
+                            Object tag = star.getTag();
+                            if (tag != null && (Integer) tag == star_yellow) {
+                                action="unmarked";
+                                Snackbar.make(v, "Unmarked", Snackbar.LENGTH_LONG).show();
+                                star.setTag(R.drawable.star_img);
+                                int_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getInterested() - 1));
+                                try {
+                                    databaseHandler.updateCount(listItems.get(getAdapterPosition()), "-", "interested");
+                                    listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested() - 1);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                star.setChecked(false, true);
+                                try {
+                                    deleteRequest(this.getAdapterPosition());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                action ="marked";
+                                Snackbar.make(v, "Marked as interested", Snackbar.LENGTH_LONG).show();
+                                star.setTag(star_yellow);
+                                star.setChecked(true, true);
+                                listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested() + 1);
+                                int_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getInterested()));
+                                String x = "-";
+                                if ((Integer) going.getTag() == tick_yellow) {
+                                    going.setTag(tick);
+                                    going.setChecked(false);
+                                    listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing() - 1);
+                                    going_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getGoing()));
+                                    x = "going";
+                                    action="marked|going";
+                                }
+                                try {
+                                    databaseHandler.updateCount(listItems.get(getAdapterPosition()), "interested", x);
+                                    //listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()+1);
+                                    //listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    addMarker(this.getAdapterPosition(), "interested");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            star.setChecked(false,true);
-                            try {
-                                deleteRequest(this.getAdapterPosition());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Snackbar.make(v, "Marked as interested", Snackbar.LENGTH_LONG).show();
-                            star.setTag(star_yellow);
-                            star.setChecked(true,true);
-                            listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()+1);
-                            int_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getInterested()));
-                            String x="-";
-                            if ((Integer) going.getTag() == tick_yellow) {
-                                going.setTag(tick);
-                                going.setChecked(false);
-                                listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
-                                going_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getGoing()));
-                                x="going";
-                            }
-                            try {
-                                databaseHandler.updateCount(listItems.get(getAdapterPosition()),"interested",x);
-                                //listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()+1);
-                                //listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                addMarker(this.getAdapterPosition(), "interested");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                        }
+                        else{
+                            if(star.isChecked())
+                                star.setChecked(false);
+                            else
+                                star.setChecked(true);
+                            Snackbar.make(v, "Not connected to internet! Please try again later.", Snackbar.LENGTH_LONG).show();
                         }
                     } else {
                         going.setChecked(false);
@@ -342,50 +363,59 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                     }
                 } else if (v.getId() == going.getId() || v.getId() == markAsGoing.getId()) {
                     if (prefs.getString("society", "false").equals("false")) {
-                        Object tag = going.getTag();
-                        if (tag != null && (Integer) tag == tick_yellow) {
-                            Snackbar.make(v, "Unmarked", Snackbar.LENGTH_LONG).show();
-                            going.setTag(tick);
-                            going.setChecked(false,true);
-                            listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
-                            going_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getGoing()));
-                            try {
-                                databaseHandler.updateCount(listItems.get(getAdapterPosition()),"-","going");
-                                //listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                        if(isOnline()) {
+                            Object tag = going.getTag();
+                            if (tag != null && (Integer) tag == tick_yellow) {
+                                Snackbar.make(v, "Unmarked", Snackbar.LENGTH_LONG).show();
+                                going.setTag(tick);
+                                going.setChecked(false, true);
+                                listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing() - 1);
+                                going_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getGoing()));
+                                try {
+                                    databaseHandler.updateCount(listItems.get(getAdapterPosition()), "-", "going");
+                                    //listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()-1);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    deleteRequest(this.getAdapterPosition());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                Snackbar.make(v, "Marked as going.", Snackbar.LENGTH_LONG).show();
+                                going.setTag(tick_yellow);
+                                going.setChecked(true, true);
+                                String x = "-";
+                                listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing() + 1);
+                                going_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getGoing()));
+                                if ((Integer) star.getTag() == star_yellow) {
+                                    star.setTag(R.drawable.star_img);
+                                    star.setChecked(false);
+                                    x = "interested";
+                                    listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested() - 1);
+                                    int_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getInterested()));
+                                }
+                                try {
+                                    databaseHandler.updateCount(listItems.get(getAdapterPosition()), "going", x);
+                                    //listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()-1);
+                                    //listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()+1);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    addMarker(this.getAdapterPosition(), "going");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                            try {
-                                deleteRequest(this.getAdapterPosition());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Snackbar.make(v, "Marked as going.", Snackbar.LENGTH_LONG).show();
-                            going.setTag(tick_yellow);
-                            going.setChecked(true,true);
-                            String x="-";
-                            listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()+1);
-                            going_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getGoing()));
-                            if ((Integer) star.getTag() == star_yellow) {
-                                star.setTag(R.drawable.star_img);
-                                star.setChecked(false);
-                                x="interested";
-                                listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()-1);
-                                int_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getInterested()));
-                            }
-                            try {
-                                databaseHandler.updateCount(listItems.get(getAdapterPosition()),"going",x);
-                                //listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested()-1);
-                                //listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing()+1);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                addMarker(this.getAdapterPosition(), "going");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                        }
+                        else {
+                            if (going.isChecked())
+                                going.setChecked(false);
+                            else
+                                going.setChecked(true);
+                            Snackbar.make(v, "Not connected to internet! Please try again later.", Snackbar.LENGTH_LONG).show();
                         }
                     } else {
                         going.setChecked(false);

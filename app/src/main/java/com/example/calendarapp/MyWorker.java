@@ -2,12 +2,15 @@ package com.example.calendarapp;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
@@ -39,6 +42,8 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class MyWorker extends Worker {
     Context context_i;
@@ -137,6 +142,7 @@ public class MyWorker extends Worker {
             }
             databaseHandler.close();
             Log.d("worker_tag", response.toString());
+            sendMessage();
             return Result.success();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -150,6 +156,17 @@ public class MyWorker extends Worker {
             e.printStackTrace();
             return Result.failure();
         }
+    }
+    private void sendMessage() {
+        final SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("newEvent",true);
+        editor.apply();
+        Log.d("sender", "Broadcasting message");
+        Intent intent = new Intent("refresh");
+        // You can also include some extra data.
+        intent.putExtra("value", "true");
+        LocalBroadcastManager.getInstance(context_i).sendBroadcast(intent);
     }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public HashMap<String,String> getPostObject() {

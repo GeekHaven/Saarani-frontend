@@ -3,6 +3,8 @@ package com.example.calendarapp;
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.ProgressDialog;
@@ -10,6 +12,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.icu.text.Edits;
 import android.net.ConnectivityManager;
@@ -66,6 +69,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class MainFragment extends Fragment {
     private MainViewModel mViewModel;
     TextView month,year,today,textLay,default_text;
@@ -84,6 +89,13 @@ public class MainFragment extends Fragment {
     HashMap<String, Integer> map
             = new HashMap<>();
     AVLoadingIndicatorView av;
+    String[] texts = {"Gathering Resources",
+            "Checking All the Dates",
+            "Marking the Calendar",
+            "Generating Buttons",
+            "Entering Cheat Codes",
+            "Downloading Hacks",
+            "Leaking Nuclear Codes"};
     HashMap<String,Integer> mapPosition =new HashMap<>();
     final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
     final SimpleDateFormat time_sdf = new SimpleDateFormat("HH:mm",Locale.getDefault());
@@ -98,6 +110,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.main_fragment, container, false);
+        Log.d("result","created");
         Bundle bundle=getArguments();
 
         if (bundle != null) {
@@ -114,16 +127,11 @@ public class MainFragment extends Fragment {
                 "May", "June", "July", "August", "September", "October", "November", "December"};
         av=view.findViewById(R.id.avi);
         fadingTextView=view.findViewById(R.id.fading_text_view);
-        String[] texts = {"Gathering Resources",
-                "Checking All the Dates",
-                "Marking the Calendar",
-                "Generating Buttons",
-                "Entering Cheat Codes",
-                "Downloading Hacks",
-                "Leaking Nuclear Codes"};
+        fadingTextView.setVisibility(View.INVISIBLE);
         fadingTextView.setTexts(texts);
         fadingTextView.setTimeout(1,FadingTextView.SECONDS);
-        fadingTextView.pause();
+        fadingTextView.stop();
+        //fadingTextView.pause();
         cardView=view.findViewById(R.id.cardView);
         default_text=view.findViewById(R.id.default_text);
         constraintLayout=view.findViewById(R.id.layout);
@@ -203,22 +211,58 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mMessageReceiver,
-//                new IntentFilter("custom-message"));
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mMessageReceiver,
+                new IntentFilter("refresh"));
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         // TODO: Use the ViewModel
     }
-//    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            String eventId = intent.getStringExtra("eventId");
-//            String markedAs = intent.getStringExtra("markedAs");
-//            ListItems item =new ListItems(listItems.get(mapPosition.get(eventId)).getName(),listItems.get(mapPosition.get(eventId)).getDesc(),listItems.get(mapPosition.get(eventId)).getByName(),listItems.get(mapPosition.get(eventId)).getDate(),listItems.get(mapPosition.get(eventId)).getTime(),listItems.get(mapPosition.get(eventId)).getVenue(),markedAs,eventId,listItems.get(mapPosition.get(eventId)).getArrayList());
-//            listItems.set(mapPosition.get(eventId),item);
-////            Toast.makeText(getContext(),ItemName +" "+qty ,Toast.LENGTH_SHORT).show();
-//
-//        }
-//    };
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mMessageReceiver);
+    }
+    public void onResume() {
+        super.onResume();
+        Log.d("result","resume");
+        IntentFilter iff= new IntentFilter("refresh");
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mMessageReceiver, iff);
+        final SharedPreferences pref = requireActivity().getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = pref.edit();
+        Log.d("notice",String.valueOf(pref.getBoolean("newEvent",false)));
+        if(pref.getBoolean("newEvent",false)){
+            makeSnacBar();
+        }
+        editor.putBoolean("newEvent",false);
+    }
+    public void makeSnacBar(){
+        final Snackbar snackbar = Snackbar
+                .make(constraintLayout, "Events Updated!", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Refresh", new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            compactCalendar.removeAllEvents();
+                            loadDatabase();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+        snackbar.show();
+    }
+
+    public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getExtras().getString("value").equals("true")){
+                makeSnacBar();
+            }
+        }
+    };
+    public boolean isInForeground(){
+        return ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED);
+    }
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public boolean isOnline() {
     ConnectivityManager cm =
@@ -310,7 +354,10 @@ public boolean isOnline() {
         sendMessage("false");
 
         av.show();
-        fadingTextView.resume();
+        fadingTextView.setVisibility(View.INVISIBLE);
+        fadingTextView.restart();
+        //fadingTextView.resume();
+        //fadingTextView.startAnimation(android.view.animation.Animation animation);
         av.setVisibility(View.VISIBLE);
         cardView.setVisibility(View.INVISIBLE);
         default_text.setVisibility(View.INVISIBLE);
@@ -414,6 +461,7 @@ public boolean isOnline() {
                                         sendMessage("true");
                                         av.hide();
                                         fadingTextView.stop();
+                                        fadingTextView.setVisibility(View.INVISIBLE);
                                         default_text.setText("No Event Found");
                                     }
                                 },
@@ -423,6 +471,7 @@ public boolean isOnline() {
 //                                        progressDialog.dismiss();
                                         av.hide();
                                         fadingTextView.stop();
+                                        fadingTextView.setVisibility(View.INVISIBLE);
                                         Toast.makeText(getContext(),"Event fetch failed!",Toast.LENGTH_SHORT).show();
                                     }
                                 }
