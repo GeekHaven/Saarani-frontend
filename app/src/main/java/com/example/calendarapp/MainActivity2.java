@@ -91,6 +91,7 @@ public class MainActivity2 extends AppCompatActivity {
     private CardView cardView;
     private RecyclerView.Adapter adapter;
     private List<ListItems> listItems;
+    public static String MainViewMode;
     private static String URL_DATA="https://socupdate.herokuapp.com/events";
     private static String url ="https://socupdate.herokuapp.com/societies/check";
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -139,8 +140,6 @@ public class MainActivity2 extends AppCompatActivity {
         toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setBackgroundColor(Integer.parseInt("232323"));
-
-
 
         mAppBarConfiguration=new AppBarConfiguration.
                 Builder(R.id.navigation_nav_main, R.id.navigation_nav_profile, R.id.navigation_nav_list,R.id.navigation_nav_soc_profile, R.id.navigation_nav_society)
@@ -218,11 +217,19 @@ public class MainActivity2 extends AppCompatActivity {
                         case R.id.nav_home: {
                             toolbar.setBackgroundColor(Integer.parseInt("232323"));
                             swap.setVisible(true);
+                            swap.setIcon(R.drawable.ic_calendar_home);
                             SharedPreferences preferences =getSharedPreferences("user",MODE_PRIVATE);
                             if(preferences.getString("society", "false").equals("true"))
                                 addEvent.setVisible(true);
                             if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_main&&navController.getCurrentDestination().getId()!=R.id.navigation_nav_list){
+                                if(MainViewMode.equals("Calendar")){
                                     navController.navigate(R.id.navigation_nav_main);
+                                    swap.setIcon(R.drawable.ic_list_view);
+                                }
+                                else {
+                                    navController.navigate(R.id.navigation_nav_list);
+                                    swap.setIcon(R.drawable.ic_calendar_home);
+                                }
                             }
                             break;
                         }
@@ -363,6 +370,7 @@ public class MainActivity2 extends AppCompatActivity {
         menuInflater.inflate(R.menu.menu, menu);
         addEvent=menu.findItem(R.id.add_event);
         swap=menu.findItem(R.id.calendar);
+        MainViewMode="Calendar";
 
         if(getIntent().getExtras()!=null && getIntent().getExtras().containsKey("Fragment")){
             if(getIntent().getExtras().getString("Fragment").equals("profile")){
@@ -401,12 +409,14 @@ public class MainActivity2 extends AppCompatActivity {
             if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_list) {
                 navController.navigate(R.id.navigation_nav_list);
                 swap.setIcon(R.drawable.ic_calendar_home);
+                MainViewMode="List";
             }
             else {
                 Bundle bundle=new Bundle();
                 bundle.putString("action","db");
                 navController.navigate(R.id.navigation_nav_main,bundle);
                 swap.setIcon(R.drawable.ic_list_view);
+                MainViewMode="Calendar";
             }
         }
         return super.onOptionsItemSelected(item);
