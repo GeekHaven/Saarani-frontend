@@ -81,7 +81,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.foldable_single_event, parent, false);
+                .inflate(R.layout.single_event, parent, false);
         prefs=context.getSharedPreferences("user", MODE_PRIVATE);
         databaseHandler=new DatabaseHandler(context);
         return new ViewHolder(v);
@@ -253,7 +253,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         TextView set;
         TextView int_count;
         TextView going_count;
-        FoldingCell foldingCell;
+        //FoldingCell foldingCell;
 
 
         ViewHolder(@NonNull View itemView) {
@@ -269,7 +269,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             going=itemView.findViewById(R.id.going);
             interested=itemView.findViewById(R.id.text_interested);
             markAsGoing=itemView.findViewById(R.id.text_going);
-            foldingCell=itemView.findViewById(R.id.folding_cell);
+            //foldingCell=itemView.findViewById(R.id.folding_cell);
             int_count=itemView.findViewById(R.id.interested_count);
             going_count=itemView.findViewById(R.id.going_count);
                 interested.setOnClickListener(this);
@@ -423,8 +423,8 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                         Snackbar.make(v, "This feature is not available for societies", Snackbar.LENGTH_LONG).show();
                     }
                 } else {
-                    //startIntent(this.getAdapterPosition());
-                    foldingCell.toggle(false);
+                    startIntent(this.getAdapterPosition());
+                    //foldingCell.toggle(false);
                 }
             }
             else if(listItems.get(getAdapterPosition()).getState().equals("completed")){
