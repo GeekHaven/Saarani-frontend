@@ -240,6 +240,9 @@ public class MainFragment extends Fragment {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(View view) {
+                        final SharedPreferences pref = requireActivity().getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+                        final SharedPreferences.Editor editor = pref.edit();
+                        editor.putBoolean("newEvent",false);
                         try {
                             compactCalendar.removeAllEvents();
                             loadDatabase();
@@ -354,7 +357,7 @@ public boolean isOnline() {
         sendMessage("false");
 
         av.show();
-        fadingTextView.setVisibility(View.INVISIBLE);
+        fadingTextView.setVisibility(View.VISIBLE);
         fadingTextView.restart();
         //fadingTextView.resume();
         //fadingTextView.startAnimation(android.view.animation.Animation animation);
