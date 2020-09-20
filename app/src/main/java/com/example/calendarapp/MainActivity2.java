@@ -182,7 +182,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("Fragment")){
             if(intent.getExtras().getString("Fragment").equals("profile")) {
-                toolbar.setBackgroundColor(Color.rgb(59, 59, 59));
+                toolbar.setBackgroundColor(Color.rgb(44, 43, 43));
                 onCreateOptionsMenu(toolbar.getMenu());
                 navController.navigate(R.id.navigation_nav_profile);
                 addEvent.setVisible(false);
@@ -234,7 +234,7 @@ public class MainActivity2 extends AppCompatActivity {
                             break;
                         }
                         case R.id.nav_profile: {
-                            toolbar.setBackgroundColor(Color.rgb(59,59,59));
+                            toolbar.setBackgroundColor(Color.rgb(44,43,43));
                             swap.setVisible(false);
                             addEvent.setVisible(false);
                             SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/colorTabLayoutBackground" android:state_selected="true"/>
-    <item android:drawable="@drawable/rectangle_sign_in_button" android:state_selected="false" android:state_focused="false" android:state_pressed="false"/>
+
+    <!-- drawable for selected tab -->
+    <item
+        android:drawable="@drawable/tab_selected_profile"
+        android:state_selected="true"/>
+
+    <!-- drawable for unselected tab -->
+    <item
+        android:drawable="@drawable/tab_unselected"
+        android:state_selected="false"/>
+
 </selector>

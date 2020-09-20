@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/colorPrimary"
+    android:layout_height="match_parent"
+    tools:context=".ProfileRVFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_marginTop="32dp"
+        android:layout_height="wrap_content"
+        android:text="No event marked as Interested!"
+        android:id="@+id/no_event"
+        android:textColor="#FFFFFF"
+        android:fontFamily="@font/montserratmedium"
+        android:gravity="center_horizontal"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="16dp"
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="24dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:layout_marginBottom="32dp"
+        />
+    </ScrollView>
+</FrameLayout>

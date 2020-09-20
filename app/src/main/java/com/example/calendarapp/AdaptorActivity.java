@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,8 +41,12 @@ import com.sackcentury.shinebuttonlib.ShineButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.calendarapp.R.drawable.abc_btn_check_to_on_mtrl_000;
@@ -60,7 +65,12 @@ interface ClickListener {
 public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHolder> {
     private List<ListItems> listItems,listUpdated;
     private final ClickListener listener;
+    final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    final String[] Selected = new String[]{"January", "February", "March", "April",
+            "May", "June", "July", "August", "September", "October", "November", "December"};
+    SimpleDateFormat sdf = new SimpleDateFormat("EEEE",Locale.getDefault());
     private Context context;
+    Date date =new Date();
     private Activity activity;
     private String eventId,marker,backFragment;
     private HashMap<Integer, String> map= new HashMap<Integer, String>();
@@ -81,14 +91,13 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.single_event, parent, false);
+                .inflate(R.layout.profile_event_item, parent, false);
         prefs=context.getSharedPreferences("user", MODE_PRIVATE);
         databaseHandler=new DatabaseHandler(context);
         return new ViewHolder(v);
     }
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         ListItems listItem = listItems.get(position);
         String name=listItem.getName();
         if(listItem.getName().length()>16){
@@ -127,6 +136,42 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         else{
             holder.star.setTag(star_img);
             holder.going.setTag(tick);
+        }
+        if(backFragment.equals("profile")){
+            Date date_parsed = null;
+            try {
+                date_parsed = f.parse(listItem.getDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            String[] date_split= listItem.getDate().split("/");
+            String date_cal= sdf.format(date_parsed).substring(0,3) + ", "+ date_split[0] + " " +Selected[Integer.parseInt(date_split[1])-1];
+            if(position==0){
+                holder.headerText.setVisibility(View.VISIBLE);
+                try {
+                    if(f.parse(f.format(date)).compareTo(f.parse(listItem.getDate()))==0){
+                        String sourceString = "<b>" + "Today" + "</b> " + date_cal;
+                        holder.headerText.setText(Html.fromHtml(sourceString));
+                    }
+                    else{
+                        holder.headerText.setText(date_cal);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                ListItems listItemsPrev= listItems.get(position-1);
+                try {
+                    if(f.parse(listItem.getDate()).compareTo(f.parse(listItemsPrev.getDate()))!=0){
+                        holder.headerText.setVisibility(View.VISIBLE);
+                        holder.headerText.setText(date_cal);
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
     }
     public boolean isOnline() {
@@ -253,6 +298,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         TextView set;
         TextView int_count;
         TextView going_count;
+        TextView headerText;
         //FoldingCell foldingCell;
 
 
@@ -272,6 +318,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             //foldingCell=itemView.findViewById(R.id.folding_cell);
             int_count=itemView.findViewById(R.id.interested_count);
             going_count=itemView.findViewById(R.id.going_count);
+            headerText=itemView.findViewById(R.id.date_strip);
                 interested.setOnClickListener(this);
                 markAsGoing.setOnClickListener(this);
                 star.setOnClickListener(this);
@@ -304,7 +351,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             Object tag = star.getTag();
                             if (tag != null && (Integer) tag == star_yellow) {
                                 action="unmarked";
-                                Snackbar.make(v, "Unmarked", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(v, "Unmarked", Snackbar.LENGTH_SHORT).show();
                                 star.setTag(R.drawable.star_img);
                                 int_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getInterested() - 1));
                                 try {
@@ -319,6 +366,12 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                                if(backFragment.equals("profile")){
+                                    int p=getAdapterPosition();
+                                    listItems.remove(getAdapterPosition());
+                                    notifyItemRemoved(p);
+                                    notifyItemRangeChanged(p,listItems.size());
+                                }
                             } else {
                                 action ="marked";
                                 Snackbar.make(v, "Marked as interested", Snackbar.LENGTH_LONG).show();
@@ -327,7 +380,9 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                                 listItems.get(getAdapterPosition()).setInterested(listItems.get(getAdapterPosition()).getInterested() + 1);
                                 int_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getInterested()));
                                 String x = "-";
+                                int fg=0;
                                 if ((Integer) going.getTag() == tick_yellow) {
+                                    fg=1;
                                     going.setTag(tick);
                                     going.setChecked(false);
                                     listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing() - 1);
@@ -346,6 +401,12 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                                     addMarker(this.getAdapterPosition(), "interested");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
+                                }
+                                if(backFragment.equals("profile") && fg==1){
+                                    int p=getAdapterPosition();
+                                    listItems.remove(getAdapterPosition());
+                                    notifyItemRemoved(p);
+                                    notifyItemRangeChanged(p,listItems.size());
                                 }
                             }
                         }
@@ -382,6 +443,12 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                                if(backFragment.equals("profile")){
+                                    int p=getAdapterPosition();
+                                    listItems.remove(getAdapterPosition());
+                                    notifyItemRemoved(p);
+                                    notifyItemRangeChanged(p,listItems.size());
+                                }
                             } else {
                                 Snackbar.make(v, "Marked as going.", Snackbar.LENGTH_LONG).show();
                                 going.setTag(tick_yellow);
@@ -389,7 +456,9 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                                 String x = "-";
                                 listItems.get(getAdapterPosition()).setGoing(listItems.get(getAdapterPosition()).getGoing() + 1);
                                 going_count.setText(String.valueOf(listItems.get(getAdapterPosition()).getGoing()));
+                                int fg=0;
                                 if ((Integer) star.getTag() == star_yellow) {
+                                    fg=1;
                                     star.setTag(R.drawable.star_img);
                                     star.setChecked(false);
                                     x = "interested";
@@ -408,6 +477,12 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                                if(backFragment.equals("profile") && fg==1){
+                                    int p=getAdapterPosition();
+                                    listItems.remove(getAdapterPosition());
+                                    notifyItemRemoved(p);
+                                    notifyItemRangeChanged(p,listItems.size());
+                                }
                             }
                         }
                         else {
@@ -422,10 +497,12 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                         star.setChecked(false);
                         Snackbar.make(v, "This feature is not available for societies", Snackbar.LENGTH_LONG).show();
                     }
+
                 } else {
                     startIntent(this.getAdapterPosition());
                     //foldingCell.toggle(false);
                 }
+
             }
             else if(listItems.get(getAdapterPosition()).getState().equals("completed")){
                 Snackbar.make(v, "This event has finished!", Snackbar.LENGTH_LONG).show();
