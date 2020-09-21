@@ -291,7 +291,7 @@ public boolean isOnline() {
                     databaseHandler.updateState(item,"completed");
                 }
                 Event eventx;
-                eventx = new Event(Color.rgb(240, 212, 83), milliseconds);
+                eventx = new Event(Color.RED, milliseconds);
                 if(f.parse(f.format(date)).compareTo(d)<=0)
                 compactCalendar.addEvent(eventx);
             } catch (ParseException e) {
@@ -441,7 +441,7 @@ public boolean isOnline() {
                                                     assert d != null;
                                                     long milliseconds = d.getTime();
                                                     Event eventx;
-                                                    eventx = new Event(Color.rgb(240, 212, 83), milliseconds);
+                                                    eventx = new Event(Color.RED, milliseconds);
                                                     compactCalendar.addEvent(eventx);
                                                 } catch (ParseException e) {
                                                     e.printStackTrace();

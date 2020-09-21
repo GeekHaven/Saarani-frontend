@@ -20,7 +20,7 @@
         android:background="?selectableItemBackgroundBorderless"
         android:layout_marginLeft="24dp"
         android:id="@+id/button"
-        android:layout_marginTop="46dp"
+        android:layout_marginTop="56dp"
         android:src="@drawable/left_arrow_white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
         android:layout_marginLeft="14dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:fontFamily="@font/montserratmedium"
         android:text="Event Details"
         android:textColor="#FFFFFF"

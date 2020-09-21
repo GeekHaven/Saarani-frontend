@@ -25,6 +25,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -117,6 +118,11 @@ public class EventActivity extends AppCompatActivity {
         editor.apply();
         databaseHandler=new DatabaseHandler(this);
         constraintLayout=findViewById(R.id.layout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
 
         shineButtonInt = (ShineButton) findViewById(R.id.shine_button_int);
         shineButtonInt.init(this);
@@ -498,17 +504,23 @@ public class EventActivity extends AppCompatActivity {
             intent.putExtra("action","db");
             intent.putExtra("date",date_event);
             startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
         else if(screen.equals("profile")){
            Intent intent= new Intent(EventActivity.this,MainActivity2.class);
            intent.putExtra("Fragment","profile");
             startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
         else if(screen.equals("list")){
             Intent intent= new Intent(EventActivity.this,MainActivity2.class);
             intent.putExtra("Fragment","list");
             intent.putExtra("date",date_event);
             startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
         else
             super.onBackPressed();

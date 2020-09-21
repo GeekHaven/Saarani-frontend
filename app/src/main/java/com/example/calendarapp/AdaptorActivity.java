@@ -239,6 +239,8 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         intent.putStringArrayListExtra("attachments", items.getArrayList());
         intent.putStringArrayListExtra("attachments_name",items.getNameList());
         context.startActivity(intent);
+        activity.finish();
+        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         //activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
     public void deleteRequest(int position) throws JSONException {

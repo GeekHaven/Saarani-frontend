@@ -16,19 +16,21 @@
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_main"
-        android:background="@color/colorPrimaryLight"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:animateLayoutChanges="false"
+        android:animationCache="false"
+        android:background="@color/colorPrimaryLight"
+        android:fitsSystemWindows="true"
+        app:elevation="0dp"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/main_drawer_menu"
         app:itemHorizontalPadding="24dp"
+        app:itemIconPadding="15dp"
+        app:itemIconSize="30dp"
+        app:itemIconTint="#757575"
         app:itemTextAppearance="@style/NavigationMenuItemTheme"
         app:itemTextColor="@color/colorPrimaryText"
-        app:elevation="0dp"
-        app:itemIconSize="35dp"
-        app:itemIconPadding="15dp"
-        app:itemIconTint="#757575"
-        android:fitsSystemWindows="true"/>
+        app:menu="@menu/main_drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
