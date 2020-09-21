@@ -227,7 +227,7 @@ public class ListFragment extends Fragment {
                 for(int i=0;i<temp.size();i++) {
                     try {
                         if (f.format(date.getTime()).equals(temp.get(i).getDate())&&f.parse(f.format(dateX)).compareTo(f.parse(temp.get(i).getDate()))<=0) {
-                            event.add(new CalendarEvent(Color.rgb(240, 212, 83)));
+                            event.add(new CalendarEvent(Color.RED));
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();

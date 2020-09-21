@@ -7,21 +7,25 @@
     <group android:id="@+id/menu_top">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/nav_home_icon"
+            android:icon="@drawable/ic_home"
             android:title="Home"/>
 
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/nav_profile_icon"
+            android:icon="@drawable/ic_profile"
             android:title="My Profile"/>
 
         <item
             android:id="@+id/nav_societies"
-            android:icon="@drawable/nav_societies_icon"
+            android:icon="@drawable/ic_society"
             android:title="Societies"/>
         <item
+            android:id="@+id/nav_about_us"
+            android:icon="@drawable/about"
+            android:title="About Us" />
+        <item
             android:id="@+id/nav_log_out"
-            android:icon="@drawable/nav_logout_icon"
+            android:icon="@drawable/ic_logout_2"
             android:title="Logout" />
     </group>
 <!--    <group android:id="@+id/menu_bottom">-->

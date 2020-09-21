@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
@@ -82,6 +83,7 @@ public class MainActivity2 extends AppCompatActivity {
     Toolbar toolbar;
     NavController navController;
     NavigationView navigationView;
+    NavOptions.Builder navBuilder;
     DrawerLayout drawerLayout;
     ImageView imgUser;
     MenuItem addEvent,swap;
@@ -146,6 +148,9 @@ public class MainActivity2 extends AppCompatActivity {
                 .setDrawerLayout(drawerLayout).build();
         
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navBuilder =  new NavOptions.Builder();
+        navBuilder.setEnterAnim(R.anim.fade_in).setExitAnim(R.anim.fade_out).setPopEnterAnim(R.anim.fade_in).setPopExitAnim(R.anim.fade_out);
+
         Bundle bundle =new Bundle();
         if(intent.getExtras()!=null && intent.getExtras().containsKey("action")) {
             if(intent.getExtras().getString("action").equals("db")) {
@@ -217,18 +222,18 @@ public class MainActivity2 extends AppCompatActivity {
                         case R.id.nav_home: {
                             toolbar.setBackgroundColor(Integer.parseInt("232323"));
                             swap.setVisible(true);
-                            swap.setIcon(R.drawable.ic_calendar_home);
+                            swap.setIcon(R.drawable.ic_calendar_1);
                             SharedPreferences preferences =getSharedPreferences("user",MODE_PRIVATE);
                             if(preferences.getString("society", "false").equals("true"))
                                 addEvent.setVisible(true);
                             if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_main&&navController.getCurrentDestination().getId()!=R.id.navigation_nav_list){
                                 if(MainViewMode.equals("Calendar")){
-                                    navController.navigate(R.id.navigation_nav_main);
+                                    navController.navigate(R.id.navigation_nav_main,null,navBuilder.build());
                                     swap.setIcon(R.drawable.ic_list_view);
                                 }
                                 else {
-                                    navController.navigate(R.id.navigation_nav_list);
-                                    swap.setIcon(R.drawable.ic_calendar_home);
+                                    navController.navigate(R.id.navigation_nav_list,null,navBuilder.build());
+                                    swap.setIcon(R.drawable.ic_calendar_1);
                                 }
                             }
                             break;
@@ -240,11 +245,11 @@ public class MainActivity2 extends AppCompatActivity {
                             SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
                             if(prefs.getString("society", "false").equals("false")) {
                                 if (navController.getCurrentDestination().getId() != R.id.navigation_nav_profile)
-                                    navController.navigate(R.id.navigation_nav_profile);
+                                    navController.navigate(R.id.navigation_nav_profile,null,navBuilder.build());
                             }
                             else{
                                 if (navController.getCurrentDestination().getId() != R.id.navigation_nav_soc_profile)
-                                    navController.navigate(R.id.navigation_nav_soc_profile);
+                                    navController.navigate(R.id.navigation_nav_soc_profile,null,navBuilder.build());
                             }
                             break;
                         }
@@ -253,7 +258,11 @@ public class MainActivity2 extends AppCompatActivity {
                             swap.setVisible(false);
                             addEvent.setVisible(false);
                             if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_society)
-                                navController.navigate(R.id.navigation_nav_society);
+                                navController.navigate(R.id.navigation_nav_society,null,navBuilder.build());
+                            break;
+                        }
+                        case R.id.nav_about_us:{
+                            startActivity(new Intent(MainActivity2.this,AboutUsActivity.class));
                             break;
                         }
                     }
@@ -379,7 +388,7 @@ public class MainActivity2 extends AppCompatActivity {
                 swap.setVisible(false);
             }
             else {
-                swap.setIcon(R.drawable.ic_calendar_home);
+                swap.setIcon(R.drawable.ic_calendar_1);
             }
         }
         addEvent.setVisible(visibility);
@@ -407,14 +416,14 @@ public class MainActivity2 extends AppCompatActivity {
         }
         else if(item.getItemId()==R.id.calendar){
             if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_list) {
-                navController.navigate(R.id.navigation_nav_list);
-                swap.setIcon(R.drawable.ic_calendar_home);
+                navController.navigate(R.id.navigation_nav_list,null,navBuilder.build());
+                swap.setIcon(R.drawable.ic_calendar_1);
                 MainViewMode="List";
             }
             else {
                 Bundle bundle=new Bundle();
                 bundle.putString("action","db");
-                navController.navigate(R.id.navigation_nav_main,bundle);
+                navController.navigate(R.id.navigation_nav_main,bundle,navBuilder.build());
                 swap.setIcon(R.drawable.ic_list_view);
                 MainViewMode="Calendar";
             }

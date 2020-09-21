@@ -46,6 +46,7 @@
         <activity android:name=".AddEventActivity" android:theme="@style/ToolTheme" android:parentActivityName=".MainActivity2"/>
         <activity android:name=".SocShowActivity"
             />
+        <activity android:name=".AboutUsActivity"/>
 
     </application>
 

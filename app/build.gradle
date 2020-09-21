@@ -54,6 +54,7 @@ dependencies {
     implementation 'com.sackcentury:shinebutton:1.0.0'
     implementation 'com.ramotion.foldingcell:folding-cell:1.2.3'
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
