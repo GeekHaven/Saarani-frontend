@@ -19,6 +19,7 @@
     <color name="colorListDivider">#4E4E4E</color>
     <color name="colorTabLayoutBackground">#757575</color>
     <color name="colorImage">#4D767676</color>
+    <color name="profile_status_bar">#2C2B2B</color>
 
     <color name="gplus_color_1">#3e802f</color>
     <color name="gplus_color_2">#f4b400</color>

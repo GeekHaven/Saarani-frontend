@@ -71,4 +71,11 @@
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:windowBackground">#232323</item>
     </style>
+    <style name="profileText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">20sp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/montserratmedium</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
