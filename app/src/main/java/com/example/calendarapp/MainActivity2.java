@@ -222,7 +222,7 @@ public class MainActivity2 extends AppCompatActivity {
                         case R.id.nav_home: {
                             toolbar.setBackgroundColor(Integer.parseInt("232323"));
                             swap.setVisible(true);
-                            swap.setIcon(R.drawable.ic_calendar_1);
+//                            swap.setIcon(R.drawable.ic_calendar_1);
                             SharedPreferences preferences =getSharedPreferences("user",MODE_PRIVATE);
                             if(preferences.getString("society", "false").equals("true"))
                                 addEvent.setVisible(true);
