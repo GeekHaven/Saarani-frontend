@@ -135,24 +135,105 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/name"
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginRight="12dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Varun Bhardwaj"
             android:textColor="#FFFFFF"
             android:textSize="7.2pt"
             android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/cardViewS"
             app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/round_6"
+            android:gravity="center"
+            android:paddingVertical="2.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintEnd_toStartOf="@id/second"
+            >
+            <ImageView
+                android:layout_width="9.08dp"
+                android:layout_height="8.25dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_frontend"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Frontend"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="8dp"
+                android:textStyle="normal"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/second"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/round_6"
+            android:gravity="center"
+            android:paddingVertical="2.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="12dp"
+            app:layout_constraintEnd_toStartOf="@id/cardViewS"
+            >
+            <ImageView
+                android:layout_width="10.08dp"
+                android:layout_height="8.25dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_developer"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Developer"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="8dp"
+                android:textStyle="normal"
+                />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="27dp"
+            android:id="@+id/fb_vb"
+            android:layout_height="27dp"
+            app:layout_constraintEnd_toStartOf="@id/github_vb"
+            app:layout_constraintTop_toBottomOf="@id/second"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/ic_fb"
+            android:paddingVertical="6dp"
+            android:background="@drawable/circle"
+            />
+        <ImageView
+            android:id="@+id/github_vb"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            app:layout_constraintEnd_toStartOf="@+id/cardViewS"
+            app:layout_constraintTop_toBottomOf="@id/second"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/ic_gt"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:tools="http://schemas.android.com/tools"
@@ -183,25 +264,107 @@
             android:layout_width="wrap_content"
             android:textSize="7.2pt"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="12dp"
             android:layout_marginRight="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="12dp"
             android:textStyle="normal"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Varun Tiwari"
             android:textColor="#FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cardView"
             app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/round_6"
+            android:gravity="center"
+            android:paddingVertical="2.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/cordi_name"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintStart_toEndOf="@id/second_vt"
+            >
+            <ImageView
+                android:layout_width="9.08dp"
+                android:layout_height="8.25dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_developer"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Developer"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="8dp"
+                android:textStyle="normal"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/second_vt"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/round_6"
+            android:gravity="center"
+            android:paddingVertical="2.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/cordi_name"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="12dp"
+            app:layout_constraintStart_toEndOf="@id/cardView"
+            >
+            <ImageView
+                android:layout_width="10.08dp"
+                android:layout_height="8.25dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_frontend"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Frontend"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="8dp"
+                android:textStyle="normal"
+                />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="27dp"
+            android:id="@+id/fb_vt"
+            android:layout_height="27dp"
+            app:layout_constraintStart_toEndOf="@id/github_vt"
+            app:layout_constraintTop_toBottomOf="@id/second_vt"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/ic_fb"
+            android:paddingVertical="6dp"
+            android:background="@drawable/circle"
+            />
+        <ImageView
+            android:id="@+id/github_vt"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            app:layout_constraintStart_toEndOf="@+id/cardView"
+            app:layout_constraintTop_toBottomOf="@id/second_vt"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/ic_gt"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         app:layout_constraintTop_toBottomOf="@+id/cl3"
         android:id="@+id/cl4"
         android:layout_width="match_parent"
+        android:layout_marginTop="24dp"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="#232323"
         android:layout_height="wrap_content">
@@ -223,20 +386,101 @@
             android:id="@+id/cordi_name_c"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="12dp"
             android:textSize="7.2pt"
             android:layout_marginLeft="24dp"
             android:layout_marginStart="24dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginRight="12dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Shreyas Gupta"
             android:textStyle="normal"
             android:textColor="#FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/cardView4"
             app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/round_6"
+            android:gravity="center"
+            android:paddingVertical="2.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/cordi_name_c"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintEnd_toStartOf="@id/second_s"
+            >
+            <ImageView
+                android:layout_width="9.08dp"
+                android:layout_height="8.25dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_backend"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Backend"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="8dp"
+                android:textStyle="normal"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/second_s"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/round_6"
+            android:gravity="center"
+            android:paddingVertical="2.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/cordi_name_c"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="12dp"
+            app:layout_constraintEnd_toStartOf="@id/cardView4"
+            >
+            <ImageView
+                android:layout_width="10.08dp"
+                android:layout_height="8.25dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_developer"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Developer"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="8dp"
+                android:textStyle="normal"
+                />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="27dp"
+            android:id="@+id/fb_sg"
+            android:layout_height="27dp"
+            app:layout_constraintEnd_toStartOf="@id/github_sg"
+            app:layout_constraintTop_toBottomOf="@id/second_s"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/ic_fb"
+            android:paddingVertical="6dp"
+            android:background="@drawable/circle"
+            />
+        <ImageView
+            android:id="@+id/github_sg"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            app:layout_constraintEnd_toStartOf="@+id/cardView4"
+            app:layout_constraintTop_toBottomOf="@id/second_s"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/ic_gt"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:tools="http://schemas.android.com/tools"
@@ -262,23 +506,104 @@
             />
 
         <TextView
-            android:id="@+id/cordi_name-cg"
+            android:id="@+id/cordi_name_cg"
             android:layout_width="wrap_content"
             android:textSize="7.2pt"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="12dp"
             android:layout_marginRight="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="12dp"
             android:textStyle="normal"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Chetan Garg"
             android:textColor="#FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cardView5"
             app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/round_6"
+            android:gravity="center"
+            android:paddingVertical="2.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/cordi_name_cg"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintStart_toEndOf="@id/second_cg"
+            >
+            <ImageView
+                android:layout_width="9.08dp"
+                android:layout_height="8.25dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_developer"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Developer"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="8dp"
+                android:textStyle="normal"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/second_cg"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/round_6"
+            android:gravity="center"
+            android:paddingVertical="2.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/cordi_name_cg"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="12dp"
+            app:layout_constraintStart_toEndOf="@id/cardView5"
+            >
+            <ImageView
+                android:layout_width="10.08dp"
+                android:layout_height="8.25dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_backend"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Backend"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="8dp"
+                android:textStyle="normal"
+                />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="27dp"
+            android:id="@+id/fb_cg"
+            android:layout_height="27dp"
+            app:layout_constraintStart_toEndOf="@id/github_cg"
+            app:layout_constraintTop_toBottomOf="@id/second_cg"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/ic_fb"
+            android:paddingVertical="6dp"
+            android:background="@drawable/circle"
+            />
+        <ImageView
+            android:id="@+id/github_cg"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            app:layout_constraintStart_toEndOf="@+id/cardView5"
+            app:layout_constraintTop_toBottomOf="@id/second_cg"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/ic_gt"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -308,20 +633,101 @@
             android:id="@+id/cordi_name_an"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="12dp"
             android:textSize="7.2pt"
             android:layout_marginLeft="24dp"
             android:layout_marginStart="24dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginRight="12dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Anip Kumar"
             android:textStyle="normal"
             android:textColor="#FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/cardView6"
             app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/round_6"
+            android:gravity="center"
+            android:paddingVertical="2.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/cordi_name_an"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintEnd_toStartOf="@id/second_an"
+            >
+            <ImageView
+                android:layout_width="9.08dp"
+                android:layout_height="8.25dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_uiux"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UI/UX"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="8dp"
+                android:textStyle="normal"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/second_an"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/round_6"
+            android:gravity="center"
+            android:paddingVertical="2.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/cordi_name_an"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="12dp"
+            app:layout_constraintEnd_toStartOf="@id/cardView6"
+            >
+            <ImageView
+                android:layout_width="10.08dp"
+                android:layout_height="8.25dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_graphics"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Graphics"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="8dp"
+                android:textStyle="normal"
+                />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="27dp"
+            android:id="@+id/fb_an"
+            android:layout_height="27dp"
+            app:layout_constraintEnd_toStartOf="@id/github_an"
+            app:layout_constraintTop_toBottomOf="@id/second_an"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/ic_fb"
+            android:paddingVertical="6dp"
+            android:background="@drawable/circle"
+            />
+        <ImageView
+            android:id="@+id/github_an"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            app:layout_constraintEnd_toStartOf="@+id/cardView6"
+            app:layout_constraintTop_toBottomOf="@id/second_an"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/ic_gt"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl7"
@@ -349,18 +755,99 @@
             android:id="@+id/cordi_name_mt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/montserratmedium"
             android:text="Mitisha Agarwal"
             android:textColor="#FFFFFF"
             android:textSize="7.2pt"
             android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cardView7"
             app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/round_6"
+            android:gravity="center"
+            android:paddingVertical="2.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/cordi_name_mt"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintStart_toEndOf="@id/second_mt"
+            >
+            <ImageView
+                android:layout_width="9.08dp"
+                android:layout_height="8.25dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_graphics"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Graphics"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="8dp"
+                android:textStyle="normal"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/second_mt"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="@drawable/round_6"
+            android:gravity="center"
+            android:paddingVertical="2.5dp"
+            app:layout_constraintTop_toBottomOf="@+id/cordi_name_mt"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="12dp"
+            app:layout_constraintStart_toEndOf="@id/cardView7"
+            >
+            <ImageView
+                android:layout_width="10.08dp"
+                android:layout_height="8.25dp"
+                android:layout_marginRight="4dp"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_uiux"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UI/UX"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="8dp"
+                android:textStyle="normal"
+                />
+        </LinearLayout>
+        <ImageView
+            android:layout_width="27dp"
+            android:id="@+id/fb_mt"
+            android:layout_height="27dp"
+            app:layout_constraintStart_toEndOf="@id/github_mt"
+            app:layout_constraintTop_toBottomOf="@id/second_mt"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/ic_fb"
+            android:paddingVertical="6dp"
+            android:background="@drawable/circle"
+            />
+        <ImageView
+            android:id="@+id/github_mt"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            app:layout_constraintStart_toEndOf="@+id/cardView7"
+            app:layout_constraintTop_toBottomOf="@id/second_mt"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/ic_gt"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
