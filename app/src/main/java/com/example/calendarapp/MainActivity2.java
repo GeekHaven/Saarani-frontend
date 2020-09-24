@@ -412,6 +412,7 @@ public class MainActivity2 extends AppCompatActivity {
         if(item.getItemId()==R.id.add_event){
             Intent intent =new Intent(MainActivity2.this,AddEventActivity.class);
             intent.putExtra("type","add");
+            intent.putExtra("from","Main");
             startActivity(intent);
         }
         else if(item.getItemId()==R.id.calendar){

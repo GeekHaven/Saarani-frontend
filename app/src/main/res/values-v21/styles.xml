@@ -21,4 +21,10 @@
         <item name="android:listDivider">@color/colorListDivider</item>
         <item name="android:windowContentTransitions">true</item>
     </style>
+
+    <style name="FloatButtonTheme" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:elevation">12dp</item>
+        <item name="android:background">@drawable/ic_float_button</item>
+        <item name="srcCompat">@drawable/ic_float_button</item>
+    </style>
 </resources>
