@@ -219,6 +219,7 @@ public class MainFragment extends Fragment {
     public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mMessageReceiver);
+        Log.d("tag","paused");
     }
     public void onResume() {
         super.onResume();
@@ -240,15 +241,17 @@ public class MainFragment extends Fragment {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(View view) {
-                        final SharedPreferences pref = requireActivity().getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-                        final SharedPreferences.Editor editor = pref.edit();
+                        SharedPreferences pref = requireActivity().getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
                         editor.putBoolean("newEvent",false);
+                        editor.apply();
                         try {
                             compactCalendar.removeAllEvents();
                             loadDatabase();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        Log.d("valueOf",String.valueOf(pref.getBoolean("newEvent",false)));
                     }
                 });
 

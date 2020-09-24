@@ -17,18 +17,22 @@
         android:roundIcon="@mipmap/ic_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity2"/>
+        <activity android:name=".MainActivity2"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SplashScreenActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".EventActivity" android:parentActivityName=".MainActivity2"/>
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EventActivity" android:parentActivityName=".MainActivity2"
+            android:screenOrientation="portrait"/>
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
@@ -42,11 +46,14 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-        <activity android:name=".SubscribeActivity"/>
-        <activity android:name=".AddEventActivity" android:theme="@style/ToolTheme" android:parentActivityName=".MainActivity2"/>
-        <activity android:name=".SocShowActivity"
+        <activity android:name=".SubscribeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".AddEventActivity" android:theme="@style/ToolTheme" android:parentActivityName=".MainActivity2"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SocShowActivity" android:screenOrientation="portrait"
             />
-        <activity android:name=".AboutUsActivity"/>
+        <activity android:name=".AboutUsActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 

@@ -52,5 +52,20 @@
              />
 <!--    </androidx.core.widget.NestedScrollView>-->
     </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatBtnProfile"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:visibility="invisible"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="50dp"
+        android:elevation="16dp"
+        android:backgroundTint="#F0D453"
+        app:srcCompat="@drawable/ic_add2"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
