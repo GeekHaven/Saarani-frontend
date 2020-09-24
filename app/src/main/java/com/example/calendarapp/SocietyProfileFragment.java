@@ -64,7 +64,7 @@ public class SocietyProfileFragment extends Fragment  {
     private RecyclerView recyclerView;
     final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
     private CardView cardView;
-    ImageView floatBtnAdd;
+    FloatingActionButton floatBtnAdd;
     private RecyclerView.Adapter adapter;
     final Date date = new Date();
     DatabaseHandler databaseHandler;
@@ -85,7 +85,7 @@ public class SocietyProfileFragment extends Fragment  {
         name=view.findViewById(R.id.society_name);
         email=view.findViewById(R.id.society_email);
         imageView=view.findViewById(R.id.society_profile);
-        floatBtnAdd=view.findViewById(R.id.floatBtnProfile);
+        //floatBtnAdd=view.findViewById(R.id.floatBtnProfile);
         recyclerView=view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(false);
         recyclerView.setAdapter(adapter);
@@ -93,15 +93,15 @@ public class SocietyProfileFragment extends Fragment  {
         displayName=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
-        floatBtnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent =new Intent(getActivity(),AddEventActivity.class);
-                intent.putExtra("type","add");
-                intent.putExtra("from","Profile");
-                startActivity(intent);
-            }
-        });
+//        floatBtnAdd.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent =new Intent(getActivity(),AddEventActivity.class);
+//                intent.putExtra("type","add");
+//                intent.putExtra("from","Profile");
+//                startActivity(intent);
+//            }
+//        });
 
         if(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()!=null){
             Picasso

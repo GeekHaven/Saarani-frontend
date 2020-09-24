@@ -55,6 +55,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -88,6 +89,7 @@ public class MainActivity2 extends AppCompatActivity {
     ImageView imgUser;
     MenuItem addEvent,swap;
     FirebaseAuth mAuth;
+    FloatingActionButton fab;
     GoogleSignInClient mGoogleSignInClient;
     private RecyclerView recyclerView;
     private CardView cardView;
@@ -119,9 +121,18 @@ public class MainActivity2 extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         subscribeToTopic();
+        fab=findViewById(R.id.floatBtnProfile);
         drawerLayout=findViewById(R.id.drawerMainActivity);
         navigationView=findViewById(R.id.navigation_main);
-
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(MainActivity2.this,AddEventActivity.class);
+                intent.putExtra("type","add");
+                intent.putExtra("from","Profile");
+                startActivity(intent);
+            }
+        });
         tvStudentName=navigationView.getHeaderView(0).findViewById(R.id.tvNavHeaderStudentName);
         tvStudentEmailId=navigationView.getHeaderView(0).findViewById(R.id.tvNavHeaderStudentId);
         imgUser=navigationView.getHeaderView(0).findViewById(R.id.imgNavHeaderUser);
@@ -189,6 +200,7 @@ public class MainActivity2 extends AppCompatActivity {
             if(intent.getExtras().getString("Fragment").equals("profile")) {
                 toolbar.setBackgroundColor(Color.rgb(44, 43, 43));
                 onCreateOptionsMenu(toolbar.getMenu());
+                fab.setVisibility(View.INVISIBLE);
                 navController.navigate(R.id.navigation_nav_profile);
                 addEvent.setVisible(false);
                 swap.setVisible(false);
@@ -199,6 +211,7 @@ public class MainActivity2 extends AppCompatActivity {
                 if(intent.getExtras()!=null&&intent.getExtras().containsKey("date")){
                     b.putString("date",intent.getExtras().getString("date"));
                 }
+                fab.setVisibility(View.INVISIBLE);
                 navController.navigate(R.id.navigation_nav_list,b);
                 SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
                 if(prefs.getString("society", "false").equals("true")) {
@@ -209,6 +222,7 @@ public class MainActivity2 extends AppCompatActivity {
             }
         }
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("back")){
+            fab.setVisibility(View.VISIBLE);
             navController.navigate(R.id.navigation_nav_soc_profile);
         }
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -229,10 +243,12 @@ public class MainActivity2 extends AppCompatActivity {
                             if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_main&&navController.getCurrentDestination().getId()!=R.id.navigation_nav_list){
                                 if(MainViewMode.equals("Calendar")){
                                     navController.navigate(R.id.navigation_nav_main,null,navBuilder.build());
+                                    fab.setVisibility(View.INVISIBLE);
                                     swap.setIcon(R.drawable.ic_list_view);
                                 }
                                 else {
                                     navController.navigate(R.id.navigation_nav_list,null,navBuilder.build());
+                                    fab.setVisibility(View.INVISIBLE);
                                     swap.setIcon(R.drawable.ic_calendar_1);
                                 }
                             }
@@ -244,12 +260,17 @@ public class MainActivity2 extends AppCompatActivity {
                             addEvent.setVisible(false);
                             SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
                             if(prefs.getString("society", "false").equals("false")) {
-                                if (navController.getCurrentDestination().getId() != R.id.navigation_nav_profile)
-                                    navController.navigate(R.id.navigation_nav_profile,null,navBuilder.build());
+                                if (navController.getCurrentDestination().getId() != R.id.navigation_nav_profile) {
+                                    fab.setVisibility(View.INVISIBLE);
+                                    navController.navigate(R.id.navigation_nav_profile, null, navBuilder.build());
+
+                                }
                             }
                             else{
-                                if (navController.getCurrentDestination().getId() != R.id.navigation_nav_soc_profile)
-                                    navController.navigate(R.id.navigation_nav_soc_profile,null,navBuilder.build());
+                                if (navController.getCurrentDestination().getId() != R.id.navigation_nav_soc_profile) {
+                                    fab.setVisibility(View.VISIBLE);
+                                    navController.navigate(R.id.navigation_nav_soc_profile, null, navBuilder.build());
+                                }
                             }
                             break;
                         }
@@ -257,11 +278,14 @@ public class MainActivity2 extends AppCompatActivity {
                             toolbar.setBackgroundColor(Integer.parseInt("232323"));
                             swap.setVisible(false);
                             addEvent.setVisible(false);
-                            if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_society)
-                                navController.navigate(R.id.navigation_nav_society,null,navBuilder.build());
+                            if(navController.getCurrentDestination().getId()!=R.id.navigation_nav_society) {
+                                fab.setVisibility(View.INVISIBLE);
+                                navController.navigate(R.id.navigation_nav_society, null, navBuilder.build());
+                            }
                             break;
                         }
                         case R.id.nav_about_us:{
+                            fab.setVisibility(View.INVISIBLE);
                             startActivity(new Intent(MainActivity2.this,AboutUsActivity.class));
                             break;
                         }
