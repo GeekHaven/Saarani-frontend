@@ -116,6 +116,13 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
     Map<String,String> json_map_attachments=new HashMap<>();
     String url = "https://socupdate.herokuapp.com/events";
     String urlPut="https://socupdate.herokuapp.com/events/";
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1099,5 +1106,6 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         Snackbar.make(constraintLayout,"You will not be able to upload attachments!",Snackbar.LENGTH_LONG).show();
     }
+
 }
 

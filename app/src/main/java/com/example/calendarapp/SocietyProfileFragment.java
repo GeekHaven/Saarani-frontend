@@ -35,6 +35,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
@@ -57,12 +58,13 @@ import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 public class SocietyProfileFragment extends Fragment  {
 
     private SocietyProfileViewModel mViewModel;
-    TextView name,desc;
+    TextView name,desc,email;
     ImageView imageView;
     String key,displayName;
     private RecyclerView recyclerView;
     final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
     private CardView cardView;
+    ImageView floatBtnAdd;
     private RecyclerView.Adapter adapter;
     final Date date = new Date();
     DatabaseHandler databaseHandler;
@@ -72,6 +74,7 @@ public class SocietyProfileFragment extends Fragment  {
         return new SocietyProfileFragment();
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -80,12 +83,25 @@ public class SocietyProfileFragment extends Fragment  {
         databaseHandler=new DatabaseHandler(getContext());
         listItems=new ArrayList<>();
         name=view.findViewById(R.id.society_name);
+        email=view.findViewById(R.id.society_email);
         imageView=view.findViewById(R.id.society_profile);
+        floatBtnAdd=view.findViewById(R.id.floatBtnProfile);
         recyclerView=view.findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(false);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         displayName=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
+        floatBtnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(getActivity(),AddEventActivity.class);
+                intent.putExtra("type","add");
+                intent.putExtra("from","Profile");
+                startActivity(intent);
+            }
+        });
 
         if(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()!=null){
             Picasso
