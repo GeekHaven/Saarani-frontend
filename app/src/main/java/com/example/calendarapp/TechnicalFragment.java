@@ -107,7 +107,7 @@ public class TechnicalFragment extends Fragment implements View.OnClickListener 
         return view;
     }
     public void changePref(String msg,Boolean val){
-        final SharedPreferences pref = getContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        final SharedPreferences pref = getContext().getSharedPreferences("subscriptions", MODE_PRIVATE);
         final SharedPreferences.Editor editor=pref.edit();
         editor.putBoolean(msg,val);
         editor.apply();
@@ -129,18 +129,20 @@ public class TechnicalFragment extends Fragment implements View.OnClickListener 
         textView.setTextColor(Color.parseColor("#2C2B2B"));
     }
     public void checkSub(){
-        final SharedPreferences pref = getContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        final SharedPreferences pref = getContext().getSharedPreferences("subscriptions", MODE_PRIVATE);
         if(pref.getBoolean("aparoksha",false))
             changeIt(apk_btn);
         if(pref.getBoolean("geekhaven",false))
             changeIt(gh_btn);
         if(pref.getBoolean("tesla",false))
             changeIt(tesla_btn);
+        if(pref.getBoolean("gravity",false))
+            changeIt(gravity_btn);
     }
     @Override
     public void onClick(View v) {
         if(v instanceof TextView){
-            final SharedPreferences pref = getContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+            final SharedPreferences pref = getContext().getSharedPreferences("subscriptions", MODE_PRIVATE);
             if(pref.getBoolean((String) v.getContentDescription(), false)){
                 unchangeIt((TextView)v);
                 unSub((String)v.getContentDescription());

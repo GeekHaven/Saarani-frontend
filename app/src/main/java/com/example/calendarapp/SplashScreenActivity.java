@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,15 +28,24 @@ public class SplashScreenActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
-        if (mAuth.getCurrentUser() != null) {
-            Intent intent=new Intent(this, MainActivity2.class);
-            intent.putExtra("action","db");
+        SharedPreferences prefs = getSharedPreferences("settingUp", MODE_PRIVATE);
+        if (mAuth.getCurrentUser() == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        }
+        else if(mAuth.getCurrentUser() != null && prefs.getBoolean("success", false)==false){
+            Toast.makeText(getApplicationContext(),mAuth.getCurrentUser().getDisplayName(),Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getApplication(),SubscribeActivity.class);
+            intent.putExtra("val",1);
             startActivity(intent);
             finish();
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
         else {
-            Intent intent = new Intent(this, LoginActivity.class);
+            Intent intent=new Intent(this, MainActivity2.class);
+            intent.putExtra("action","db");
             startActivity(intent);
             finish();
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

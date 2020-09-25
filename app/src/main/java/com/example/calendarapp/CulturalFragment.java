@@ -84,7 +84,7 @@ public class CulturalFragment extends Fragment implements View.OnClickListener {
         return view;
     }
     public void changePref(String msg,Boolean val){
-        final SharedPreferences pref = getContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        final SharedPreferences pref = getContext().getSharedPreferences("subscriptions", MODE_PRIVATE);
         final SharedPreferences.Editor editor=pref.edit();
         editor.putBoolean(msg,val);
         editor.apply();
@@ -106,18 +106,18 @@ public class CulturalFragment extends Fragment implements View.OnClickListener {
         textView.setTextColor(Color.parseColor("#2C2B2B"));
     }
     public void checkSubs(){
-        final SharedPreferences pref = getContext().getSharedPreferences("MyPref", MODE_PRIVATE);
-        if(pref.getBoolean("geniticx", false))
+        final SharedPreferences pref = getContext().getSharedPreferences("subscriptions", MODE_PRIVATE);
+        if(pref.getBoolean("dance", false))
             changeIt(dance_btn);
         if(pref.getBoolean("ams",false))
             changeIt(ams_btn);
         if(pref.getBoolean("virtuosi",false))
             changeIt(music_btn);
-        if(pref.getBoolean("rang",false))
+        if(pref.getBoolean("rangtarangini",false))
             changeIt(drama_btn);
         if(pref.getBoolean("sarasva",false))
             changeIt(lit_btn);
-        if(pref.getBoolean("spirit",false))
+        if(pref.getBoolean("sports",false))
             changeIt(sports_btn);
         if(pref.getBoolean("nirmiti",false))
             changeIt(fas_btn);
@@ -184,8 +184,8 @@ public class CulturalFragment extends Fragment implements View.OnClickListener {
         drama.setOnClickListener(this);
         drama.setContentDescription("rangtarangini");
 
-        drama_btn=view.findViewById(R.id.rang_btn);
-        dance_btn.setOnClickListener(this);
+        drama_btn=view.findViewById(R.id.rangBtn);
+        drama_btn.setOnClickListener(this);
         drama_btn.setContentDescription("rangtarangini");
 
         effe=view.findViewById(R.id.effe);
@@ -224,7 +224,7 @@ public class CulturalFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(v instanceof TextView){
-        final SharedPreferences pref = getContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        final SharedPreferences pref = getContext().getSharedPreferences("subscriptions", MODE_PRIVATE);
         if(pref.getBoolean((String) v.getContentDescription(), false)){
             unchangeIt((TextView)v);
             unSub((String)v.getContentDescription());
