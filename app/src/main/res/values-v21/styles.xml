@@ -2,7 +2,7 @@
 <resources>
 
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <item name="colorControlNormal">#F0D453</item>
+        <item name="colorControlNormal">#FFFFFF</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">

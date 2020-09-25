@@ -59,7 +59,7 @@ public class SubscribeActivity extends AppCompatActivity {
         btn_next = findViewById(R.id.extended_fab);
         Intent intent = getIntent();
         value = intent.getExtras().getInt("val");
-        final SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        final SharedPreferences pref = getApplicationContext().getSharedPreferences("subscriptions", MODE_PRIVATE);
         final SharedPreferences.Editor editor = pref.edit();
         final int[] x = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         geekhaven = findViewById(R.id.geekhaven);
@@ -425,6 +425,7 @@ public class SubscribeActivity extends AppCompatActivity {
                 Intent intent1=new Intent(SubscribeActivity.this, MainActivity2.class);
                 intent1.putExtra("action","request_call");
                 startActivity(intent1);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
 

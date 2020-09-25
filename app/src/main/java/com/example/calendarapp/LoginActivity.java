@@ -139,6 +139,7 @@ public class LoginActivity extends AppCompatActivity {
                             intent.putExtra("val",1);
                             startActivity(intent);
                             finish();
+                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         }
                         else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

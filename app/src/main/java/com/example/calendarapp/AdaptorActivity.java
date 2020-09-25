@@ -113,10 +113,18 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         holder.int_count.setText(String.valueOf(listItem.getInterested()));
         holder.going_count.setText(String.valueOf(listItem.getGoing()));
         if(listItem.getState().equals("completed")){
+            holder.star.setClickable(false);
+            holder.going.setClickable(false);
+            holder.interested.setClickable(false);
+            holder.markAsGoing.setClickable(false);
             holder.set.setText("COMPLETED");
             holder.set.setBackgroundResource(R.drawable.completed_background);
         }
         else if(listItem.getState().equals("cancelled")){
+            holder.star.setClickable(false);
+            holder.going.setClickable(false);
+            holder.interested.setClickable(false);
+            holder.markAsGoing.setClickable(false);
             holder.set.setText("CANCELLED");
             holder.set.setBackgroundResource(R.drawable.cancelled_background);
         }
@@ -171,7 +179,6 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                     e.printStackTrace();
                 }
             }
-
         }
     }
     public boolean isOnline() {

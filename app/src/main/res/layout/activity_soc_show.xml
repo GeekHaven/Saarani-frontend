@@ -142,11 +142,12 @@
                 android:layout_marginEnd="32dp"
                 android:layout_marginRight="32dp"
                 android:layout_marginBottom="48dp"
+                android:paddingVertical="4dp"
                 android:background="@drawable/icon_background"
                 android:scaleType="centerInside"
                 app:layout_constraintBottom_toBottomOf="@+id/card_view_outer"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_fb" />
+                app:srcCompat="@drawable/ic_fb2" />
 
             <ImageView
                 android:id="@+id/gmail"
@@ -225,6 +226,7 @@
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="30dp"
                     android:background="#232323"

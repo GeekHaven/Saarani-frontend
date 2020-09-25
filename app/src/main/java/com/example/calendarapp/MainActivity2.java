@@ -33,6 +33,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -55,6 +56,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -85,6 +87,7 @@ public class MainActivity2 extends AppCompatActivity {
     NavController navController;
     NavigationView navigationView;
     NavOptions.Builder navBuilder;
+    CollapsingToolbarLayout collapsingToolbarLayout;
     DrawerLayout drawerLayout;
     ImageView imgUser;
     MenuItem addEvent,swap;
@@ -124,6 +127,7 @@ public class MainActivity2 extends AppCompatActivity {
         fab=findViewById(R.id.floatBtnProfile);
         drawerLayout=findViewById(R.id.drawerMainActivity);
         navigationView=findViewById(R.id.navigation_main);
+        collapsingToolbarLayout=findViewById(R.id.collapsingToolbarLayout);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,6 +180,9 @@ public class MainActivity2 extends AppCompatActivity {
             else {
                 bundle.putString("loadFrom", "server");
                 sendIdToken();
+                SharedPreferences.Editor editor = getSharedPreferences("settingUp", MODE_PRIVATE).edit();
+                editor.putBoolean("success",true);
+                editor.apply();
             }
         }
         else if(intent.getExtras()==null){
@@ -198,6 +205,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("Fragment")){
             if(intent.getExtras().getString("Fragment").equals("profile")) {
+                collapsingToolbarLayout.setBackgroundColor(Color.rgb(44, 43, 43));
                 toolbar.setBackgroundColor(Color.rgb(44, 43, 43));
                 onCreateOptionsMenu(toolbar.getMenu());
                 fab.setVisibility(View.INVISIBLE);
@@ -234,6 +242,7 @@ public class MainActivity2 extends AppCompatActivity {
                             break;
                         }
                         case R.id.nav_home: {
+                            collapsingToolbarLayout.setBackgroundColor(Integer.parseInt("232323"));
                             toolbar.setBackgroundColor(Integer.parseInt("232323"));
                             swap.setVisible(true);
 //                            swap.setIcon(R.drawable.ic_calendar_1);
@@ -255,6 +264,7 @@ public class MainActivity2 extends AppCompatActivity {
                             break;
                         }
                         case R.id.nav_profile: {
+                            collapsingToolbarLayout.setBackgroundColor(Color.rgb(44,43,43));
                             toolbar.setBackgroundColor(Color.rgb(44,43,43));
                             swap.setVisible(false);
                             addEvent.setVisible(false);
@@ -275,6 +285,7 @@ public class MainActivity2 extends AppCompatActivity {
                             break;
                         }
                         case R.id.nav_societies: {
+                            collapsingToolbarLayout.setBackgroundColor(Integer.parseInt("232323"));
                             toolbar.setBackgroundColor(Integer.parseInt("232323"));
                             swap.setVisible(false);
                             addEvent.setVisible(false);
@@ -456,14 +467,16 @@ public class MainActivity2 extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     public void signOut(){
+        mAuth.signOut();
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Toast.makeText(MainActivity2.this,"LogOut Successful",Toast.LENGTH_SHORT).show();
-                        mAuth.signOut();
+                        SharedPreferences.Editor editor = getSharedPreferences("settingUp", MODE_PRIVATE).edit();
+                        editor.putBoolean("success",false);
+                        editor.apply();
                         startActivity(new Intent(MainActivity2.this, LoginActivity.class));
-
                     }
                 });
     }
