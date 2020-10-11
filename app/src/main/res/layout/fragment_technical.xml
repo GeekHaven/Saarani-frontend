@@ -10,7 +10,7 @@
         android:orientation="vertical"
         android:paddingBottom="200dp"
         android:layout_height="wrap_content"
-        tools:context=".CulturalFragment">
+        tools:context=".navigation.society.cultural.CulturalFragment">
         <LinearLayout
             android:layout_marginTop="16dp"
             android:id="@+id/apk"

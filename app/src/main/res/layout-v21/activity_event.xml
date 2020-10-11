@@ -165,6 +165,21 @@
                 android:textColor="#7C7C7C"
                 android:textSize="12sp"
                 android:textStyle="bold" />
+            <TextView
+                android:layout_width="25dp"
+                android:id="@+id/interested_count"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/count_background"
+                android:fontFamily="@font/montserratmedium"
+                android:textSize="7sp"
+                android:textStyle="normal|bold"
+                android:layout_marginRight="25dp"
+                android:textColor="#2C2B2B"
+                android:text="--"
+                />
 
 <!--            <ImageView-->
 <!--                android:id="@+id/tick"-->
@@ -195,6 +210,19 @@
                 android:textColor="#7C7C7C"
                 android:textSize="12sp"
                 android:textStyle="bold" />
+            <TextView
+                android:layout_width="25dp"
+                android:id="@+id/going_count"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/count_background"
+                android:fontFamily="@font/montserratmedium"
+                android:textSize="7sp"
+                android:textColor="#2C2B2B"
+                android:text="--"
+                />
         </LinearLayout>
     </LinearLayout>
 

@@ -640,7 +640,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginRight="12dp"
             android:fontFamily="@font/montserratmedium"
-            android:text="Anip Kumar"
+            android:text="Kumar Anip"
             android:textStyle="normal"
             android:textColor="#FFFFFF"
             app:layout_constraintEnd_toStartOf="@+id/cardView6"
