@@ -1,0 +1,117 @@
+{
+  "geekhaven": {
+    "coordinators": ["Manthan Raju Surkar", "Prateek Mishra"],
+    "email": "geekhaven@iiita.ac.in",
+    "name": "Geekhaven",
+    "desc": "Technical Society",
+    "insta": "geekhaven_iiita",
+    "fb": "https://www.facebook.com/geekhaveniiita/"
+  },
+  "nirmiti": {
+    "coordinators": ["Keshab Agrawal", "Amandeep Sokhal", "Nehal Singh"],
+    "email": "nirmiti@iiita.ac.in",
+    "name": "Nirmiti",
+    "desc": "Fine Arts Society",
+    "insta": "nirmiti_iiita",
+    "fb": "https://www.facebook.com/Fine-Arts-Society-IIIT-Allahabad-303222639838229/"
+  },
+  "tesla": {
+    "coordinators": ["Pranjal Maurya", "Anurag Kumar"],
+    "email": "tesla@iiita.ac.in",
+    "name": "Tesla",
+    "desc": "Electronics Society",
+    "insta": "tesla_iiita",
+    "fb": "https://www.facebook.com/Tesla.IIITA/"
+  },
+  "rangtarangini": {
+    "coordinators": ["Palak Mittal", "Naukesh Goyal", "Divyansh Bhorvanshi"],
+    "email": "rangtarangini.society@iiita.ac.in",
+    "name": "Rangtarangini",
+    "desc": "Drama Society",
+    "insta": "rangtarangini",
+    "fb": "https://www.facebook.com/dramatics.iiita/"
+  },
+  "ams": {
+    "coordinators": ["Nikhilesh Kumar", "Devavath Mahesh", "Aditya Kamble"],
+    "email": "ams.society@iiita.ac.in",
+    "name": "AMS",
+    "desc": "Media Society",
+    "insta": "thunderboltams",
+    "fb": "https://www.facebook.com/AMS.IIITA/"
+  },
+  "dance": {
+    "coordinators": ["Jahanvi Singh Bhadoria", "Akash Manhas", "Rahul Reddy Muppidi"],
+    "email": "dance.society@iiita.ac.in",
+    "name": "Geneticx Crew",
+    "desc": "Dance Society",
+    "insta": "thegeneticxcrew",
+    "fb": "https://www.facebook.com/dancesocietyiiita/"
+  },
+  "sarasva": {
+    "coordinators": ["Abhigyan Sharma", "Ananya Aparajita Mohanty", "Giriraj Chandak"],
+    "email": "sarasva.society@iiita.ac.in",
+    "name": "Sarasva",
+    "desc": "Literary Society",
+    "insta": "sarasva_iiita",
+    "fb": "https://www.facebook.com/sarasva.litclub/"
+  },
+  "virtuosi": {
+    "coordinators": ["Vidur Kataria", "Parag Goyal", "Kartic Choubey"],
+    "email": "virtuosi.society@iiita.ac.in",
+    "name": "Virtuosi",
+    "desc": "Music Society",
+    "insta": "virtuosi.society.iiita",
+    "fb": "https://www.facebook.com/MusicSocietyIIITA/"
+  },
+  "effervescence": {
+    "coordinators": ["Shashwat Sinha"],
+    "email": "effervescence@iiita.ac.in",
+    "name": "Effervescence",
+    "desc": "Cultural Festival",
+    "insta": "goeffervescence",
+    "fb": "https://www.facebook.com/effervescence.iiita/"
+  },
+  "iiic": {
+    "coordinators": ["Aadya Sharma", "Sagar Lakhani"],
+    "email": "iiic@iiita.ac.in",
+    "name": "IIIC",
+    "desc": "Business Incubator",
+    "fb": "https://www.facebook.com/iiicallahabad/"
+  },
+  "gymkhana": {
+    "coordinators": ["Harsh Bhardwaj"],
+    "email": "gymkhana@iiita.ac.in",
+    "name": "Gymkhana",
+    "desc": "Students' Council",
+    "fb": "https://www.facebook.com/GymkhanaIIITA/"
+  },
+  "sports": {
+    "coordinators": ["Shivam Kumar", "Ankush Pandey", "Lokesh Naik"],
+    "email": "sports.council@iiita.ac.in",
+    "name": "Spirit",
+    "desc": "Sports Society",
+    "fb": "https://www.facebook.com/Spiritiiita/"
+  },
+  "aparoksha": {
+    "coordinators": ["Ekansh Bansal", "Animesh Jha"],
+    "email": "team.aparoksha@iiita.ac.in",
+    "name": "Aparoksha",
+    "desc": "Technical Festival",
+    "insta": "aparokshaiiita",
+    "fb": "https://www.facebook.com/aparoksha/"
+  },
+  "asmita": {
+    "coordinators": ["Arshpreet Singh", "Tanmay Malu"],
+    "email": "asmita@iiita.ac.in",
+    "name": "Asmita",
+    "desc": "Sports Festival",
+    "insta": "asmita_iiita",
+    "fb": "https://www.facebook.com/asmitaiiita/"
+  },
+  "gravity": {
+    "coordinators": ["Paawan Kumar", "Shefali Vinod Ramteke"],
+    "email": "gravity@iiita.ac.in",
+    "name": "Gravity",
+    "desc": "Applied Sciences Society"
+  }
+}

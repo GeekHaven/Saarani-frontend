@@ -9,6 +9,10 @@
         android:height="150dp"
         android:drawable="@drawable/logo"
         />
-
-
+    <item android:width="140dp"
+        android:gravity="bottom|center_horizontal"
+        android:height="35dp"
+        android:bottom="90dp"
+        android:drawable="@drawable/name"
+        />
 </layer-list>
