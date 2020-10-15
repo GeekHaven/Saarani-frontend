@@ -68,7 +68,7 @@ public class EventActivity extends AppCompatActivity {
     LinearLayout layout_attachment;
     ArrayList<String> arrayList=new ArrayList<>();
     ArrayList<String> nameList =new ArrayList<>();
-    TextView interested,going,attachment_text;
+    TextView interested,going,attachment_text,int_count,going_count;
     private ProgressDialog pDialog;
     DatabaseHandler databaseHandler;
     HashMap<String,String> mapUrl= new HashMap<>();
@@ -102,6 +102,8 @@ public class EventActivity extends AppCompatActivity {
         shineButtonGo=findViewById(R.id.shine_button_go);
         shineButtonGo.init(this);
 
+        int_count=findViewById(R.id.interested_count);
+        going_count=findViewById(R.id.going_count); 
         eventName=findViewById(R.id.name);
         desc=findViewById(R.id.desc);
         date=findViewById(R.id.date);
@@ -410,7 +412,7 @@ public class EventActivity extends AppCompatActivity {
         linearLayout.addView(name,0,textParams);
         ImageView imageView =new ImageView(this);
         imageView.setPadding(30,30,30,30);
-        imageView.setImageResource(R.drawable.download);
+        imageView.setImageResource(R.drawable.ic_download);
         imageView.setBackgroundResource(R.drawable.ellipse_dark);
         LinearLayout.LayoutParams paramsBtn = new LinearLayout.LayoutParams(
                 (int) TypedValue.applyDimension(
