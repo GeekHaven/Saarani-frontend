@@ -6,36 +6,21 @@
     android:background="#232323"
     android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image"
         android:layout_width="45pt"
         android:layout_height="45pt"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="#F0D453"
-        app:cardCornerRadius="81pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="40.5pt"
-            android:layout_height="40.5pt"
-            android:layout_gravity="center"
-            app:cardCornerRadius="81pt">
-
-            <ImageView
-                android:layout_width="40.5pt"
-                android:id="@+id/image"
-                android:layout_height="40.5pt"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ellipse" />
-
-        </androidx.cardview.widget.CardView>
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintTop_toTopOf="parent"
+        app:civ_border_color="#F0D453"
+        app:civ_border_width="4dp"
+        android:alpha="0.8"
+        android:src="@drawable/person"/>
 
     <TextView
         android:id="@+id/cordi_name"
@@ -53,6 +38,6 @@
         android:text=""
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cardView"
+        app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
