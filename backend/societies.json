@@ -1,6 +1,6 @@
 {
   "geekhaven": {
-    "coordinators": ["Manthan Raju Surkar", "Prateek Mishra"],
+    "coordinators": ["Manthan Raju Surkar" : "https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/71015325_2135303379907191_8367050987910725632_o.jpg?_nc_cat=108&_nc_sid=174925&_nc_ohc=XQBEd0HU9pUAX-LD5Ar&_nc_ht=scontent-bom1-2.xx&oh=6a4913d0d64c714471a2a5eb22e341ad&oe=5FAD97A8", "Prateek Mishra":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/42183020_1902832086475892_6827256597559902208_o.jpg?_nc_cat=100&_nc_sid=09cbfe&_nc_ohc=OzFPbuo3MxwAX_pjlDQ&_nc_ht=scontent-bom1-2.xx&oh=642a81577e0c94696d5e884f32dc4991&oe=5FAF2E3E"],
     "email": "geekhaven@iiita.ac.in",
     "name": "Geekhaven",
     "desc": "Technical Society",
@@ -8,7 +8,7 @@
     "fb": "https://www.facebook.com/geekhaveniiita/"
   },
   "nirmiti": {
-    "coordinators": ["Keshab Agrawal", "Amandeep Sokhal", "Nehal Singh"],
+    "coordinators": ["Keshab Agrawal":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-1/p200x200/67668720_1269308336571035_2685247238887702528_o.jpg?_nc_cat=100&_nc_sid=7206a8&_nc_ohc=BceT5PBBhF0AX9ZJt0x&_nc_ht=scontent-bom1-2.xx&tp=6&oh=77c6707a6b9fedd70dd9d3e2b478145d&oe=5FAF125F", "Amandeep Sokhal":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-1/p100x100/73290154_1217664438428181_934892016720936960_o.jpg?_nc_cat=105&_nc_sid=7206a8&_nc_ohc=6Lq_X_h3558AX9R01Zd&_nc_ht=scontent-bom1-1.xx&tp=6&oh=e5f0e1b5639c6dc729ba3321e190ff53&oe=5FAFA2E4", "Nehal Singh":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/75226335_397719934492232_4310493001479618560_o.jpg?_nc_cat=111&_nc_sid=09cbfe&_nc_ohc=t2vYQNHj7BEAX8vvLFK&_nc_ht=scontent-bom1-2.xx&oh=79f947eacfbb074a6ad2ed4532039807&oe=5FADBA10"],
     "email": "nirmiti@iiita.ac.in",
     "name": "Nirmiti",
     "desc": "Fine Arts Society",
@@ -16,7 +16,7 @@
     "fb": "https://www.facebook.com/Fine-Arts-Society-IIIT-Allahabad-303222639838229/"
   },
   "tesla": {
-    "coordinators": ["Pranjal Maurya", "Anurag Kumar"],
+    "coordinators": ["Pranjal Maurya":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/54523259_2043544409093335_1395853947314372608_n.jpg?_nc_cat=101&_nc_sid=174925&_nc_ohc=d88XIL9tD0QAX_Msj69&_nc_ht=scontent-bom1-1.xx&oh=bba5e09ee265a6aed760a4d455451eb2&oe=5FADA124", "Anurag Kumar":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/118176440_614629279479766_6102296623330405108_n.jpg?_nc_cat=103&_nc_sid=09cbfe&_nc_ohc=tN2AFTcxdrAAX8UM6ul&_nc_ht=scontent-bom1-1.xx&oh=8a44eadc7920f32768fd13763b0096c5&oe=5FADE9E2"],
     "email": "tesla@iiita.ac.in",
     "name": "Tesla",
     "desc": "Electronics Society",
@@ -24,7 +24,7 @@
     "fb": "https://www.facebook.com/Tesla.IIITA/"
   },
   "rangtarangini": {
-    "coordinators": ["Palak Mittal", "Naukesh Goyal", "Divyansh Bhorvanshi"],
+    "coordinators": ["Palak Mittal":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/74330873_387932518758932_1846202438193774592_n.jpg?_nc_cat=111&_nc_sid=09cbfe&_nc_ohc=KTLWqUjAF-wAX9w7i9c&_nc_oc=AQkJ1bp7FE09IiIno227nPJuXr6bMuwJJsl9BjF2mKzO9rgO3TLV6lnxX82qwbUxuGc&_nc_ht=scontent-bom1-2.xx&oh=be0de24f4c2e310ef8ad816fb85659dc&oe=5FAFF886", "Naukesh Goyal":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-1/p100x100/34524876_104248180475045_6290860502784409600_n.jpg?_nc_cat=107&_nc_sid=7206a8&_nc_ohc=DqHWJaJy1MgAX9Eq_Bl&_nc_ht=scontent-bom1-2.xx&tp=6&oh=eb80c80bc12da4e4672414e43f6f2fcb&oe=5FAF2DDC", "Divyansh Bhorvanshi"],
     "email": "rangtarangini.society@iiita.ac.in",
     "name": "Rangtarangini",
     "desc": "Drama Society",
@@ -32,7 +32,7 @@
     "fb": "https://www.facebook.com/dramatics.iiita/"
   },
   "ams": {
-    "coordinators": ["Nikhilesh Kumar", "Devavath Mahesh", "Aditya Kamble"],
+    "coordinators": ["Nikhilesh Kumar":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/64785310_2353296284756771_4745621262133362688_o.jpg?_nc_cat=107&_nc_sid=09cbfe&_nc_ohc=A1YWsaNcHrEAX9tECLh&_nc_ht=scontent-bom1-2.xx&oh=1e2d4143bdd81c67bfe37d154ccd3ddb&oe=5FB01BEC", "Devavath Mahesh":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/84340744_1053537181659869_6918391796376535040_o.jpg?_nc_cat=106&_nc_sid=e3f864&_nc_ohc=xrHl0U_ncC4AX8RXi6h&_nc_ht=scontent-bom1-1.xx&oh=0be975f61d80fba5c9c57ea94d31a1d6&oe=5FB099A4", "Aditya Kamble":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/79085841_1019535501730273_7872108942518648832_o.jpg?_nc_cat=103&_nc_sid=09cbfe&_nc_ohc=ddk7tisZ1OoAX_SQeaB&_nc_ht=scontent-bom1-1.xx&oh=e53b1b7757c2e962d84e8c1084bacf02&oe=5FB02EE2"],
     "email": "ams.society@iiita.ac.in",
     "name": "AMS",
     "desc": "Media Society",
@@ -40,7 +40,7 @@
     "fb": "https://www.facebook.com/AMS.IIITA/"
   },
   "dance": {
-    "coordinators": ["Jahanvi Singh Bhadoria", "Akash Manhas", "Rahul Reddy Muppidi"],
+    "coordinators": ["Jahanvi Singh Bhadoria":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/75204634_2418586548263885_2429683185693491200_o.jpg?_nc_cat=106&_nc_sid=09cbfe&_nc_ohc=3mvsn5QGiM8AX8SWKu9&_nc_ht=scontent-bom1-1.xx&oh=cf0c902a4ba27628a229f150cc46375d&oe=5FAE31B5", "Akash Manhas":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/70585791_2366137503603285_102893724056420352_o.jpg?_nc_cat=104&_nc_sid=09cbfe&_nc_ohc=hwUu7yDMlPQAX99IH3q&_nc_ht=scontent-bom1-1.xx&oh=f72bae2f0cb5fb74de401764d3513245&oe=5FAF1072", "Rahul Reddy Muppidi":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/69307938_2694742600589344_3057027205826609152_o.jpg?_nc_cat=107&_nc_sid=09cbfe&_nc_ohc=rxmVZF8BSpUAX-v0ds1&_nc_ht=scontent-bom1-2.xx&oh=0c1eb28d0fce444ce9578cc9bd7f0892&oe=5FB0A23E"],
     "email": "dance.society@iiita.ac.in",
     "name": "Geneticx Crew",
     "desc": "Dance Society",
@@ -48,7 +48,7 @@
     "fb": "https://www.facebook.com/dancesocietyiiita/"
   },
   "sarasva": {
-    "coordinators": ["Abhigyan Sharma", "Ananya Aparajita Mohanty", "Giriraj Chandak"],
+    "coordinators": ["Abhigyan Sharma":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/68255119_1136555853219100_4058250993819713536_o.jpg?_nc_cat=111&_nc_sid=174925&_nc_ohc=PmuwxaA4h6YAX-Y0pfg&_nc_ht=scontent-bom1-2.xx&oh=c7edbf1c242a5b4d870d98bbcd92ff10&oe=5FB0866D", "Ananya Aparajita Mohanty":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/48384517_2440655976007871_6152050226384338944_o.jpg?_nc_cat=104&_nc_sid=174925&_nc_ohc=4b6qiHOZ9tcAX-66eIn&_nc_ht=scontent-bom1-1.xx&oh=2833831d3facde9e8c3d317260c9c768&oe=5FB03582", "Giriraj Chandak":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/44332982_920794698113455_8218674324693843968_n.jpg?_nc_cat=105&_nc_sid=09cbfe&_nc_ohc=WPxE-3UYZSUAX8jZrTr&_nc_ht=scontent-bom1-1.xx&oh=8158a2018f55807a45434b5346d8b758&oe=5FB0CD57"],
     "email": "sarasva.society@iiita.ac.in",
     "name": "Sarasva",
     "desc": "Literary Society",
@@ -56,7 +56,7 @@
     "fb": "https://www.facebook.com/sarasva.litclub/"
   },
   "virtuosi": {
-    "coordinators": ["Vidur Kataria", "Parag Goyal", "Kartic Choubey"],
+    "coordinators": ["Vidur Kataria":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/64444505_324640648473185_2851181453532725248_o.jpg?_nc_cat=108&_nc_sid=09cbfe&_nc_ohc=XleQJWBC8PYAX_O36Ur&_nc_ht=scontent-bom1-2.xx&oh=43cf1338de2b4c35a10000cbc214c236&oe=5FAD9CCB", "Parag Goyal", "Kartic Choubey":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/73104731_1106791736190891_4638216959127715840_n.jpg?_nc_cat=100&_nc_sid=09cbfe&_nc_ohc=rmJpzmxc--wAX9nGGNh&_nc_ht=scontent-bom1-2.xx&oh=7853b5ab36ee887f1f8192e9957e769f&oe=5FAE7BC6"],
     "email": "virtuosi.society@iiita.ac.in",
     "name": "Virtuosi",
     "desc": "Music Society",
@@ -64,7 +64,7 @@
     "fb": "https://www.facebook.com/MusicSocietyIIITA/"
   },
   "effervescence": {
-    "coordinators": ["Shashwat Sinha"],
+    "coordinators": ["Shashwat Sinha":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-1/p200x200/38888254_2117228251685968_735332511705464832_n.jpg?_nc_cat=107&_nc_sid=7206a8&_nc_ohc=54VLMQWW5aoAX9AKZhi&_nc_ht=scontent-bom1-2.xx&tp=6&oh=eba3e6e176674df5853a1ac694b65b83&oe=5FADB63C"],
     "email": "effervescence@iiita.ac.in",
     "name": "Effervescence",
     "desc": "Cultural Festival",
@@ -72,28 +72,28 @@
     "fb": "https://www.facebook.com/effervescence.iiita/"
   },
   "iiic": {
-    "coordinators": ["Aadya Sharma", "Sagar Lakhani"],
+    "coordinators": ["Aadya Mishra":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/74666305_2495373847410086_5271134807428956160_o.jpg?_nc_cat=111&_nc_sid=09cbfe&_nc_ohc=ExXgwtFFIUsAX-dyeux&_nc_ht=scontent-bom1-2.xx&oh=56eebdb06b1764ccb3ea0f974b9b0814&oe=5FAF7964", "Sagar Lakhani":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/20031883_133770077213605_1198978800533651074_n.jpg?_nc_cat=107&_nc_sid=09cbfe&_nc_ohc=4yzcL8qhCTcAX9EN4l4&_nc_ht=scontent-bom1-2.xx&oh=7938d6bdc603fc4753f0d2bc6b743b02&oe=5FAE044B"],
     "email": "iiic@iiita.ac.in",
     "name": "IIIC",
     "desc": "Business Incubator",
     "fb": "https://www.facebook.com/iiicallahabad/"
   },
   "gymkhana": {
-    "coordinators": ["Harsh Bhardwaj"],
+    "coordinators": ["Harsh Bhardwaj":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/82794526_2513635435592318_5194708248103485440_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=1zNIHdCAaF8AX8QW1fO&_nc_ht=scontent-bom1-1.xx&oh=b71a0ff381fb8f58b2ef8f5290c903fd&oe=5FAF5BC7"],
     "email": "gymkhana@iiita.ac.in",
     "name": "Gymkhana",
     "desc": "Students' Council",
     "fb": "https://www.facebook.com/GymkhanaIIITA/"
   },
   "sports": {
-    "coordinators": ["Shivam Kumar", "Ankush Pandey", "Lokesh Naik"],
+    "coordinators": ["Shivam Kumar":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/64460339_650028615461663_8065597562800832512_o.jpg?_nc_cat=110&_nc_sid=09cbfe&_nc_ohc=3eCETczqX1IAX-l2rDo&_nc_ht=scontent-bom1-2.xx&oh=eefba4ee48814672ef0ec9757aa01a43&oe=5FAD7354", "Ankush Pandey":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/75388421_2243657922404819_8822604382152425472_o.jpg?_nc_cat=111&_nc_sid=09cbfe&_nc_ohc=02-8rHaO6lYAX96zEFy&_nc_ht=scontent-bom1-2.xx&oh=9d162276813777feca4a64b541d9d24a&oe=5FAFDBBE", "Lokesh Naik":"https://scontent-bom1-2.cdninstagram.com/v/t51.2885-19/s150x150/92951636_2591671507758942_2137833620990066688_n.jpg?_nc_ht=scontent-bom1-2.cdninstagram.com&_nc_ohc=GX-5oHyWxDcAX_9hBX0&oh=174d71797ea4777ab492a6db6ab8ddb4&oe=5FB29E9E"],
     "email": "sports.council@iiita.ac.in",
     "name": "Spirit",
     "desc": "Sports Society",
     "fb": "https://www.facebook.com/Spiritiiita/"
   },
   "aparoksha": {
-    "coordinators": ["Ekansh Bansal", "Animesh Jha"],
+    "coordinators": ["Ekansh Bansal":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/55510774_2194809333912217_5694058613568438272_o.jpg?_nc_cat=105&_nc_sid=09cbfe&_nc_ohc=m8qlXhRgZMkAX9UtLU8&_nc_ht=scontent-bom1-1.xx&oh=0a5a9c2d2dc23b148623ff2861b142f1&oe=5FAE1E32", "Animesh Jha":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/54420958_2856093917799418_8804239041865187328_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=lRuqYeObjZsAX-urFg1&_nc_ht=scontent-bom1-1.xx&oh=482bdde46355d897a894c83bd1994a2f&oe=5FAD72F7"],
     "email": "team.aparoksha@iiita.ac.in",
     "name": "Aparoksha",
     "desc": "Technical Festival",
@@ -101,7 +101,7 @@
     "fb": "https://www.facebook.com/aparoksha/"
   },
   "asmita": {
-    "coordinators": ["Arshpreet Singh", "Tanmay Malu"],
+    "coordinators": ["Arshpreet Singh":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/42330596_275121309793300_7427691152934961152_o.jpg?_nc_cat=110&_nc_sid=174925&_nc_ohc=-ieeU0a1Io8AX_h25E8&_nc_ht=scontent-bom1-2.xx&oh=835fb375a68f425b0c57eddbfd033dea&oe=5FAD5F1A", "Tanmay Malu":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/37118369_2127444717469767_5538986749172121600_o.jpg?_nc_cat=104&_nc_sid=174925&_nc_ohc=XqSoWlBtb5MAX-cYuXp&_nc_ht=scontent-bom1-1.xx&oh=3b417d4ba1fb286b146099520c97e436&oe=5FAF9A99"],
     "email": "asmita@iiita.ac.in",
     "name": "Asmita",
     "desc": "Sports Festival",
@@ -109,7 +109,7 @@
     "fb": "https://www.facebook.com/asmitaiiita/"
   },
   "gravity": {
-    "coordinators": ["Paawan Kumar", "Shefali Vinod Ramteke"],
+    "coordinators": ["Paawan Kumar":"https://scontent-bom1-2.xx.fbcdn.net/v/t1.0-9/13177774_821285924675128_5687299324885153005_n.jpg?_nc_cat=109&_nc_sid=174925&_nc_ohc=eY5tRWR-k4cAX-0MPWE&_nc_ht=scontent-bom1-2.xx&oh=c90d0c6f79e1695b7b22bc4789061765&oe=5FAD701F", "Shefali Vinod Ramteke":"https://scontent-bom1-1.xx.fbcdn.net/v/t1.0-9/116721231_2642825082632581_4261851584085441616_n.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=QkgJmtFVKycAX9aSmBO&_nc_ht=scontent-bom1-1.xx&oh=8ff041d8e8c9d53778ff583cc81d1d07&oe=5FAF4FE3"],
     "email": "gravity@iiita.ac.in",
     "name": "Gravity",
     "desc": "Applied Sciences Society"
