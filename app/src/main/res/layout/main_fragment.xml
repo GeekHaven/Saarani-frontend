@@ -1,161 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/SwipeRefreshMain"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:background="#232323"
-    android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    >
-<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:id="@+id/layout"
-    android:background="#232323"
-    android:layout_marginBottom="30dp"
-    android:paddingBottom="64dp"
-    android:layout_height="wrap_content"
+    tools:context="navigation.main.MainFragment"
     >
-    <com.wang.avi.AVLoadingIndicatorView
-        android:id="@+id/avi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        style="@style/AVLoadingIndicatorView"
-        android:visibility="invisible"
-        android:elevation="2dp"
-        android:translationZ="2dp"
-        app:indicatorName="PacmanIndicator"
-        app:indicatorColor="#FFFFFF"
-    />
-    <com.tomer.fadingtextview.FadingTextView
-        android:layout_width="match_parent"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:id="@+id/fading_text_view"
-        android:visibility="invisible"
-        android:textColor="#FFFFFF"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avi"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/montserratmedium"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="40dp"
-        android:fontFamily="@font/montserratmedium"
-        android:id="@+id/month"
-        android:textColor="#F0D453"
-        android:textSize="42sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="400dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/montserratmedium"
-        android:id="@+id/year"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <androidx.cardview.widget.CardView
-        android:layout_width="fill_parent"
-        android:layout_height="400dp"
-        android:id="@+id/cardView"
-        android:background="#2C2B2B"
-        android:layout_marginTop="116dp"
-        android:elevation="0dp"
-        android:layout_marginHorizontal="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:cardCornerRadius="6dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
-    <com.github.sundeepk.compactcalendarview.CompactCalendarView
-        android:id="@+id/compactcalendar_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:background="#2C2B2B"
-        android:paddingTop="16dp"
-        android:paddingRight="10dp"
-        app:compactCalendarBackgroundColor="#2C2B2B"
-        app:compactCalendarCurrentDayBackgroundColor="#1AFFFFFF"
-        app:compactCalendarCurrentDayTextColor="#FFFFFF"
-        app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="false"
-        app:compactCalendarCurrentSelectedDayBackgroundColor="#FFFFFF"
-        app:compactCalendarCurrentSelectedDayTextColor="#000000"
-        app:compactCalendarMultiEventIndicatorColor="#fff"
-        app:compactCalendarTargetHeight="400dp"
-        app:compactCalendarTextColor="#fff"
-        app:compactCalendarTextSize="16sp"
-         />
-    </androidx.cardview.widget.CardView>
-    <TextView
-        android:id="@+id/today"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="550dp"
-        android:fontFamily="@font/montserratmedium"
-        android:text="Today"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:id="@+id/textLay"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:gravity="right"
-        android:layout_marginTop="550dp"
-        android:fontFamily="@font/montserratmedium"
-        android:text=""
-        android:textColor="#FFFFFF"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/today"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/default_text"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="25dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="590dp"
-        android:fontFamily="@font/montserratmedium"
-        android:text="No Event Found"
-        android:textColor="#9D9D9D"
-        android:textSize="16sp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="20dp"
+    <ScrollView
+        android:layout_height="match_parent"
         android:background="#232323"
-        android:nestedScrollingEnabled="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLay" />
+        android:layout_width="match_parent"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:id="@+id/layout"
+            android:background="#232323"
+            android:layout_marginBottom="30dp"
+            android:paddingBottom="64dp"
+            android:layout_height="wrap_content"
+            >
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/avi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/AVLoadingIndicatorView"
+                android:visibility="invisible"
+                android:elevation="2dp"
+                android:translationZ="2dp"
+                app:indicatorName="PacmanIndicator"
+                app:indicatorColor="#FFFFFF"
+                />
+            <com.tomer.fadingtextview.FadingTextView
+                android:layout_width="match_parent"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:id="@+id/fading_text_view"
+                android:visibility="invisible"
+                android:textColor="#FFFFFF"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/avi"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserratmedium"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="40dp"
+                android:fontFamily="@font/montserratmedium"
+                android:id="@+id/month"
+                android:textColor="#F0D453"
+                android:textSize="42sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="400dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/montserratmedium"
+                android:id="@+id/year"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="fill_parent"
+                android:layout_height="400dp"
+                android:id="@+id/cardView"
+                android:background="#2C2B2B"
+                android:layout_marginTop="116dp"
+                android:elevation="0dp"
+                android:layout_marginHorizontal="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardCornerRadius="6dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                >
+                <com.github.sundeepk.compactcalendarview.CompactCalendarView
+                    android:id="@+id/compactcalendar_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:background="#2C2B2B"
+                    android:paddingTop="16dp"
+                    android:paddingRight="10dp"
+                    app:compactCalendarBackgroundColor="#2C2B2B"
+                    app:compactCalendarCurrentDayBackgroundColor="#1AFFFFFF"
+                    app:compactCalendarCurrentDayTextColor="#FFFFFF"
+                    app:compactCalendarShouldSelectFirstDayOfMonthOnScroll="false"
+                    app:compactCalendarCurrentSelectedDayBackgroundColor="#FFFFFF"
+                    app:compactCalendarCurrentSelectedDayTextColor="#000000"
+                    app:compactCalendarMultiEventIndicatorColor="#fff"
+                    app:compactCalendarTargetHeight="400dp"
+                    app:compactCalendarTextColor="#fff"
+                    app:compactCalendarTextSize="16sp"
+                    />
+            </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/today"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="550dp"
+                android:fontFamily="@font/montserratmedium"
+                android:text="Today"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:id="@+id/textLay"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:gravity="right"
+                android:layout_marginTop="550dp"
+                android:fontFamily="@font/montserratmedium"
+                android:text=""
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/today"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/default_text"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="25dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="590dp"
+                android:fontFamily="@font/montserratmedium"
+                android:text="No Event Found"
+                android:textColor="#9D9D9D"
+                android:textSize="16sp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="20dp"
+                android:background="#232323"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textLay" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

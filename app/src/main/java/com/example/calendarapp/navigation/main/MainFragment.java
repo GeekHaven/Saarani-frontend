@@ -24,7 +24,9 @@ import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -108,6 +110,9 @@ public class MainFragment extends Fragment {
     final String[] Selected = new String[]{"January", "February", "March", "April",
             "May", "June", "July", "August", "September", "October", "November", "December"};
 
+
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     public static MainFragment newInstance() {
         return new MainFragment();
     }
@@ -137,6 +142,8 @@ public class MainFragment extends Fragment {
         cardView=view.findViewById(R.id.cardView);
         default_text=view.findViewById(R.id.default_text);
         constraintLayout=view.findViewById(R.id.layout);
+        swipeRefreshLayout = view.findViewById(R.id.SwipeRefreshMain);
+
         if(!isOnline()){
             Snackbar.make(constraintLayout,"Not connected to network! Changes will not be saved.",Snackbar.LENGTH_LONG);
         }
@@ -154,6 +161,22 @@ public class MainFragment extends Fragment {
         compactCalendar = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
         compactCalendar.setUseThreeLetterAbbreviation(true);
         Log.d("date",date.toString());
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Handler h = new Handler();
+                h.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(swipeRefreshLayout.isRefreshing()){
+                            swipeRefreshLayout.setRefreshing(false);
+                            Toast.makeText(getContext(), "Swiped 5 Seconds", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },5000);
+            }
+        });
         textLay.setText(sdf.format(date).substring(0,3)+", "+dateFormat1.format(date)+" "+Selected[Integer.parseInt(dateFormat.format(date))-1]);
         if(loadDataFrom!=null&&loadDataFrom.equals("server")) {
             try {
