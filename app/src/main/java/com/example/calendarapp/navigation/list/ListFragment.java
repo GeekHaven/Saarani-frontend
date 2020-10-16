@@ -1,5 +1,7 @@
 package com.example.calendarapp.navigation.list;
 
+
+
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProviders;
@@ -14,13 +16,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,9 +34,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.calendarapp.R;
-import com.example.calendarapp.adapters.AdaptorActivity;
-import com.example.calendarapp.data.ListItems;
-import com.example.calendarapp.database.DatabaseHandler;
+import com.example.calendarapp.adapters.*;
+import com.example.calendarapp.data.*;
+import com.example.calendarapp.database.*;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,8 +69,11 @@ import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 public class ListFragment extends Fragment {
 
     private ListViewModel mViewModel;
+    private SwipeRefreshLayout swipeRefreshLayout;
     TextView date_setUp,today_text,tomorrow_text,default_text1,default_text2;
-    List<ListItems> listItems,recylerViewList,recyclerViewListTom;
+    List<ListItems> listItems;
+    List<ListItems> recylerViewList;
+    List<ListItems> recyclerViewListTom;
     private RecyclerView recyclerViewToday,recyclerViewTom;
     private CardView cardView;
     Date dateX=new Date();
@@ -93,6 +101,8 @@ public class ListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.list_fragment, container, false);
         Bundle bundle=getArguments();
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshListFragment);
         if(bundle!=null&&bundle.getString("date")!=null){
             dateClick=bundle.getString("date");
         }
@@ -121,6 +131,22 @@ public class ListFragment extends Fragment {
         recyclerViewTom.setHasFixedSize(true);
         recyclerViewTom.setAdapter(adapter2);
         recyclerViewTom.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(swipeRefreshLayout.isRefreshing()){
+                            swipeRefreshLayout.setRefreshing(false);
+                            Toast.makeText(getContext(), "Could not Load", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },5000);
+            }
+        });
 
         builder= new HorizontalCalendar.Builder(view,R.id.calendarView);
         GregorianCalendar gc = new GregorianCalendar();

@@ -24,7 +24,9 @@ import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,9 +42,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.calendarapp.R;
-import com.example.calendarapp.adapters.AdaptorActivity;
-import com.example.calendarapp.data.ListItems;
-import com.example.calendarapp.database.DatabaseHandler;
+import com.example.calendarapp.adapters.*;
+import com.example.calendarapp.data.*;
+import com.example.calendarapp.database.*;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -73,6 +75,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class MainFragment extends Fragment {
     private MainViewModel mViewModel;
     TextView month,year,today,textLay,default_text;
+    private SwipeRefreshLayout swipeRefreshLayout;
     CompactCalendarView compactCalendar;
     ConstraintLayout constraintLayout;
     int x=0;
@@ -128,6 +131,7 @@ public class MainFragment extends Fragment {
         listItems=new ArrayList<>();
 
         av=view.findViewById(R.id.avi);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshMainFragment);
         fadingTextView=view.findViewById(R.id.fading_text_view);
         fadingTextView.setVisibility(View.INVISIBLE);
         fadingTextView.setTexts(texts);
@@ -137,6 +141,23 @@ public class MainFragment extends Fragment {
         cardView=view.findViewById(R.id.cardView);
         default_text=view.findViewById(R.id.default_text);
         constraintLayout=view.findViewById(R.id.layout);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(swipeRefreshLayout.isRefreshing()){
+                            swipeRefreshLayout.setRefreshing(false);
+                            Toast.makeText(getContext(), "Could not Load", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },5000);
+            }
+        });
+
         if(!isOnline()){
             Snackbar.make(constraintLayout,"Not connected to network! Changes will not be saved.",Snackbar.LENGTH_LONG);
         }
