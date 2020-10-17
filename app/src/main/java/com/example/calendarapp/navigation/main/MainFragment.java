@@ -165,16 +165,29 @@ public class MainFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Handler h = new Handler();
-                h.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(swipeRefreshLayout.isRefreshing()){
+                if(swipeRefreshLayout.isRefreshing()){
+                    if(isOnline()) {
+                        try {
+                            loadRecyclerViewData();
+                        } catch (JSONException | ParseException e) {
+                            e.printStackTrace();
+                        } finally {
+                            ResetCurrentDate();
                             swipeRefreshLayout.setRefreshing(false);
-                            Toast.makeText(getContext(), "Swiped 5 Seconds", Toast.LENGTH_SHORT).show();
                         }
                     }
-                },5000);
+                    else{
+                        Handler h = new Handler();
+                        h.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(), "No response!! please check your\nInternet Connectivity", Toast.LENGTH_SHORT).show();
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        },1000);
+                    }
+                }
+
             }
         });
         textLay.setText(sdf.format(date).substring(0,3)+", "+dateFormat1.format(date)+" "+Selected[Integer.parseInt(dateFormat.format(date))-1]);
@@ -369,6 +382,14 @@ public boolean isOnline() {
         intent.putExtra("message", msg);
         LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
     }
+
+    private void ResetCurrentDate(){
+        year.setText(yearFormat.format(date));
+        compactCalendar.setCurrentDate(date);
+        month.setText(Selected[Integer.parseInt(dateFormat.format(date))-1]);
+        textLay.setText(sdf.format(date).substring(0,3)+", "+dateFormat1.format(date)+" "+Selected[Integer.parseInt(dateFormat.format(date))-1]);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void loadRecyclerViewData() throws JSONException, ParseException {
         databaseHandler.deleteDatabase();
