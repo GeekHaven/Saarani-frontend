@@ -14,13 +14,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -83,6 +86,10 @@ public class ListFragment extends Fragment {
             "May", "June", "July", "August", "September", "October", "November", "December"};
     HorizontalCalendar horizontalCalendar;
     HorizontalCalendar.Builder builder;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+
     public static ListFragment newInstance() {
         return new ListFragment();
     }
@@ -111,6 +118,7 @@ public class ListFragment extends Fragment {
 
         today_text=view.findViewById(R.id.today_text);
         tomorrow_text=view.findViewById(R.id.tomorrow_text);
+        swipeRefreshLayout = view.findViewById(R.id.SwipeRefreshList);
 
         recyclerViewToday=view.findViewById(R.id.recyclerViewToday);
         recyclerViewToday.setHasFixedSize(true);
@@ -131,6 +139,23 @@ public class ListFragment extends Fragment {
         today_text.setText(Html.fromHtml(t));
         String to="<b>"+getString(R.string.tomorrow)+"</b>"+"  "+sdf.format(gc.getTime()).substring(0,3)+", "+dateFormat1.format(gc.getTime())+" "+dateFormatMonth.format(gc.getTime());
         tomorrow_text.setText(Html.fromHtml(to));
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Handler h = new Handler();
+                h.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(swipeRefreshLayout.isRefreshing()){
+                            swipeRefreshLayout.setRefreshing(false);
+                            Toast.makeText(getContext(), "Swiped 5 Seconds", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },5000);
+            }
+        });
+
 //        addEventsToCal();
         Date d=new Date();
         try {
@@ -140,6 +165,7 @@ public class ListFragment extends Fragment {
         }
         addEvents(listItems);
         return view;
+
     }
 
     @Override
