@@ -43,6 +43,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.calendarapp.R;
 import com.example.calendarapp.adapters.AdaptorActivity;
+import com.example.calendarapp.customSwipeRefresh.CustomSwipeRefreshLayout;
 import com.example.calendarapp.data.ListItems;
 import com.example.calendarapp.database.DatabaseHandler;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -111,7 +112,7 @@ public class MainFragment extends Fragment {
             "May", "June", "July", "August", "September", "October", "November", "December"};
 
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private CustomSwipeRefreshLayout swipeRefreshLayout;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -159,6 +160,7 @@ public class MainFragment extends Fragment {
         month.setText(Selected[Integer.parseInt(dateFormat.format(date))-1]);
         //textLay.setText(sdf.format(date)+", "+dateFormat1.format(date)+" "+Selected[Integer.parseInt(dateFormat.format(date))-1]);
         compactCalendar = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
+        compactCalendar.setNestedScrollingEnabled(false);
         compactCalendar.setUseThreeLetterAbbreviation(true);
         Log.d("date",date.toString());
 
@@ -168,11 +170,13 @@ public class MainFragment extends Fragment {
                 if(swipeRefreshLayout.isRefreshing()){
                     if(isOnline()) {
                         try {
+                            compactCalendar.removeAllEvents();
                             loadRecyclerViewData();
                         } catch (JSONException | ParseException e) {
                             e.printStackTrace();
                         } finally {
                             ResetCurrentDate();
+                            recyclerView.setVisibility(View.GONE);
                             swipeRefreshLayout.setRefreshing(false);
                         }
                     }
