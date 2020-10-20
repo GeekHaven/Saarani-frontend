@@ -171,13 +171,10 @@ public class MainFragment extends Fragment {
                     if(isOnline()) {
                         try {
                             compactCalendar.removeAllEvents();
+                            recyclerView.setVisibility(View.GONE);
                             loadRecyclerViewData();
                         } catch (JSONException | ParseException e) {
                             e.printStackTrace();
-                        } finally {
-                            ResetCurrentDate();
-                            recyclerView.setVisibility(View.GONE);
-                            swipeRefreshLayout.setRefreshing(false);
                         }
                     }
                     else{
@@ -392,8 +389,9 @@ public boolean isOnline() {
         compactCalendar.setCurrentDate(date);
         month.setText(Selected[Integer.parseInt(dateFormat.format(date))-1]);
         textLay.setText(sdf.format(date).substring(0,3)+", "+dateFormat1.format(date)+" "+Selected[Integer.parseInt(dateFormat.format(date))-1]);
-        showRecyclerView(date);
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void loadRecyclerViewData() throws JSONException, ParseException {
@@ -509,6 +507,8 @@ public boolean isOnline() {
                                         Log.d("size",String.valueOf(listItems.size()));
                                         showRecyclerView(date);
                                         databaseHandler.close();
+                                        ResetCurrentDate();
+                                        swipeRefreshLayout.setRefreshing(false);
 //                                        progressDialog.dismiss();
                                         cardView.setVisibility(View.VISIBLE);
                                         today.setVisibility(View.VISIBLE);
