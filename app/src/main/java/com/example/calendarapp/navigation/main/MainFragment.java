@@ -43,6 +43,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.calendarapp.R;
 import com.example.calendarapp.adapters.AdaptorActivity;
+import com.example.calendarapp.customSwipeRefresh.CustomSwipeRefreshLayout;
 import com.example.calendarapp.data.ListItems;
 import com.example.calendarapp.database.DatabaseHandler;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -111,7 +112,7 @@ public class MainFragment extends Fragment {
             "May", "June", "July", "August", "September", "October", "November", "December"};
 
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private CustomSwipeRefreshLayout swipeRefreshLayout;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -159,6 +160,7 @@ public class MainFragment extends Fragment {
         month.setText(Selected[Integer.parseInt(dateFormat.format(date))-1]);
         //textLay.setText(sdf.format(date)+", "+dateFormat1.format(date)+" "+Selected[Integer.parseInt(dateFormat.format(date))-1]);
         compactCalendar = (CompactCalendarView) view.findViewById(R.id.compactcalendar_view);
+        compactCalendar.setNestedScrollingEnabled(false);
         compactCalendar.setUseThreeLetterAbbreviation(true);
         Log.d("date",date.toString());
 
@@ -168,12 +170,11 @@ public class MainFragment extends Fragment {
                 if(swipeRefreshLayout.isRefreshing()){
                     if(isOnline()) {
                         try {
+                            compactCalendar.removeAllEvents();
+                            recyclerView.setVisibility(View.GONE);
                             loadRecyclerViewData();
                         } catch (JSONException | ParseException e) {
                             e.printStackTrace();
-                        } finally {
-                            ResetCurrentDate();
-                            swipeRefreshLayout.setRefreshing(false);
                         }
                     }
                     else{
@@ -388,8 +389,9 @@ public boolean isOnline() {
         compactCalendar.setCurrentDate(date);
         month.setText(Selected[Integer.parseInt(dateFormat.format(date))-1]);
         textLay.setText(sdf.format(date).substring(0,3)+", "+dateFormat1.format(date)+" "+Selected[Integer.parseInt(dateFormat.format(date))-1]);
-        showRecyclerView(date);
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void loadRecyclerViewData() throws JSONException, ParseException {
@@ -505,6 +507,8 @@ public boolean isOnline() {
                                         Log.d("size",String.valueOf(listItems.size()));
                                         showRecyclerView(date);
                                         databaseHandler.close();
+                                        ResetCurrentDate();
+                                        swipeRefreshLayout.setRefreshing(false);
 //                                        progressDialog.dismiss();
                                         cardView.setVisibility(View.VISIBLE);
                                         today.setVisibility(View.VISIBLE);
