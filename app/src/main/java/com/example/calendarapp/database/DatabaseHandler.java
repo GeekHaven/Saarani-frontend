@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -27,6 +28,7 @@ import java.util.Locale;
 public class DatabaseHandler extends SQLiteOpenHelper {
     Date date=new Date();
     final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    final SimpleDateFormat time_f=new SimpleDateFormat("HH:mm",Locale.getDefault());
     private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "eventStorage";
     private static final String TABLE_EVENTS = "events";
@@ -347,6 +349,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteDatabase() throws JSONException, ParseException {
         List<ListItems> allEvents =getAllEvents();
         for(int i=0;i<allEvents.size();i++){
+//            Date timeEvent=time_f.parse(allEvents.get(i).getTime().split(" ")[1]);
+//            Date timeCurrent =time_f.parse(time_f.format(date));
+//            Log.d("current_time",timeCurrent.toString());
+//            Log.d("event_time",timeEvent.toString());
             if((f.parse(f.format(date.getTime())).compareTo(f.parse(allEvents.get(i).getDate()))>0)||(allEvents.get(i).getState().equals("upcoming")&& LocalTime.now().isBefore(LocalTime.parse(allEvents.get(i).getTime().split(" ")[1]))&&f.parse(f.format(date.getTime())).compareTo(f.parse(allEvents.get(i).getDate()))==0)||(allEvents.get(i).getState().equals("upcoming")&&f.parse(f.format(date.getTime())).compareTo(f.parse(allEvents.get(i).getDate()))<0))
             deleteEvent(allEvents.get(i));
         }
