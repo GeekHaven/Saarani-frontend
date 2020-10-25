@@ -88,7 +88,7 @@ public class MainFragment extends Fragment {
     FadingTextView fadingTextView;
     private List<ListItems> listItems,recylerViewList;
     private static String URL_DATA="https://socupdate.herokuapp.com/events";
-    HashMap<String, Integer> map
+    HashMap<String, Integer> checkEvent
             = new HashMap<>();
     AVLoadingIndicatorView av;
     String[] texts = {"Gathering Resources",
@@ -317,13 +317,24 @@ public boolean isOnline() {
 }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void loadDatabase() throws JSONException {
-
+        checkEvent=new HashMap<>();
         year.setText(yearFormat.format(date));
         month.setText(Selected[Integer.parseInt(dateFormat.format(date))-1]);
         textLay.setText(sdf.format(date).substring(0,3)+", "+dateFormat1.format(date)+" "+Selected[Integer.parseInt(dateFormat.format(date))-1]);
         today.setVisibility(View.VISIBLE);
         compactCalendar.setCurrentDate(date);
         listItems=databaseHandler.getAllEvents();
+        Log.d("MainFragListItemSize", String.valueOf(listItems.size()));
+        for(int i=0;i<listItems.size();i++){
+            if(checkEvent.getOrDefault(listItems.get(i).getEventId(),0)!=0){
+                listItems.remove(i);
+                /*databaseHandler.deleteEvent(listItems.get(i));*/
+                i--;
+            }
+            else{
+                checkEvent.put(listItems.get(i).getEventId(),1);
+            }
+        }
         Log.d("db_list_size", String.valueOf(listItems.size()));
         int pos=0;
         for(int i=0;i<listItems.size();i++){
@@ -395,7 +406,7 @@ public boolean isOnline() {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void loadRecyclerViewData() throws JSONException, ParseException {
-        databaseHandler.deleteDatabase();
+
         final String urlPost = "https://socupdate.herokuapp.com/events/marked";
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
@@ -432,6 +443,23 @@ public boolean isOnline() {
 
                                     @Override
                                     public void onResponse(JSONObject response) {
+                                        try {
+                                            SharedPreferences prefs = getActivity().getSharedPreferences("database_check", MODE_PRIVATE);
+                                            // Checking lock
+                                            while(prefs.getBoolean("open",false)){}
+                                            //
+                                            // Closing lock
+                                            SharedPreferences.Editor editor = getActivity().getSharedPreferences("database_check", MODE_PRIVATE).edit();
+                                            editor.putBoolean("open",true);
+                                            editor.apply();
+                                            //
+                                            databaseHandler.deleteDatabase();
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
                                         Iterator<String> keys = response.keys();
                                         int position=0;
                                         while(keys.hasNext()){
@@ -482,9 +510,9 @@ public boolean isOnline() {
                                                 item.setInterested(interested_count);
                                                 //listItems.add(item);
                                                 databaseHandler.addEvent(item);
-                                                mapPosition.put(eventId,position);
-                                                position++;
-                                                try {
+                                                /*mapPosition.put(eventId,position);
+                                                position++;*/
+                                                /*try {
                                                     Date d = f.parse(jsonObject.getString("date"));
                                                     assert d != null;
                                                     long milliseconds = d.getTime();
@@ -493,19 +521,25 @@ public boolean isOnline() {
                                                     compactCalendar.addEvent(eventx);
                                                 } catch (ParseException e) {
                                                     e.printStackTrace();
-                                                }
+                                                }*/
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
 
                                             }
+                                            // Opening Lock
+                                            SharedPreferences.Editor editor = getActivity().getSharedPreferences("database_check", MODE_PRIVATE).edit();
+                                            editor.putBoolean("open",false);
+                                            editor.apply();
+                                            //
                                         }
                                         try {
-                                            listItems=databaseHandler.getAllEvents();
+                                            /*listItems=databaseHandler.getAllEvents();*/
+                                            loadDatabase();
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
                                         Log.d("size",String.valueOf(listItems.size()));
-                                        showRecyclerView(date);
+                                        /*showRecyclerView(date);*/
                                         databaseHandler.close();
                                         ResetCurrentDate();
                                         swipeRefreshLayout.setRefreshing(false);

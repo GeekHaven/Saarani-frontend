@@ -37,6 +37,12 @@ public class SubscribeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        setAnimation();
         setContentView(R.layout.activity_subscribe);
+        // Initializing Lock
+        SharedPreferences.Editor edit = getSharedPreferences("database_check", MODE_PRIVATE).edit();
+        edit.putBoolean("open",false);
+        edit.apply();
+        //
+
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();

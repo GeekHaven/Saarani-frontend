@@ -1,6 +1,7 @@
 package com.example.calendarapp.worker;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 
@@ -34,6 +35,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class BackgroundSyncWorker extends Worker {
     Context context_i;
     private static String url="https://socupdate.herokuapp.com/events/marked";
@@ -62,8 +65,16 @@ public class BackgroundSyncWorker extends Worker {
         VolleySingleton.getmInstance(getApplicationContext()).addToRequestQueue(request);
         try {
             JSONObject response = future.get(60, TimeUnit.SECONDS);
-
+            SharedPreferences prefs = context_i.getSharedPreferences("database_check", MODE_PRIVATE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // Checking Lock
+                while(prefs.getBoolean("open",false)){}
+                //
+                // Closing Lock
+                SharedPreferences.Editor editor = context_i.getSharedPreferences("database_check", MODE_PRIVATE).edit();
+                editor.putBoolean("open",true);
+                editor.apply();
+                //
                 databaseHandler.deleteDatabase();
             }
             Iterator<String> keys = response.keys();
@@ -120,6 +131,11 @@ public class BackgroundSyncWorker extends Worker {
                     e.printStackTrace();
                 }
             }
+            // Opening Lock
+            SharedPreferences.Editor editor = context_i.getSharedPreferences("database_check", MODE_PRIVATE).edit();
+            editor.putBoolean("open",false);
+            editor.apply();
+            //
             databaseHandler.close();
             Log.d("worker_tag", response.toString());
             return Result.success();

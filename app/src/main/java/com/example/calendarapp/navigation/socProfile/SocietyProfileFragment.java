@@ -49,6 +49,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -68,6 +69,7 @@ public class SocietyProfileFragment extends Fragment  {
     private RecyclerView.Adapter adapter;
     final Date date = new Date();
     DatabaseHandler databaseHandler;
+    HashMap<String,Integer> map = new HashMap<>();
     private List<ListItems> listItems;
 
     public static SocietyProfileFragment newInstance() {
@@ -135,12 +137,24 @@ public class SocietyProfileFragment extends Fragment  {
 
         try {
             List<ListItems> allEvents=new ArrayList<>();
+            map=new HashMap<>();
             allEvents=databaseHandler.getAllEvents();
+
             for(int i=0;i<allEvents.size();i++){
                 ListItems item=allEvents.get(i);
                 if(item.getByName().equals(displayName)){
                     if(!item.getState().equals("cancelled")&&(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))<0||(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))==0&&(f.parse(f.format(date)).compareTo(f.parse(item.getDate()))==0 && LocalTime.now().isBefore(LocalTime.parse(item.getTime().split(" ")[1]))))))
                     listItems.add(item);
+                }
+            }
+            for(int i=0;i<listItems.size();i++){
+                if(map.getOrDefault(listItems.get(i).getEventId(),0)!=0){
+                    listItems.remove(i);
+                    /*databaseHandler.deleteEvent(listItems.get(i));*/
+                    i--;
+                }
+                else{
+                    map.put(listItems.get(i).getEventId(),1);
                 }
             }
             adapter=new SocietyCardAdaptor(listItems, getContext(),"alertDialog");

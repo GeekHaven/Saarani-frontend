@@ -84,7 +84,16 @@ public class MyWorker extends Worker {
                     }
 
                 }
+                SharedPreferences prefs = context_i.getSharedPreferences("database_check", MODE_PRIVATE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    // Checking Lock
+                    while(prefs.getBoolean("open",false)){}
+                    //
+                    // Closing Lock
+                    SharedPreferences.Editor editor = context_i.getSharedPreferences("database_check", MODE_PRIVATE).edit();
+                    editor.putBoolean("open",true);
+                    editor.apply();
+                    //
                     databaseHandler.deleteDatabase();
                 }
             } catch (JSONException e) {
@@ -149,6 +158,11 @@ public class MyWorker extends Worker {
                     e.printStackTrace();
                 }
             }
+            // Opening Lock
+            SharedPreferences.Editor editor = context_i.getSharedPreferences("database_check", MODE_PRIVATE).edit();
+            editor.putBoolean("open",false);
+            editor.apply();
+            //
             databaseHandler.close();
             Log.d("worker_tag", response.toString());
             sendMessage();
