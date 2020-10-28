@@ -2,16 +2,23 @@ package com.example.calendarapp.navigation.list;
 
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -22,6 +29,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +41,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.calendarapp.R;
 import com.example.calendarapp.adapters.AdaptorActivity;
+import com.example.calendarapp.customSwipeRefresh.CustomSwipeRefreshLayout;
 import com.example.calendarapp.data.ListItems;
 import com.example.calendarapp.database.DatabaseHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,6 +49,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GetTokenResult;
+import com.tomer.fadingtextview.FadingTextView;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,6 +75,8 @@ import devs.mulham.horizontalcalendar.model.CalendarEvent;
 import devs.mulham.horizontalcalendar.utils.CalendarEventsPredicate;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class ListFragment extends Fragment {
 
     private ListViewModel mViewModel;
@@ -81,13 +94,29 @@ public class ListFragment extends Fragment {
     final DateFormat yearFormat= new SimpleDateFormat("YYYY",Locale.getDefault());
     final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
     private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM", Locale.getDefault());
-    private Map<String,Integer> map =  new HashMap<>();
+    private Map<String,Integer> checkEvent =  new HashMap<>();
     final String[] Selected = new String[]{"January", "February", "March", "April",
             "May", "June", "July", "August", "September", "October", "November", "December"};
     HorizontalCalendar horizontalCalendar;
     HorizontalCalendar.Builder builder;
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private final String[] texts = {"Gathering Resources",
+            "Checking All the Dates",
+            "Marking the Calendar",
+            "Generating Buttons",
+            "Entering Cheat Codes",
+            "Downloading Hacks",
+            "Leaking Nuclear Codes"};
+    private FadingTextView fadingTextView;
+    private AVLoadingIndicatorView avLoadingIndicatorView;
+
+    private ConstraintLayout loadingConstraintLayout;
+
+    private ScrollView scrollView;
+
+    private CustomSwipeRefreshLayout swipeRefreshLayout;
+
+    private boolean horizontalCalBuild=true;
 
 
     public static ListFragment newInstance() {
@@ -107,6 +136,18 @@ public class ListFragment extends Fragment {
         databaseHandler=new DatabaseHandler(getContext());
         try {
             listItems=databaseHandler.getAllEvents();
+            Log.d("ListFragListItemSize", String.valueOf(listItems.size()));
+            for(int i=0;i<listItems.size();i++){
+                if(checkEvent.getOrDefault(listItems.get(i).getEventId(),0)!=0){
+                    listItems.remove(i);
+                    /*databaseHandler.deleteEvent(listItems.get(i));*/
+                    i--;
+                }
+                else{
+                    checkEvent.put(listItems.get(i).getEventId(),1);
+                }
+            }
+            Log.d("db_list_size", String.valueOf(listItems.size()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -119,6 +160,16 @@ public class ListFragment extends Fragment {
         today_text=view.findViewById(R.id.today_text);
         tomorrow_text=view.findViewById(R.id.tomorrow_text);
         swipeRefreshLayout = view.findViewById(R.id.SwipeRefreshList);
+
+        loadingConstraintLayout=view.findViewById(R.id.loading_container);
+        scrollView=view.findViewById(R.id.main_container);
+
+        avLoadingIndicatorView=view.findViewById(R.id.avi);
+
+        fadingTextView=view.findViewById(R.id.fading_text_view);
+        fadingTextView.setTexts(texts);
+        fadingTextView.setTimeout(1,FadingTextView.SECONDS);
+        fadingTextView.stop();
 
         recyclerViewToday=view.findViewById(R.id.recyclerViewToday);
         recyclerViewToday.setHasFixedSize(true);
@@ -143,16 +194,22 @@ public class ListFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Handler h = new Handler();
-                h.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(swipeRefreshLayout.isRefreshing()){
-                            swipeRefreshLayout.setRefreshing(false);
-                            Toast.makeText(getContext(), "Swiped 5 Seconds", Toast.LENGTH_SHORT).show();
-                        }
+                if(swipeRefreshLayout.isRefreshing()){
+                    if(isOnline()) {
+                        horizontalCalendar.refresh();
+                        addEventsToCal();
                     }
-                },5000);
+                    else{
+                        Handler h = new Handler();
+                        h.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(), "No response!! please check your\nInternet Connectivity", Toast.LENGTH_SHORT).show();
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        },1000);
+                    }
+                }
             }
         });
 
@@ -245,13 +302,16 @@ public class ListFragment extends Fragment {
                 return event;
             }
         });
-        horizontalCalendar = builder
-                .range(startDate, endDate)
-                .datesNumberOnScreen(7)
-                .configure()
-                .showTopText(false)
-                .end()
-                .build();
+        if(horizontalCalBuild) {
+            horizontalCalendar = builder
+                    .range(startDate, endDate)
+                    .datesNumberOnScreen(7)
+                    .configure()
+                    .showTopText(false)
+                    .end()
+                    .build();
+            horizontalCalBuild=false;
+        }
         horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -319,9 +379,11 @@ public class ListFragment extends Fragment {
         final String urlPost = "https://socupdate.herokuapp.com/events/marked";
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = mAuth.getCurrentUser();
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Loading data....");
-        progressDialog.show();
+        loadingConstraintLayout.setVisibility(View.VISIBLE);
+        sendMessage("false");
+        avLoadingIndicatorView.show();
+        fadingTextView.restart();
+        scrollView.setVisibility(View.GONE);
         if (user != null) {
             user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
                 @Override
@@ -337,6 +399,23 @@ public class ListFragment extends Fragment {
                                     @RequiresApi(api = Build.VERSION_CODES.O)
                                     @Override
                                     public void onResponse(JSONObject response) {
+                                        try {
+                                            SharedPreferences prefs = getActivity().getSharedPreferences("database_check", MODE_PRIVATE);
+                                            // Checking lock
+//                                            while(prefs.getBoolean("open",false)){}
+                                            //
+                                            // Closing lock
+                                            SharedPreferences.Editor editor = getActivity().getSharedPreferences("database_check", MODE_PRIVATE).edit();
+                                            editor.putBoolean("open",true);
+                                            editor.apply();
+                                            //
+                                            databaseHandler.deleteDatabase();
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
                                         Iterator<String> keys = response.keys();
                                         int position=0;
                                         while(keys.hasNext()){
@@ -367,23 +446,72 @@ public class ListFragment extends Fragment {
                                                         "Venue: "+jsonObject.getString("venue"),marker,eventId,attachmentsList
                                                 );
                                                 item.setNameList(attachmentNameList);
-                                                final String date0= jsonObject.getString("date");
-                                                temp.add(item);
-                                                listItems.add(item);
-                                                Date d=new Date();
-                                                try {
-                                                    addDataToRV(f.format(d),tomorrowDate);
-                                                } catch (ParseException e) {
-                                                    e.printStackTrace();
+                                                item.setPhotoUrl(jsonObject.getString("photoURL"));
+                                                item.setState("upcoming");
+                                                Integer going_count=0;
+                                                Integer interested_count=0;
+                                                if(jsonObject.has("markedBy")) {
+                                                    JSONObject markings = jsonObject.getJSONObject("markedBy");
+                                                    Iterator<String> k = markings.keys();
+                                                    while (k.hasNext()) {
+                                                        String user = k.next();
+                                                        if (markings.getString(user).equals("going")) {
+                                                            going_count++;
+                                                        } else {
+                                                            interested_count++;
+                                                        }
+                                                    }
                                                 }
-
+                                                item.setGoing(going_count);
+                                                item.setInterested(interested_count);
+                                                item.setNameList(attachmentNameList);
+                                                final String date0= jsonObject.getString("date");
+                                                databaseHandler.addEvent(item);
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
                                             }
                                         }
+                                        Date d=new Date();
+                                        try {
+                                            addDataToRV(f.format(d),tomorrowDate);
+                                        } catch (ParseException | JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        try {
+                                            listItems=databaseHandler.getAllEvents();
+                                            Log.d("ListFragListItemSize", String.valueOf(listItems.size()));
+                                            HashMap<String,Integer> checkEvent=new HashMap<>();
+                                            for(int i=0;i<listItems.size();i++){
+                                                if(checkEvent.getOrDefault(listItems.get(i).getEventId(),0)!=0){
+                                                    listItems.remove(i);
+                                                    /*databaseHandler.deleteEvent(listItems.get(i));*/
+                                                    i--;
+                                                }
+                                                else{
+                                                    checkEvent.put(listItems.get(i).getEventId(),1);
+                                                }
+                                            }
+                                            Log.d("db_list_size", String.valueOf(listItems.size()));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                         Log.d("tempSize",String.valueOf(temp.size()));
-                                        progressDialog.dismiss();
-                                        addEvents(temp);
+//                                        progressDialog.dismiss();
+                                        addEvents(listItems);
+                                        sendMessage("true");
+                                        avLoadingIndicatorView.hide();
+                                        fadingTextView.stop();
+                                        loadingConstraintLayout.setVisibility(View.GONE);
+                                        scrollView.setVisibility(View.VISIBLE);
+                                        try {
+                                            resetCurrentDate();
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        swipeRefreshLayout.setRefreshing(false);
                                     }
 
                                 },
@@ -400,5 +528,35 @@ public class ListFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private void sendMessage(String msg) {
+        Log.d("sender", "Broadcasting message");
+        Intent intent = new Intent("toolbar-visibility");
+        // You can also include some extra data.
+        intent.putExtra("message", msg);
+        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void resetCurrentDate() throws ParseException, JSONException {
+        Date date=new Date();
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.add(Calendar.DATE, 1);
+        tomorrowDate=f.format(gc.getTime());
+        date_setUp.setText(dateFormatMonth.format(date)+", "+yearFormat.format(date));
+        String t="<b>"+getString(R.string.today)+"</b>"+"  "+sdf.format(date).substring(0,3)+", "+dateFormat1.format(date)+" "+dateFormatMonth.format(date);
+        today_text.setText(Html.fromHtml(t));
+        String to="<b>"+getString(R.string.tomorrow)+"</b>"+"  "+sdf.format(gc.getTime()).substring(0,3)+", "+dateFormat1.format(gc.getTime())+" "+dateFormatMonth.format(gc.getTime());
+        tomorrow_text.setText(Html.fromHtml(to));
+        horizontalCalendar.goToday(true);
+        addDataToRV(f.format(date),tomorrowDate);
     }
 }

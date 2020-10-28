@@ -446,7 +446,7 @@ public boolean isOnline() {
                                         try {
                                             SharedPreferences prefs = getActivity().getSharedPreferences("database_check", MODE_PRIVATE);
                                             // Checking lock
-                                            while(prefs.getBoolean("open",false)){}
+//                                            while(prefs.getBoolean("open",false)){}
                                             //
                                             // Closing lock
                                             SharedPreferences.Editor editor = getActivity().getSharedPreferences("database_check", MODE_PRIVATE).edit();

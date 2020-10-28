@@ -1,146 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/SwipeRefreshList"
+<com.example.calendarapp.customSwipeRefresh.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/SwipeRefreshList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".navigation.list.ListFragment">
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#232323">
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <ScrollView
+            android:id="@+id/main_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="64dp"
-            >
-            <TextView
-                android:id="@+id/month_title"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:gravity="start"
-                android:layout_marginLeft="16dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/montserratmedium"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
+                android:paddingBottom="64dp">
+
+                <TextView
+                    android:id="@+id/month_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/montserratmedium"
+                    android:gravity="start"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <devs.mulham.horizontalcalendar.HorizontalCalendarView
+                    android:id="@+id/calendarView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#232323"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/month_title"
+                    app:sizeMiddleText="16sp"
+                    app:textColorNormal="#7C7C7C"
+                    app:textColorSelected="#F0D453" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="0dp"
+                    android:background="#2C2B2B"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView5">
+
+                    <TextView
+                        android:id="@+id/today_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginLeft="24dp"
+                        android:layout_marginTop="29dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginRight="24dp"
+                        android:fontFamily="@font/montserratmedium"
+                        android:gravity="left"
+                        android:text="Today"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+                    <TextView
+                        android:id="@+id/default_text1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/montserratmedium"
+                        android:text="No Event Found"
+                        android:textColor="#9D9D9D"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewToday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#232323"
+                        android:nestedScrollingEnabled="false" />
+
+                    <TextView
+                        android:id="@+id/tomorrow_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginLeft="24dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginRight="24dp"
+                        android:fontFamily="@font/montserratmedium"
+                        android:gravity="left"
+                        android:text="Tomorrow"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/default_text2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/montserratmedium"
+                        android:text="No Event Found"
+                        android:textColor="#9D9D9D"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewTomorrow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="5dp"
+                        android:background="#232323"
+                        android:nestedScrollingEnabled="false" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </ScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/loading_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <com.wang.avi.AVLoadingIndicatorView
+                android:id="@+id/avi"
+                style="@style/AVLoadingIndicatorView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="2dp"
+                android:translationZ="2dp"
+                app:indicatorColor="#FFFFFF"
+                app:indicatorName="PacmanIndicator"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <devs.mulham.horizontalcalendar.HorizontalCalendarView
-                android:id="@+id/calendarView"
+            <com.tomer.fadingtextview.FadingTextView
+                android:id="@+id/fading_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#232323"
-                app:sizeMiddleText="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/month_title"
-                app:textColorNormal="#7C7C7C"
-                app:textColorSelected="#F0D453" />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:layout_marginTop="0dp"
-                android:background="#2C2B2B"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/calendarView" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView5"
-                >
-            <TextView
-                android:layout_width="match_parent"
-                android:id="@+id/today_text"
-                android:text="Today"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="29dp"
-                android:layout_marginEnd="24dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/montserratmedium"
-                android:textSize="14sp"
+                android:gravity="center"
                 android:textColor="#FFFFFF"
-                android:layout_marginRight="24dp"
-                android:gravity="left"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView5" />
-            <TextView
-                android:id="@+id/default_text1"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="24dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/montserratmedium"
-                android:text="No Event Found"
-                android:textColor="#9D9D9D"
-                android:textSize="16sp"
-                android:visibility="gone"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewToday"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="8dp"
-                android:background="#232323"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:id="@+id/tomorrow_text"
-                android:layout_height="wrap_content"
-                android:text="Tomorrow"
-                android:fontFamily="@font/montserratmedium"
-                android:textSize="14sp"
-                android:textColor="#FFFFFF"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginRight="24dp"
-                android:gravity="left"
-                />
-            <TextView
-                android:id="@+id/default_text2"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="25dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/montserratmedium"
-                android:text="No Event Found"
-                android:textColor="#9D9D9D"
-                android:textSize="16sp"
-                android:visibility="gone"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewTomorrow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="5dp"
-                android:background="#232323"
-                />
-            </LinearLayout>
+                app:layout_constraintTop_toBottomOf="@+id/avi" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
+    </FrameLayout>
 
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</com.example.calendarapp.customSwipeRefresh.CustomSwipeRefreshLayout>
