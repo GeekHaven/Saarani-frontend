@@ -32,6 +32,7 @@ import com.example.calendarapp.database.DatabaseHandler;
 import com.example.calendarapp.data.ListItems;
 import com.example.calendarapp.R;
 import com.example.calendarapp.adapters.SocietyCardAdaptor;
+import com.squareup.picasso.Picasso;
 import com.tomer.fadingtextview.FadingTextView;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -44,9 +45,14 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SocShowActivity extends AppCompatActivity {
     int i;
@@ -63,6 +69,7 @@ public class SocShowActivity extends AppCompatActivity {
     LayoutInflater layoutInflater;
     DatabaseHandler databaseHandler;
     RecyclerView.Adapter adapter;
+    HashMap<String,String> cordiMap = new HashMap<>();
     List<ListItems> listItems =new ArrayList<>();
     TextView soc_name,soc_desc,view_more,defaultText;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -250,21 +257,29 @@ public class SocShowActivity extends AppCompatActivity {
             imageView.setImageResource(R.drawable.gravity);
         }
     }
-    public void addCordisToView(ArrayList<String> arrayList){
-        for(i=0;i<arrayList.size();i++){
-
+    public void addCordisToView(HashMap<String,String> map){
+        int i=0;
+        for(Map.Entry<String,String> mapElement: map.entrySet()){
             if(i%2==0){
                 View view=getLayoutInflater().inflate(R.layout.soc_profile_cordi,null);
                 TextView name=view.findViewById(R.id.cordi_name);
-                name.setText(arrayList.get(i));
+                CircleImageView imageView = view.findViewById(R.id.image);
+                if(!mapElement.getValue().isEmpty()) {
+                    Picasso.get().load(mapElement.getValue()).error(R.drawable.person).placeholder(R.drawable.progress_animation).into(imageView);
+                }
+                name.setText(mapElement.getKey());
                 linearLayout.addView(view);
             }
             else{
                 View view=getLayoutInflater().inflate(R.layout.soc_profile_cordi_alt,null);
                 TextView name=view.findViewById(R.id.cordi_name);
-                name.setText(arrayList.get(i));
+                CircleImageView imageView = view.findViewById(R.id.image);
+                if(!mapElement.getValue().isEmpty())
+                    Picasso.get().load(mapElement.getValue()).error(R.drawable.person).placeholder(R.drawable.progress_animation).into(imageView);
+                name.setText(mapElement.getKey());
                 linearLayout.addView(view);
             }
+            i++;
         }
 
 
@@ -288,7 +303,11 @@ public class SocShowActivity extends AppCompatActivity {
                             if (jsonObject.has("coordinators")) {
                                 JSONArray jsonArray = jsonObject.getJSONArray("coordinators");
                                 for (int i = 0; i < jsonArray.length(); i++) {
-                                    cordis.add(jsonArray.getString(i));
+                                    JSONObject obj = jsonArray.getJSONObject(i);
+                                    Iterator<String> it = obj.keys();
+                                    String k=it.next();
+                                    cordiMap.put(k,obj.getString(k));
+                                    //cordis.add(jsonArray.getString(i));
                                 }
                             }
                             gmail=jsonObject.getString("email");
@@ -308,7 +327,7 @@ public class SocShowActivity extends AppCompatActivity {
 
                         }
                     }
-                    addCordisToView(cordis);
+                    addCordisToView(cordiMap);
 //                    progressDialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
