@@ -1,6 +1,7 @@
 package com.example.calendarapp.activites;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -101,6 +102,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
     Map<String,String> json_map_attachments=new HashMap<>();
     String url = "https://socupdate.herokuapp.com/events";
     String urlPut="https://socupdate.herokuapp.com/events/";
+    ProgressDialog progressDialog;
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -169,6 +171,11 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 Log.d("date", date);
             }
         });
+
+        progressDialog=new ProgressDialog(this,R.style.ProgressDialogTheme);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setTitle("Adding Event");
+        progressDialog.setMessage("Sending Data to Server");
 
         Intent intent=getIntent();
         if(intent.getExtras().getString("type").equals("edit")){
@@ -348,6 +355,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                 uploadFile((Uri) mapElement.getValue(), (String) mapElement.getKey());
                             }
                         } else {
+                            progressDialog.show();
                             if (requestType.equals("post"))
                                 sendEvent(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
                             else if (requestType.equals("put"))
@@ -811,6 +819,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
         Log.d("json_map_attachSize", String.valueOf(json_map_attachments.size()));
         Log.d("uriMapSize+size", uriMap.size()+" "+ size);
         if(json_map_attachments.size()==uriMap.size()+size) {
+            progressDialog.show();
             if(requestType.equals("post"))
                 sendEvent(eventName.getText().toString(), eventDesc.getText().toString(), eventVenue.getText().toString(), hourSelect + ":" + minuteSelect, date);
             else if (requestType.equals("put"))
@@ -926,12 +935,14 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                                     startActivity(intent);
                                                     finish();
                                                 } catch (Throwable t) {
+                                                    progressDialog.dismiss();
                                                     Toast.makeText(AddEventActivity.this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
                                                     startActivity(new Intent(AddEventActivity.this, MainActivity.class));
                                                     finish();
                                                 }
                                             }
                                             else{
+                                                progressDialog.dismiss();
                                                 startActivity(new Intent(AddEventActivity.this, MainActivity.class));
                                                 finish();
                                             }
@@ -940,6 +951,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                     new Response.ErrorListener() {
                                         @Override
                                         public void onErrorResponse(VolleyError error) {
+                                            progressDialog.dismiss();
                                             Snackbar.make(constraintLayout,"Event creation failed! Please try again later",Snackbar.LENGTH_LONG);
                                             startActivity(new Intent(AddEventActivity.this, MainActivity.class));
                                             finish();
@@ -1028,10 +1040,12 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                                     startActivity(intent);
                                                     finish();
                                                 } catch (Throwable t) {
+                                                    progressDialog.dismiss();
                                                     Toast.makeText(AddEventActivity.this, "Request failed try again: " + t.toString(), Toast.LENGTH_LONG).show();
                                                 }
                                             }
                                             else{
+                                                progressDialog.dismiss();
                                                 Intent intent=new Intent(AddEventActivity.this, MainActivity.class);
                                                 intent.putExtra("action","db");
                                                 Log.d("home_intent","yes");
@@ -1043,6 +1057,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                     new Response.ErrorListener() {
                                         @Override
                                         public void onErrorResponse(VolleyError error) {
+                                            progressDialog.dismiss();
                                             Toast.makeText(AddEventActivity.this,error.toString(),Toast.LENGTH_SHORT).show();
                                         }
                                     }

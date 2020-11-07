@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,6 +45,7 @@ public class ProfileRVFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     DatabaseHandler databaseHandler;
     ArrayList<ListItems> listItems,showListItems;
+    private HashMap<String,Integer> checkEvent=new HashMap<>();
     Date date=new Date();
     final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
@@ -117,6 +119,7 @@ public class ProfileRVFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public boolean fetchData(){
         try {
+            checkEvent=new HashMap<>();
             List<ListItems> allEvents=databaseHandler.getAllEvents();
             for(int i=0;i<allEvents.size();i++) {
                 ListItems item = allEvents.get(i);
@@ -125,6 +128,16 @@ public class ProfileRVFragment extends Fragment {
                         //showListItems.add(item);
                     } else if (item.getMarker().equals("interested")){
                     showListItems.add(item);}
+                }
+            }
+            for(int i=0;i<showListItems.size();i++){
+                if(checkEvent.getOrDefault(showListItems.get(i).getEventId(),0)!=0){
+                    showListItems.remove(i);
+                    /*databaseHandler.deleteEvent(listItems.get(i));*/
+                    i--;
+                }
+                else{
+                    checkEvent.put(showListItems.get(i).getEventId(),1);
                 }
             }
         } catch (JSONException | ParseException e) {
