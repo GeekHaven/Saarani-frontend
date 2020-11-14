@@ -54,18 +54,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class SocietyProfileFragment extends Fragment  {
 
     private SocietyProfileViewModel mViewModel;
-    TextView name,desc,email;
-    ImageView imageView;
+    TextView name,desc,email,no_event_text_view;
+    CircleImageView imageView;
     String key,displayName;
     private RecyclerView recyclerView;
     final SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
     private CardView cardView;
-    FloatingActionButton floatBtnAdd;
     private RecyclerView.Adapter adapter;
     final Date date = new Date();
     DatabaseHandler databaseHandler;
@@ -87,23 +87,15 @@ public class SocietyProfileFragment extends Fragment  {
         name=view.findViewById(R.id.society_name);
         email=view.findViewById(R.id.society_email);
         imageView=view.findViewById(R.id.society_profile);
-        //floatBtnAdd=view.findViewById(R.id.floatBtnProfile);
         recyclerView=view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(false);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         displayName=FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        no_event_text_view=view.findViewById(R.id.no_event_text_view);
 
-//        floatBtnAdd.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent =new Intent(getActivity(),AddEventActivity.class);
-//                intent.putExtra("type","add");
-//                intent.putExtra("from","Profile");
-//                startActivity(intent);
-//            }
-//        });
+
 
         if(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()!=null){
             Picasso
@@ -147,104 +139,34 @@ public class SocietyProfileFragment extends Fragment  {
                     listItems.add(item);
                 }
             }
-            for(int i=0;i<listItems.size();i++){
-                if(map.getOrDefault(listItems.get(i).getEventId(),0)!=0){
-                    listItems.remove(i);
-                    /*databaseHandler.deleteEvent(listItems.get(i));*/
-                    i--;
+            if(!listItems.isEmpty()) {
+                recyclerView.setVisibility(View.VISIBLE);
+                no_event_text_view.setVisibility(View.INVISIBLE);
+                for (int i = 0; i < listItems.size(); i++) {
+                    if (map.getOrDefault(listItems.get(i).getEventId(), 0) != 0) {
+                        listItems.remove(i);
+                        /*databaseHandler.deleteEvent(listItems.get(i));*/
+                        i--;
+                    } else {
+                        map.put(listItems.get(i).getEventId(), 1);
+                    }
                 }
-                else{
-                    map.put(listItems.get(i).getEventId(),1);
-                }
+                adapter = new SocietyCardAdaptor(listItems, getContext(), "alertDialog");
+                recyclerView.setAdapter(adapter);
             }
-            adapter=new SocietyCardAdaptor(listItems, getContext(),"alertDialog");
-            recyclerView.setAdapter(adapter);
+            else{
+                recyclerView.setVisibility(View.GONE);
+                no_event_text_view.setVisibility(View.VISIBLE);
+            }
         } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
 
-//        getSocKey();
-//        addDataToRV();
 
         return view;
     }
 
 
-    public void getSocKey(){
-        String nameSoc = "";
-        FirebaseAuth mAuth =FirebaseAuth.getInstance();
-        FirebaseUser user =mAuth.getCurrentUser();
-        String email= user.getEmail();
-        String[] part= email.split("@");
-        if(part[0].contains(".")){
-            String[] namex= part[0].split("\\.");
-            if(namex[1].equals("society")){
-                nameSoc=namex[0];
-            }
-            else if(namex[1].equals("council")){
-                nameSoc=namex[0];
-            }
-            else
-                nameSoc=namex[1];
-        }
-        else{
-            nameSoc=part[0];
-        }
-        key=nameSoc;
-    }
-    public void addDataToRV(){
-        Log.d("key",key);
-        String url = "https://socupdate.herokuapp.com/societies/"+key+"/events";
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Loading data....");
-        progressDialog.show();
-        StringRequest stringRequest =new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject json =new JSONObject(response);
-                    Iterator<String> iterator= json.keys();
-                    while (iterator.hasNext()){
-                        String key = iterator.next();
-                        JSONObject jsonObject = json.getJSONObject(key);
-                        ArrayList<String> attachmentsList =new ArrayList<>();
-                        ArrayList<String> attachmentNameList =new ArrayList<>();
-                        if(jsonObject.has("attachments")){
-                            JSONObject jsonObject1 = jsonObject.getJSONObject("attachments");
-                            Iterator iterator1= jsonObject1.keys();
-                            while(iterator1.hasNext()){
-                                String name= iterator1.next().toString();
-                                attachmentsList.add(jsonObject1.getString(name));
-                                attachmentNameList.add(name);
-                            }
-                        }
-                        ListItems items = new ListItems(
-                                jsonObject.getString("name"),
-                                jsonObject.getString("desc"),
-                                jsonObject.getString("byName"),
-                                "Date: "+jsonObject.getString("date"),
-                                "Time: "+jsonObject.getString("time"),
-                                "Venue: "+jsonObject.getString("venue"),"",key,attachmentsList
-                        );
-                        items.setNameList(attachmentNameList);
-                        listItems.add(items);
-                    }
-                    adapter=new SocietyCardAdaptor(listItems, getContext(),"alertDialog");
-                    recyclerView.setAdapter(adapter);
-                    progressDialog.dismiss();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(stringRequest);
-    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

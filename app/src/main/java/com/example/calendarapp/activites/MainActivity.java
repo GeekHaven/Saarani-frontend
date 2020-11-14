@@ -63,6 +63,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class MainActivity extends AppCompatActivity {
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     NavOptions.Builder navBuilder;
     CollapsingToolbarLayout collapsingToolbarLayout;
     DrawerLayout drawerLayout;
-    ImageView imgUser;
+    CircleImageView imgUser;
     MenuItem addEvent,swap;
     FirebaseAuth mAuth;
     FloatingActionButton fab;

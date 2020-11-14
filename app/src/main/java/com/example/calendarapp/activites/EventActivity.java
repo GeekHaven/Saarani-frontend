@@ -1,11 +1,14 @@
 package com.example.calendarapp.activites;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,6 +67,7 @@ public class EventActivity extends AppCompatActivity {
     String screen,date_event;
     ConstraintLayout constraintLayout;
     String marker="";
+    boolean isSociety=false;
     ShineButton shineButtonInt,shineButtonGo;
     LinearLayout layout_attachment;
     ArrayList<String> arrayList=new ArrayList<>();
@@ -73,6 +77,7 @@ public class EventActivity extends AppCompatActivity {
     DatabaseHandler databaseHandler;
     HashMap<String,String> mapUrl= new HashMap<>();
     private int i=0;
+    int goingCount=0,interestedCount=0;
     public static final int progress_bar_type = 0;
     final SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.getDefault());
     final SimpleDateFormat format = new SimpleDateFormat("MMMM", Locale.getDefault());
@@ -109,8 +114,6 @@ public class EventActivity extends AppCompatActivity {
         date=findViewById(R.id.date);
         venue=findViewById(R.id.venue);
         byName=findViewById(R.id.society_name);
-//        star=findViewById(R.id.star);
-//        tick_mark=findViewById(R.id.tick);
         interested=findViewById(R.id.text_interested);
         going=findViewById(R.id.text_going);
         button_back=findViewById(R.id.button);
@@ -126,10 +129,17 @@ public class EventActivity extends AppCompatActivity {
         Intent intent =getIntent();
         eventId=intent.getExtras().getString("eventId");
         screen=intent.getExtras().getString("screen");
+
+        final SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
+
+        isSociety= !prefs.getString("society", "false").equals("false");
+
         if(intent.getExtras().getString("type").equals("notif")){
               setItems();
         }
         else {
+            goingCount=intent.getExtras().getInt("going");
+            interestedCount=intent.getExtras().getInt("interested");
             marker=intent.getExtras().getString("marker");
 //            Toast.makeText(EventActivity.this,marker,Toast.LENGTH_SHORT).show();
             arrayList=intent.getStringArrayListExtra("attachments");
@@ -161,215 +171,187 @@ public class EventActivity extends AppCompatActivity {
             venue.setText(venue_event.substring(7));
             date.setText(sdf.format(date_event).substring(0, 3) + ", " + d.format(date_event) + " " + format.format(date_event) + " " + y.format(date_event) + " "+time_event.substring(6));
         }
-        SharedPreferences prefs = getSharedPreferences("user", MODE_PRIVATE);
-        if(prefs.getString("society", "false").equals("false")) {
-            shineButtonInt.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Object tag = shineButtonInt.getTag();
-                    if (tag != null && (Integer) tag == star_yellow) {
-                        Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
-//                        star.setTag(R.drawable.star_img);
-//                        star.setImageResource(R.drawable.star_img);
-                        shineButtonInt.setChecked(false,true);
-                        shineButtonInt.setTag(star_img);
-                        try {
-                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"-","interested");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        deleteRequest();
-                    } else {
-                        Snackbar.make(constraintLayout, "Marked as interested.", Snackbar.LENGTH_LONG).show();
-//                        star.setTag(star_yellow);
-//                        star.setImageResource(star_yellow);
-                        shineButtonInt.setTag(star_yellow);
-                        shineButtonInt.setChecked(true,true);
-                        String x="-";
-                        if ((Integer) shineButtonGo.getTag() == tick_yellow) {
-//                            tick_mark.setTag(tick);
-//                            tick_mark.setImageResource(R.drawable.going_man);
-                            shineButtonGo.setTag(tick);
-                            shineButtonGo.setChecked(false);
-                            x="going";
-                        }
-                        try {
-                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"interested",x);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"interested");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        addMarker("interested");
-                    }
+
+        shineButtonInt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(prefs.getString("society", "false").equals("false")) {
+                    interestedMarkerClicked(v);
                 }
-            });
-            interested.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Object tag = shineButtonInt.getTag();
-                    if (tag != null && (Integer) tag == star_yellow) {
-                        Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
-//                        star.setTag(R.drawable.star_img);
-//                        star.setImageResource(R.drawable.star_img);
-                        shineButtonInt.setChecked(false,true);
-                        shineButtonInt.setTag(star_img);
-                        try {
-                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"-","interested");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        deleteRequest();
-                    } else {
-                        Snackbar.make(constraintLayout, "Marked as interested", Snackbar.LENGTH_LONG).show();
-//                        star.setTag(star_yellow);
-//                        star.setImageResource(star_yellow);
-                        shineButtonInt.setTag(star_yellow);
-                        shineButtonInt.setChecked(true,true);
-                        String x="-";
-                        if ((Integer) shineButtonGo.getTag() == tick_yellow) {
-//                            tick_mark.setTag(tick);
-//                            tick_mark.setImageResource(R.drawable.going_man);
-                            shineButtonGo.setTag(tick);
-                            shineButtonGo.setChecked(false);
-                            x="going";
-                        }
-                        try {
-                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"interested",x);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"interested");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        addMarker("interested");
-                    }
+                else{
+                    shineButtonInt.setChecked(false);
+                    Snackbar.make(v,"This feature is not available for socities!",Snackbar.LENGTH_LONG).show();
                 }
-            });
-            shineButtonGo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Object tag = shineButtonGo.getTag();
-                    if (tag != null && (Integer) tag == tick_yellow) {
-                        Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
-//                        tick_mark.setTag(tick);
-//                        tick_mark.setImageResource(R.drawable.going_man);
-                        shineButtonGo.setTag(tick);
-                        shineButtonGo.setChecked(false,true);
-                        try {
-                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"-","going");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        deleteRequest();
-                    } else {
-                        Snackbar.make(constraintLayout, "Marked as going.", Snackbar.LENGTH_LONG).show();
-//                        tick_mark.setTag(tick_yellow);
-//                        tick_mark.setImageResource(R.drawable.going_man_yellow);
-                        shineButtonGo.setTag(tick_yellow);
-                        shineButtonGo.setChecked(true,true);
-                        String x="-";
-                        if ((Integer) shineButtonInt.getTag() == star_yellow) {
-//                            star.setTag(R.drawable.star_img);
-//                            star.setImageResource(R.drawable.star_img);
-                            shineButtonInt.setTag(star_img);
-                            shineButtonInt.setChecked(false);
-                            x="interested";
-                        }
-                        try {
-                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"going",x);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"going");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        addMarker("going");
-                    }
+            }
+        });
+        interested.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(prefs.getString("society", "false").equals("false")) {
+                    interestedMarkerClicked(v);
                 }
-            });
-            going.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Object tag = shineButtonGo.getTag();
-                    if (tag != null && (Integer) tag == tick_yellow) {
-                        Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
-//                        tick_mark.setTag(tick);
-//                        tick_mark.setImageResource(R.drawable.going_man);
-                        shineButtonGo.setTag(tick);
-                        shineButtonGo.setChecked(false,true);
-                        try {
-                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"-","going");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"none");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        deleteRequest();
-                    } else {
-                        Snackbar.make(constraintLayout, "Marked as going.", Snackbar.LENGTH_LONG).show();
-//                        tick_mark.setTag(tick_yellow);
-//                        tick_mark.setImageResource(R.drawable.going_man_yellow);
-                        shineButtonGo.setTag(tick_yellow);
-                        shineButtonGo.setChecked(true,true);
-                        String x="-";
-                        if ((Integer) shineButtonInt.getTag() == star_yellow) {
-//                            star.setTag(R.drawable.star_img);
-//                            star.setImageResource(R.drawable.star_img);
-                            shineButtonInt.setChecked(false);
-                            shineButtonInt.setTag(star_img);
-                            x="interested";
-                        }
-                        try {
-                            databaseHandler.updateCount(databaseHandler.getEvent(eventId),"going",x);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            databaseHandler.updateMarker(databaseHandler.getEvent(eventId),"going");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        addMarker("going");
-                    }
+                else{
+                    shineButtonInt.setChecked(false);
+                    Snackbar.make(v,"This feature is not available for socities!",Snackbar.LENGTH_LONG).show();
                 }
-            });
+            }
+        });
+        shineButtonGo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(prefs.getString("society", "false").equals("false")) {
+                    goingMarkerClicked(v);
+                }
+                else{
+                    shineButtonGo.setChecked(false);
+                    Snackbar.make(v,"This feature is not available for socities!",Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+        going.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(prefs.getString("society", "false").equals("false")) {
+                    goingMarkerClicked(v);
+                }
+                else{
+                    shineButtonGo.setChecked(false);
+                    Snackbar.make(v,"This feature is not available for socities!",Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public void goingMarkerClicked(View v){
+        if(isOnline()) {
+            Object tag = shineButtonGo.getTag();
+            if (tag != null && (Integer) tag == tick_yellow) {
+                Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
+                shineButtonGo.setTag(tick);
+                shineButtonGo.setChecked(false, true);
+                try {
+                    databaseHandler.updateCount(databaseHandler.getEvent(eventId), "-", "going");
+                    goingCount--;
+                    going_count.setText(String.valueOf(goingCount));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    databaseHandler.updateMarker(databaseHandler.getEvent(eventId), "none");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                deleteRequest();
+            } else {
+                Snackbar.make(constraintLayout, "Marked as going.", Snackbar.LENGTH_LONG).show();
+                shineButtonGo.setTag(tick_yellow);
+                shineButtonGo.setChecked(true, true);
+                String x = "-";
+                if ((Integer) shineButtonInt.getTag() == star_yellow) {
+                    shineButtonInt.setTag(star_img);
+                    shineButtonInt.setChecked(false);
+                    x = "interested";
+                    interestedCount--;
+                    int_count.setText(String.valueOf(interestedCount));
+                }
+                try {
+                    databaseHandler.updateCount(databaseHandler.getEvent(eventId), "going", x);
+                    goingCount++;
+                    going_count.setText(String.valueOf(goingCount));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    databaseHandler.updateMarker(databaseHandler.getEvent(eventId), "going");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                addMarker("going");
+            }
         }
         else{
-//            star.setVisibility(View.GONE);
-            shineButtonInt.setVisibility(View.GONE);
-            interested.setVisibility(View.GONE);
-            going.setVisibility(View.GONE);
-//            tick_mark.setVisibility(View.GONE);
-            shineButtonGo.setVisibility(View.GONE);
-        }
+            if(shineButtonGo.isChecked()) {
+                if(marker.equals("none")) {
+                    shineButtonGo.setChecked(false);
+                }
+                else if(marker.equals("interested")){
+                    shineButtonInt.setChecked(true);
+                    shineButtonGo.setChecked(false);
+                }
 
+            }
+            else {
+                shineButtonGo.setChecked(true);
+            }
+            Snackbar.make(v, "Not connected to internet! Please try again later.", Snackbar.LENGTH_LONG).show();
+        }
     }
+
+    public void interestedMarkerClicked(View v){
+        if(isOnline()) {
+            Object tag = shineButtonInt.getTag();
+            if (tag != null && (Integer) tag == star_yellow) {
+                Snackbar.make(constraintLayout, "Unmarked", Snackbar.LENGTH_LONG).show();
+                shineButtonInt.setChecked(false, true);
+                shineButtonInt.setTag(star_img);
+                try {
+                    databaseHandler.updateCount(databaseHandler.getEvent(eventId), "-", "interested");
+                    interestedCount--;
+                    int_count.setText(String.valueOf(interestedCount));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    databaseHandler.updateMarker(databaseHandler.getEvent(eventId), "none");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                deleteRequest();
+            } else {
+                Snackbar.make(constraintLayout, "Marked as interested.", Snackbar.LENGTH_LONG).show();
+                shineButtonInt.setTag(star_yellow);
+                shineButtonInt.setChecked(true, true);
+                String x = "-";
+                if ((Integer) shineButtonGo.getTag() == tick_yellow) {
+                    shineButtonGo.setTag(tick);
+                    shineButtonGo.setChecked(false);
+                    x = "going";
+                    goingCount--;
+                    going_count.setText(String.valueOf(goingCount));
+                }
+                try {
+                    databaseHandler.updateCount(databaseHandler.getEvent(eventId), "interested", x);
+                    interestedCount++;
+                    int_count.setText(String.valueOf(interestedCount));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    databaseHandler.updateMarker(databaseHandler.getEvent(eventId), "interested");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                addMarker("interested");
+            }
+        }
+        else{
+            if(shineButtonInt.isChecked()) {
+                if(marker.equals("none")) {
+                    shineButtonInt.setChecked(false);
+                }
+                else if(marker.equals("going")){
+                    shineButtonInt.setChecked(false);
+                    shineButtonGo.setChecked(true);
+                }
+
+            }
+            else {
+                shineButtonInt.setChecked(true);
+            }
+            Snackbar.make(v, "Not connected to internet! Please try again later.", Snackbar.LENGTH_LONG).show();
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void addAttachmentList(String url,int count,String nameOfAttachment){
         attachment_text.setVisibility(View.VISIBLE);
@@ -445,23 +427,19 @@ public class EventActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void setIcon(){
         Log.d("markxxx",marker);
-        if(marker.equals("interested")){
-//            star.setImageResource(star_yellow);
-//            star.setTag(star_yellow);
+        int_count.setText(String.valueOf(interestedCount));
+        going_count.setText(String.valueOf(goingCount));
+        if(marker.equals("interested") && !isSociety){
             shineButtonInt.setTag(star_yellow);
             shineButtonInt.setChecked(true);
         }
-        else if(marker.equals("going")){
-//            tick_mark.setImageResource(R.drawable.going_man_yellow);
-//            tick_mark.setTag(tick_yellow);
+        else if(marker.equals("going") && !isSociety){
             shineButtonGo.setTag(tick_yellow);
             shineButtonGo.setChecked(true);
             Log.d("set","true");
         }
         else{
-//            star.setTag(star_img);
             shineButtonInt.setTag(star_img);
-//            tick_mark.setTag(tick);
             shineButtonGo.setTag(tick);
         }
         if(arrayList.size()!=0) {
@@ -623,6 +601,23 @@ public class EventActivity extends AppCompatActivity {
                                                             nameList.add(convertString.toString());
                                                         }
                                                     }
+
+                                                    if(jsonObject.has("markedBy")) {
+                                                        JSONObject markings = jsonObject.getJSONObject("markedBy");
+                                                        Iterator<String> k = markings.keys();
+                                                        while (k.hasNext()) {
+                                                            String user = k.next();
+                                                            if (markings.getString(user).equals("going")) {
+                                                                goingCount++;
+                                                            } else {
+                                                                interestedCount++;
+                                                            }
+                                                        }
+                                                    }
+
+//                                                    item.setGoing(goingCount);
+//                                                    item.setInterested(interestedCount);
+
                                                     Date date_event = null;
                                                     try {
                                                         date_event = dateFormat.parse(dateEvent);
@@ -660,5 +655,11 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
+    }
 
 }

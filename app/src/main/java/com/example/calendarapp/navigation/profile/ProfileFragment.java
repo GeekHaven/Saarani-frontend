@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class ProfileFragment extends Fragment{
@@ -48,7 +49,7 @@ public class ProfileFragment extends Fragment{
     TabAdapter adapter;
     ViewPager viewPager;
     DatabaseHandler databaseHandler;
-    ImageView imgProfileUserPhoto;
+    CircleImageView imgProfileUserPhoto;
     ConstraintLayout constraintLayout;
     TextView tvUserName,tvUserEmailID, tvNoEvent;
     TabLayout tabLayout;

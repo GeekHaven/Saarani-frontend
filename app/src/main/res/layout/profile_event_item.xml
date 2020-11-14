@@ -22,7 +22,7 @@
     android:id="@+id/menu_item_card_view"
     android:layout_width="match_parent"
     android:background="#2C2B2B"
-    android:layout_height="110dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_marginBottom="16dp"
     card_view:cardCornerRadius="8dp">
@@ -33,7 +33,7 @@
         android:orientation="horizontal">
         <TextView
             android:layout_width="6dp"
-            android:layout_height="110dp"
+            android:layout_height="match_parent"
             android:background="@drawable/round_left_strip"
             />
         <LinearLayout
@@ -124,12 +124,13 @@
                     android:id="@+id/date"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/markerLayoutGrid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="1dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal"
                 >
                 <!--    <ImageView-->
