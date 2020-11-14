@@ -363,15 +363,7 @@ public class ListFragment extends Fragment {
                 return true;
             }
         });
-//        if(dateClick!=null) {
-//            try {
-//                Calendar cal=Calendar.getInstance();
-//                cal.setTime(f.parse(dateClick));
-//                horizontalCalendar.selectDate(cal,true);
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//        }
+
         horizontalCalendar.refresh();
     }
     public void addEventsToCal(){
@@ -400,15 +392,7 @@ public class ListFragment extends Fragment {
                                     @Override
                                     public void onResponse(JSONObject response) {
                                         try {
-                                            SharedPreferences prefs = getActivity().getSharedPreferences("database_check", MODE_PRIVATE);
-                                            // Checking lock
-//                                            while(prefs.getBoolean("open",false)){}
-                                            //
-                                            // Closing lock
-                                            SharedPreferences.Editor editor = getActivity().getSharedPreferences("database_check", MODE_PRIVATE).edit();
-                                            editor.putBoolean("open",true);
-                                            editor.apply();
-                                            //
+
                                             databaseHandler.deleteDatabase();
 
                                         } catch (JSONException e) {

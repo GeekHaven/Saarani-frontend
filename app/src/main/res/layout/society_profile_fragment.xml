@@ -34,7 +34,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
+                    app:civ_border_color="#FFFFFF"
+                    app:civ_border_width="2dp"
                     android:id="@+id/society_profile"
                     android:layout_width="110dp"
                     android:layout_height="110dp"
@@ -105,6 +107,21 @@
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout10"
                 app:layout_constraintVertical_bias="0.044" />
 
+            <TextView
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/no_event_text_view"
+                android:text="No upcoming events!"
+                android:textColor="#FFFFFF"
+                android:gravity="center"
+                android:layout_marginTop="32dp"
+                android:fontFamily="@font/montserratmedium"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text"
+                />
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"

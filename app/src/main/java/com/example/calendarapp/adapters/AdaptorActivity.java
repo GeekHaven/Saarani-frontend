@@ -65,6 +65,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
     private HashMap<Integer, String> mapMarker= new HashMap<Integer, String>();
     DatabaseHandler databaseHandler;
     SharedPreferences prefs ;
+    boolean isSociety=false;
 
 
     public AdaptorActivity(List<ListItems> listItems, Context context, String backFragment, Activity activity) {
@@ -80,6 +81,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.profile_event_item, parent, false);
         prefs=context.getSharedPreferences("user", MODE_PRIVATE);
+        isSociety= !prefs.getString("society", "false").equals("false");
         databaseHandler=new DatabaseHandler(context);
         return new ViewHolder(v);
     }
@@ -119,11 +121,11 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         marker=listItem.getMarker();
         mapMarker.put(position,listItem.getMarker());
         Log.d("mark",listItem.getMarker());
-        if(listItem.getMarker().equals("interested")){
+        if(listItem.getMarker().equals("interested") && !isSociety){
             holder.star.setChecked(true);
             holder.star.setTag(star_yellow);
         }
-        else if(listItem.getMarker().equals("going")){
+        else if(listItem.getMarker().equals("going") && !isSociety){
             holder.going.setChecked(true);
             holder.going.setTag(tick_yellow);
             Log.d("set","true");
@@ -230,6 +232,8 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         intent.putExtra("eventId",items.getEventId());
         intent.putExtra("type","event");
         intent.putExtra("screen",backFragment);
+        intent.putExtra("interested",items.getInterested());
+        intent.putExtra("going",items.getGoing());
         intent.putStringArrayListExtra("attachments", items.getArrayList());
         intent.putStringArrayListExtra("attachments_name",items.getNameList());
         context.startActivity(intent);
@@ -322,21 +326,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
             itemView.setClickable(true);
             itemView.setOnClickListener(this);
         }
-//        public BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                String eventId = intent.getStringExtra("eventId");
-//                String markedAs = intent.getStringExtra("markedAs");
-////            Toast.makeText(getContext(),ItemName +" "+qty ,Toast.LENGTH_SHORT).show();
-//
-//            }
-//        };
-//        public void sendBroadcast(String msg,int position){
-//            Intent intent = new Intent("custom-message");
-//            intent.putExtra("eventId",map.get(position));
-//            intent.putExtra("markedAs",msg);
-//            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-//        }
+
         @Override
         public void onClick(View v) {
             if(listItems.get(getAdapterPosition()).getState().equals("upcoming") ) {
@@ -407,10 +397,19 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             }
                         }
                         else{
-                            if(star.isChecked())
-                                star.setChecked(false);
-                            else
+                            if(star.isChecked()) {
+                                if(listItems.get(getAdapterPosition()).getMarker().equals("none")) {
+                                    star.setChecked(false);
+                                }
+                                else if(listItems.get(getAdapterPosition()).getMarker().equals("going")){
+                                    star.setChecked(false);
+                                    going.setChecked(true);
+                                }
+
+                            }
+                            else {
                                 star.setChecked(true);
+                            }
                             Snackbar.make(v, "Not connected to internet! Please try again later.", Snackbar.LENGTH_LONG).show();
                         }
                     } else {
@@ -482,10 +481,19 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
                             }
                         }
                         else {
-                            if (going.isChecked())
-                                going.setChecked(false);
-                            else
+                            if(going.isChecked()) {
+                                if(listItems.get(getAdapterPosition()).getMarker().equals("none")) {
+                                    going.setChecked(false);
+                                }
+                                else if(listItems.get(getAdapterPosition()).getMarker().equals("interested")){
+                                    star.setChecked(true);
+                                    going.setChecked(false);
+                                }
+
+                            }
+                            else {
                                 going.setChecked(true);
+                            }
                             Snackbar.make(v, "Not connected to internet! Please try again later.", Snackbar.LENGTH_LONG).show();
                         }
                     } else {
@@ -496,7 +504,7 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
 
                 } else {
                     startIntent(this.getAdapterPosition());
-                    //foldingCell.toggle(false);
+
                 }
 
             }
