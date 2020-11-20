@@ -12,8 +12,6 @@
         android:allowBackup="false"
         android:grantUriPermissions="true"
         android:icon="@mipmap/ic_icon"
-        android:hardwareAccelerated="false"
-        android:largeHeap="true"
         tools:replace="android:label,android:allowBackup"
         android:label="Caliiita"
         android:roundIcon="@mipmap/ic_icon"

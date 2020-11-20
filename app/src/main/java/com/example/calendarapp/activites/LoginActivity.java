@@ -76,12 +76,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        if (mAuth.getCurrentUser() != null) {
-//            finish();
-//            Intent intent=new Intent(this, MainActivity2.class);
-//            intent.putExtra("action","db");
-//            startActivity(intent);
-//        }
+
     }
 
     @Override
@@ -103,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                if(account.getEmail().contains("iiita.ac.in") || account.getEmail().equals("varunbhardwaj.064@gmail.com"))
+                if(account.getEmail().contains("iiita.ac.in"))
                     firebaseAuthWithGoogle(account);
                 else {
                     Toast.makeText(LoginActivity.this, "Please Sign in using your College ID", Toast.LENGTH_LONG).show();
@@ -120,9 +115,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         ((CircularProgressDrawable)circularProgressBar.getIndeterminateDrawable()).start();
-//        progressDialog.setTitle("Loading...");
-//        progressDialog.setMessage("Signing In Using Google");
-//        progressDialog.show();
+
 
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

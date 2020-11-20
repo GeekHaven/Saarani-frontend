@@ -30,8 +30,8 @@ import java.util.concurrent.TimeUnit;
 public class SubscribeActivity extends AppCompatActivity {
     int value;
     Button btn_next;
-    LinearLayout geekhaven, effe, tesla, sarasva, aparoksha, asmita, gymkhana, rangtarangini, genitix, ams, nirmiti, virtuosi, spirit, iiic;
-    ImageView geekhaven_image, effe_image, tesla_image, sarasva_image, aparoksha_image, asmita_image, gymkhana_image, rangtarangini_image, genitix_image, ams_image, nirmiti_image, virtuosi_image, spirit_image, iiic_image;
+    LinearLayout geekhaven, effe, tesla, sarasva, aparoksha, asmita, gymkhana, rangtarangini, genitix, ams, nirmiti, virtuosi, spirit, iiic,gravity;
+    ImageView geekhaven_image, effe_image, tesla_image, sarasva_image, aparoksha_image, asmita_image, gymkhana_image, rangtarangini_image, genitix_image, ams_image, nirmiti_image, virtuosi_image, spirit_image, iiic_image,gravity_image;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +60,7 @@ public class SubscribeActivity extends AppCompatActivity {
         value = intent.getExtras().getInt("val");
         final SharedPreferences pref = getApplicationContext().getSharedPreferences("subscriptions", MODE_PRIVATE);
         final SharedPreferences.Editor editor = pref.edit();
-        final int[] x = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        final int[] x = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         geekhaven = findViewById(R.id.geekhaven);
         geekhaven_image = findViewById(R.id.geekhaven_logo);
         if (pref.getBoolean("geekhaven", false)) {
@@ -164,6 +164,16 @@ public class SubscribeActivity extends AppCompatActivity {
             spirit_image.setColorFilter(Color.parseColor("#F5D22B"));
             spirit.setBackgroundResource(R.drawable.society_card_highlight);
         }
+
+        gravity=findViewById(R.id.gravity);
+        gravity_image=findViewById(R.id.gravity_logo);
+        if(pref.getBoolean("gravity",false)){
+            x[14]++;
+            gravity_image.setColorFilter(Color.parseColor("#F5D22B"));
+            gravity.setBackgroundResource(R.drawable.society_card_highlight);
+        }
+
+
         geekhaven.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -413,6 +423,26 @@ public class SubscribeActivity extends AppCompatActivity {
                     FirebaseMessaging.getInstance().unsubscribeFromTopic("sports");
                     x[13]++;
                     editor.putBoolean("sports", false);
+                }
+            }
+        });
+
+        gravity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(x[14]%2==0){
+                    gravity_image.setColorFilter(Color.parseColor("#F5D22B"));
+                    gravity.setBackgroundResource(R.drawable.society_card_highlight);
+                    FirebaseMessaging.getInstance().subscribeToTopic("gravity");
+                    x[14]++;
+                    editor.putBoolean("gravity",true);
+                }
+                else{
+                    gravity_image.setColorFilter(Color.parseColor("#FFFFFF"));
+                    gravity.setBackgroundResource(R.drawable.society_card);
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic("gravity");
+                    x[14]++;
+                    editor.putBoolean("gravity",false);
                 }
             }
         });
