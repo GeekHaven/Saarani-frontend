@@ -260,6 +260,7 @@ public class SocShowActivity extends AppCompatActivity {
     public void addCordisToView(HashMap<String,String> map){
         int i=0;
         for(Map.Entry<String,String> mapElement: map.entrySet()){
+            Log.d("soc-show",mapElement.getValue());
             if(i%2==0){
                 View view=getLayoutInflater().inflate(R.layout.soc_profile_cordi,null);
                 TextView name=view.findViewById(R.id.cordi_name);
@@ -286,9 +287,6 @@ public class SocShowActivity extends AppCompatActivity {
     }
     public void getCordiData(){
         String url = "https://socupdate.herokuapp.com/societies";
-//        final ProgressDialog progressDialog = new ProgressDialog(SocShowActivity.this);
-//        progressDialog.setMessage("Loading data....");
-//        progressDialog.show();
         StringRequest stringRequest =new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -307,8 +305,8 @@ public class SocShowActivity extends AppCompatActivity {
                                     Iterator<String> it = obj.keys();
                                     String k=it.next();
                                     cordiMap.put(k,obj.getString(k));
-                                    //cordis.add(jsonArray.getString(i));
                                 }
+                                Log.d("cordiMap", String.valueOf(cordiMap));
                             }
                             gmail=jsonObject.getString("email");
                             if(jsonObject.has("fb"))

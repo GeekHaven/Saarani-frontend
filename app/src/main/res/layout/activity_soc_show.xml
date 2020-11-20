@@ -69,7 +69,6 @@
                     android:layout_marginTop="-30dp"
                     app:cardBackgroundColor="@android:color/transparent"
                     app:cardCornerRadius="40dp"
-                    app:cardElevation="16dp"
                     card_view:targetApi="lollipop">
 
                     <ImageView

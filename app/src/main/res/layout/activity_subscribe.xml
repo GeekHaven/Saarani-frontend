@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout android:layout_width="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#232323"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -590,8 +591,9 @@
         </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="155dp"
                 android:weightSum="1"
+                android:orientation="horizontal"
                 android:layout_marginTop="24dp"
                 >
                 <LinearLayout
@@ -639,7 +641,6 @@
                     android:layout_weight="0.5"
                     android:orientation="vertical"
                     android:id="@+id/iiic"
-                    android:layout_marginBottom="58dp"
                     android:layout_marginLeft="12dp"
                     android:background="@drawable/society_card"
                     >
@@ -674,19 +675,48 @@
                         />
                 </LinearLayout>
             </LinearLayout>
-<!--        <Button-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_marginHorizontal="16dp"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:id="@+id/proceed"-->
-<!--            android:textAllCaps="false"-->
-<!--            android:text="Continue"-->
-<!--            android:textColor="#292929"-->
-<!--            android:background="@drawable/btn_round2"-->
-<!--            android:layout_marginBottom="16dp"-->
-<!--            android:fontFamily="@font/montserratmedium"-->
-<!--            />-->
+
+            <LinearLayout
+                android:layout_width="170dp"
+                android:layout_height="155dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:orientation="vertical"
+                android:id="@+id/gravity"
+                android:layout_marginBottom="100dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/society_card"
+                >
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_height="80dp"
+                    android:id="@+id/gravity_logo"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="8dp"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/ic_gvt"
+                    />
+                <TextView
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/montserratmedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="GRAVITY"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:layout_gravity="center"
+                    android:textColor="#FFFFFF"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Technical Society"
+                    android:gravity="center"
+                    android:fontFamily="@font/montserratmedium"
+                    android:textColor="#6B6B6B"
+                    android:textSize="10sp"
+                    />
+            </LinearLayout>
 
         </LinearLayout>
         </LinearLayout>
