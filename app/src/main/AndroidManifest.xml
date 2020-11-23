@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.calendarapp">
+    package="com.geekhaven.caliiita">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="false"
         android:grantUriPermissions="true"
         android:icon="@mipmap/ic_icon"
         tools:replace="android:label,android:allowBackup"
-        android:label="Caliiita"
+        android:label="CalIIITA"
         android:roundIcon="@mipmap/ic_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activites.MainActivity"
+        <activity android:name="com.geekhaven.caliiita.activites.MainActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activites.SplashScreenActivity"
+            android:name="com.geekhaven.caliiita.activites.SplashScreenActivity"
             android:theme="@style/SplashTheme"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -29,30 +28,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activites.LoginActivity"
+        <activity android:name="com.geekhaven.caliiita.activites.LoginActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activites.EventActivity" android:parentActivityName=".activites.MainActivity"
+        <activity android:name="com.geekhaven.caliiita.activites.EventActivity" android:parentActivityName="com.geekhaven.caliiita.activites.MainActivity"
             android:screenOrientation="portrait"/>
         <service
-            android:name=".services.MyFirebaseMessagingService"
+            android:name="com.geekhaven.caliiita.services.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <receiver android:name=".receiver.ButtonReceiver" />
+        <receiver android:name="com.geekhaven.caliiita.receiver.ButtonReceiver" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-        <activity android:name=".activites.SubscribeActivity"
+        <activity android:name="com.geekhaven.caliiita.activites.SubscribeActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activites.AddEventActivity" android:theme="@style/ToolTheme" android:parentActivityName=".activites.MainActivity"
+        <activity android:name="com.geekhaven.caliiita.activites.AddEventActivity" android:theme="@style/ToolTheme" android:parentActivityName="com.geekhaven.caliiita.activites.MainActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activites.SocShowActivity" android:screenOrientation="portrait"
+        <activity android:name="com.geekhaven.caliiita.activites.SocShowActivity" android:screenOrientation="portrait"
             />
-        <activity android:name=".activites.AboutUsActivity"
+        <activity android:name="com.geekhaven.caliiita.activites.AboutUsActivity"
             android:screenOrientation="portrait"/>
 
     </application>
