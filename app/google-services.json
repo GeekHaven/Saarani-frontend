@@ -1,42 +1,50 @@
 {
   "project_info": {
-    "project_number": "271594298370",
-    "firebase_url": "https://calendarapp-680df.firebaseio.com",
-    "project_id": "calendarapp-680df",
-    "storage_bucket": "calendarapp-680df.appspot.com"
+    "project_number": "99875879153",
+    "firebase_url": "https://caliiita-8f11d.firebaseio.com",
+    "project_id": "caliiita-8f11d",
+    "storage_bucket": "caliiita-8f11d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:271594298370:android:c52c66918bd32e733b9b1b",
+        "mobilesdk_app_id": "1:99875879153:android:093bf7c9a5301f0c6ed150",
         "android_client_info": {
-          "package_name": "com.example.calendarapp"
+          "package_name": "com.geekhaven.caliiita"
         }
       },
       "oauth_client": [
         {
-          "client_id": "271594298370-nqg267jvt6j0acoujr0md54ed4etcchb.apps.googleusercontent.com",
+          "client_id": "99875879153-qfc88cjkhmr8oampn54oikspkqhbcn7m.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.calendarapp",
+            "package_name": "com.geekhaven.caliiita",
+            "certificate_hash": "aac324dea3fb03f43a47f6ef2d5ff4acec46fcc8"
+          }
+        },
+        {
+          "client_id": "99875879153-uc6m3ff2jq9eft1tm7j0q0qmk8sp8ooa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.geekhaven.caliiita",
             "certificate_hash": "efef0fffa7809d9a8e128ec82fab12afc3c5c308"
           }
         },
         {
-          "client_id": "271594298370-jmsnpsmnhm1ahm6viiag2gi2dnpqn0lg.apps.googleusercontent.com",
+          "client_id": "99875879153-uqjrcbh82888hvn6jrkpgq0cjhd49raj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCzjA7iVmoz1rSGuHnxndwM71DnJvIBerQ"
+          "current_key": "AIzaSyBSlV2Co1MyNR0XvNo1QEsNtrnLH0A0i4o"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "271594298370-jmsnpsmnhm1ahm6viiag2gi2dnpqn0lg.apps.googleusercontent.com",
+              "client_id": "99875879153-uqjrcbh82888hvn6jrkpgq0cjhd49raj.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

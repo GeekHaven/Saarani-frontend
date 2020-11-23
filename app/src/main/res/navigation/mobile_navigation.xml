@@ -7,33 +7,33 @@
 
     <fragment
         android:id="@+id/navigation_nav_main"
-        android:name="com.example.calendarapp.navigation.main.MainFragment"
+        android:name="com.geekhaven.caliiita.navigation.main.MainFragment"
         android:label="Main Fragment"
         tools:layout="@layout/main_fragment">
     </fragment>
 
     <fragment
         android:id="@+id/navigation_nav_profile"
-        android:name="com.example.calendarapp.navigation.profile.ProfileFragment"
+        android:name="com.geekhaven.caliiita.navigation.profile.ProfileFragment"
         android:label="Profile Fragment"
         tools:layout="@layout/profile_fragment">
     </fragment>
 
     <fragment
         android:id="@+id/navigation_nav_society"
-        android:name="com.example.calendarapp.navigation.society.SocietyFragment"
+        android:name="com.geekhaven.caliiita.navigation.society.SocietyFragment"
         android:label="Society Fragment"
         tools:layout="@layout/society_fragment">
     </fragment>
     <fragment
         android:id="@+id/navigation_nav_list"
-        android:name="com.example.calendarapp.navigation.list.ListFragment"
+        android:name="com.geekhaven.caliiita.navigation.list.ListFragment"
         android:label="List Fragment"
         tools:layout="@layout/list_fragment">
     </fragment>
     <fragment
         android:id="@+id/navigation_nav_soc_profile"
-        android:name="com.example.calendarapp.navigation.socProfile.SocietyProfileFragment"
+        android:name="com.geekhaven.caliiita.navigation.socProfile.SocietyProfileFragment"
         android:label="Soc Profile Fragment"
         tools:layout="@layout/society_profile_fragment">
     </fragment>
