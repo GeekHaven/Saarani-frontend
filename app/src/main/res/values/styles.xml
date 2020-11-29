@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -7,7 +7,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="drawerArrowStyle">@style/drawerArrowStyle</item>
         <item name="listPreferredItemHeightSmall">64dp</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="android:listDivider">@color/colorListDivider</item>
+
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">

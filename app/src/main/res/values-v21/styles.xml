@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="colorControlNormal">#FFFFFF</item>
@@ -20,6 +20,7 @@
         <item name="listPreferredItemHeightSmall">64dp</item>
         <item name="android:listDivider">@color/colorListDivider</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
     <style name="FloatButtonTheme" parent="Theme.MaterialComponents.NoActionBar">
