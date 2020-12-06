@@ -45,6 +45,11 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_logo7" />
+
         <activity android:name="com.geekhaven.caliiita.activites.SubscribeActivity"
             android:screenOrientation="portrait"/>
         <activity android:name="com.geekhaven.caliiita.activites.AddEventActivity" android:theme="@style/ToolTheme" android:parentActivityName="com.geekhaven.caliiita.activites.MainActivity"

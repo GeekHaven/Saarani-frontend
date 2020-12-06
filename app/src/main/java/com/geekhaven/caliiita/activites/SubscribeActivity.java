@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 public class SubscribeActivity extends AppCompatActivity {
     int value;
     Button btn_next;
+    final int[] x = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     LinearLayout geekhaven, effe, tesla, sarasva, aparoksha, asmita, gymkhana, rangtarangini, genitix, ams, nirmiti, virtuosi, spirit, iiic,gravity;
     ImageView geekhaven_image, effe_image, tesla_image, sarasva_image, aparoksha_image, asmita_image, gymkhana_image, rangtarangini_image, genitix_image, ams_image, nirmiti_image, virtuosi_image, spirit_image, iiic_image,gravity_image;
 
@@ -37,11 +38,6 @@ public class SubscribeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        setAnimation();
         setContentView(R.layout.activity_subscribe);
-        // Initializing Lock
-        SharedPreferences.Editor edit = getSharedPreferences("database_check", MODE_PRIVATE).edit();
-        edit.putBoolean("open",false);
-        edit.apply();
-        //
 
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -60,7 +56,6 @@ public class SubscribeActivity extends AppCompatActivity {
         value = intent.getExtras().getInt("val");
         final SharedPreferences pref = getApplicationContext().getSharedPreferences("subscriptions", MODE_PRIVATE);
         final SharedPreferences.Editor editor = pref.edit();
-        final int[] x = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         geekhaven = findViewById(R.id.geekhaven);
         geekhaven_image = findViewById(R.id.geekhaven_logo);
         if (pref.getBoolean("geekhaven", false)) {
@@ -451,6 +446,8 @@ public class SubscribeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 editor.apply();
+                if(x[0]%2==0&&x[1]%2==0&&x[2]%2==0&&x[3]%2==0&&x[4]%2==0&&x[5]%2==0&&x[6]%2==0&&x[7]%2==0&&x[8]%2==0&&x[9]%2==0&&x[10]%2==0&&x[11]%2==0&&x[12]%2==0&&x[13]%2==0&&x[14]%2==0)
+                    subscribeToAllTopics();
                 Intent intent1=new Intent(SubscribeActivity.this, MainActivity.class);
                 intent1.putExtra("action","request_call");
                 startActivity(intent1);
@@ -473,14 +470,56 @@ public class SubscribeActivity extends AppCompatActivity {
         }
     }
 
-    public void setAnimation() {
-        if (Build.VERSION.SDK_INT > 20) {
-            Slide slide = new Slide();
-            slide.setSlideEdge(Gravity.LEFT);
-            slide.setDuration(400);
-            slide.setInterpolator(new DecelerateInterpolator());
-            getWindow().setExitTransition(slide);
-            getWindow().setEnterTransition(slide);
-        }
+    public void subscribeToAllTopics(){
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("subscriptions", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        FirebaseMessaging.getInstance().subscribeToTopic("geekhaven");
+        editor.putBoolean("geekhaven", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("effervescence");
+        editor.putBoolean("effervescence", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("tesla");
+        editor.putBoolean("tesla", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("sarasva");
+        editor.putBoolean("sarasva", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("aparoksha");
+        editor.putBoolean("aparoksha", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("asmita");
+        editor.putBoolean("asmita", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("gymkhana");
+        editor.putBoolean("gymkhana", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("rangtarangini");
+        editor.putBoolean("rangtarangini", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("dance");
+        editor.putBoolean("dance", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("ams");
+        editor.putBoolean("ams", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("nirmiti");
+        editor.putBoolean("nirmiti", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("virtuosi");
+        editor.putBoolean("virtuosi", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("iiic");
+        editor.putBoolean("iiic", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("sports");
+        editor.putBoolean("sports", true);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("gravity");
+        editor.putBoolean("gravity",true);
+
+        editor.apply();
+
     }
 }
