@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -246,6 +247,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                 attachmentParent.addView(attachLayout, params);
                 final TextView attachmentName = new TextView(this);
                 attachmentName.setText(attachmentNameList.get(i));
+                attachmentName.setTextColor(Color.parseColor("#FFFFFF"));
                 attachmentName.setSingleLine();
                 LinearLayout.LayoutParams paramsText = new LinearLayout.LayoutParams(
                         0
@@ -415,6 +417,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                     addEmailLayout.addView(attachLayout,params);
                     TextView attachmentName=new TextView(AddEventActivity.this);
                     attachmentName.setText(sendTo.getText().toString());
+                    attachmentName.setTextColor(Color.parseColor("#FFFFFF"));
                     to.add(sendTo.getText().toString());
 //                    mailList[index]=sendTo.getText().toString();
                     map.put(String.valueOf(id),sendTo.getText().toString());
@@ -614,6 +617,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                     attachmentParent.addView(attachLayout, params);
                                     final TextView attachmentName = new TextView(this);
                                     attachmentName.setText(result);
+                                    attachmentName.setTextColor(Color.parseColor("#FFFFFF"));
                                     attachmentName.setSingleLine();
                                     LinearLayout.LayoutParams paramsText = new LinearLayout.LayoutParams(
                                             0
@@ -747,6 +751,7 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                 attachmentParent.addView(attachLayout, params);
                                 TextView attachmentName = new TextView(this);
                                 attachmentName.setText(result);
+                                attachmentName.setTextColor(Color.parseColor("#FFFFFF"));
                                 attachmentName.setSingleLine();
                                 LinearLayout.LayoutParams paramsText = new LinearLayout.LayoutParams(
                                         0

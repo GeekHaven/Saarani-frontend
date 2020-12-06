@@ -326,17 +326,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("VARUN", msg);
                     }
                 });
-        FirebaseMessaging.getInstance().subscribeToTopic("iit2019091")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String msg = "Subscribed to Event";
-                        if (!task.isSuccessful()) {
-                            msg = getString(R.string.msg_subscribe_failed);
-                        }
-                        Log.d("VARUN", msg);
-                    }
-                });
     }
     public void sendIdToken(){
 //        final TextView textView = findViewById(R.id.check);

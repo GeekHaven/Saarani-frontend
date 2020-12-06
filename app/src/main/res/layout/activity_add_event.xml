@@ -232,6 +232,17 @@
                 android:layout_marginLeft="8dp"
                 android:background="@drawable/custom_spinner" />
 
+            <TextView
+                android:id="@+id/ampm"
+                android:text="(Enter time in 24 hour format)"
+                android:fontFamily="@font/montserratmedium"
+                android:textColor="#FFFFFF"
+                android:textSize="9sp"
+                android:layout_marginLeft="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
 
         </LinearLayout>
 
