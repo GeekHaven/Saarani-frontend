@@ -11,16 +11,24 @@ import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -190,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
+        checkAutoStartAndBatterySettings();
 
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("Fragment")){
             if(intent.getExtras().getString("Fragment").equals("profile")) {
@@ -298,6 +306,29 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private void openBatterySettings(){
+        PowerManager pm=(PowerManager) getSystemService(POWER_SERVICE);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+            if(pm!=null && !pm.isIgnoringBatteryOptimizations(getPackageName())){
+                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+                LayoutInflater inflater=LayoutInflater.from(MainActivity.this);
+                View view=inflater.inflate(R.layout.settings_alert_dialog_1,null);
+                builder.setView(view);
+                builder.setNeutralButton("Here!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.show();
+            }
+        }
+    }
+
+    private void checkAutoStartAndBatterySettings(){
+
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
