@@ -25,7 +25,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="30dp"
         android:fontFamily="@font/montserratmedium"
-        android:text="Grant Permission to “CALIIITA”\nto recieve notifications   "
+        android:text="Allow “CALIIITA” to run in back\nto recieve notification"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:textStyle="normal"
@@ -33,22 +33,33 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:id="@+id/imageView6"
+        android:background="@drawable/inner_text_background"
         android:layout_width="match_parent"
         android:layout_marginHorizontal="36dp"
-        android:paddingVertical="1dp"
-        android:background="@drawable/inner_text_background"
+        android:paddingVertical="12dp"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
-         >
+
+        >
+
         <ImageView
-            android:src="@drawable/alert_settings_picture_1"
             android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="3dp"
+            app:srcCompat="@drawable/ic_tick" />
+        <TextView
+            android:text="No restrictions \nBattery saver doesn’t restrict app’s activity"
+            android:layout_width="wrap_content"
+            android:fontFamily="@font/montserratmedium"
+            android:textColor="#61AEFC"
+            android:textSize="12sp"
+            android:textStyle="normal"
             android:layout_height="wrap_content"
             />
     </LinearLayout>
@@ -61,7 +72,7 @@
         android:layout_marginTop="36dp"
         android:textSize="12sp"
         android:textColor="#CCCCCC"
-        android:text="1 of 2"
+        android:text="2 of 2"
         android:fontFamily="@font/montserratmedium"
         android:layout_marginLeft="29dp"
         />
