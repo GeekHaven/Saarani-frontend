@@ -68,31 +68,31 @@
 
     <TextView
         android:id="@+id/settings"
-        android:text="SETTINGS"
-        app:layout_constraintTop_toBottomOf="@id/imageView6"
-        android:layout_marginTop="36dp"
-        android:fontFamily="@font/montserratmedium"
-        android:textSize="12sp"
-        android:textColor="#F0D453"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginRight="27dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
+        android:layout_marginTop="36dp"
+        android:layout_marginRight="27dp"
+        android:clickable="true"
+        android:fontFamily="@font/montserratmedium"
+        android:text="SETTINGS"
+        android:textColor="#F0D453"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView6" />
 
     <TextView
         android:id="@+id/deny"
-        android:textColor="#F0D453"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@id/settings"
-        app:layout_constraintTop_toBottomOf="@id/imageView6"
-        android:layout_marginTop="36dp"
-        android:layout_marginRight="30dp"
-        android:text="DENY"
-        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
+        android:layout_marginTop="36dp"
+        android:layout_marginRight="30dp"
+        android:clickable="true"
+        android:text="DENY"
+        android:textColor="#F0D453"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/settings"
+        app:layout_constraintTop_toBottomOf="@id/imageView6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

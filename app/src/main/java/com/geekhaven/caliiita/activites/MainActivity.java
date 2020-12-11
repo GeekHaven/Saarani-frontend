@@ -1,6 +1,7 @@
 package com.geekhaven.caliiita.activites;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -13,6 +14,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -23,6 +25,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -198,7 +201,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        checkAutoStartAndBatterySettings();
+        SharedPreferences sharedPreferences=getSharedPreferences("SettingsData",MODE_PRIVATE);
+        if(!sharedPreferences.getBoolean("settings",false))
+            checkAutoStartAndBatterySettings();
 
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("Fragment")){
             if(intent.getExtras().getString("Fragment").equals("profile")) {
@@ -308,27 +313,169 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    int RC_SETTINGS_1=1001, RC_SETTINGS_2=1002;
+    AlertDialog settingsDialog1, settingsDialog2;
+
     private void openBatterySettings(){
+
+        AlertDialog.Builder builder2=new AlertDialog.Builder(MainActivity.this);
+        LayoutInflater inflater=LayoutInflater.from(MainActivity.this);
+        View view=inflater.inflate(R.layout.settings_alert_dialog_2,null);
+
+        builder2.setView(view);
+        settingsDialog2=builder2.create();
+        settingsDialog2.setCanceledOnTouchOutside(false);
+
         PowerManager pm=(PowerManager) getSystemService(POWER_SERVICE);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-            if(pm!=null && !pm.isIgnoringBatteryOptimizations(getPackageName())){
-                AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
-                LayoutInflater inflater=LayoutInflater.from(MainActivity.this);
-                View view=inflater.inflate(R.layout.settings_alert_dialog_1,null);
-                builder.setView(view);
-                builder.setNeutralButton("Here!", new DialogInterface.OnClickListener() {
+            if(pm!=null && !pm.isIgnoringBatteryOptimizations(getPackageName()) && Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                settingsDialog2.show();
+            }
+        }
+
+        TextView btnDeny, btnSettings;
+        btnDeny=view.findViewById(R.id.deny);
+        btnSettings=view.findViewById(R.id.settings);
+
+        btnDeny.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertBuilder=new AlertDialog.Builder(MainActivity.this);
+                alertBuilder.setTitle("Warning!");
+                alertBuilder.setMessage("You will have to manually enable this Setting to ensure proper functioning of the App! Do you want to Continue");
+
+                alertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        settingsDialog2.dismiss();
+                    }
+                });
+
+                alertBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 });
-                builder.show();
+
+                AlertDialog alertDialog=alertBuilder.create();
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
             }
+        });
+
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+                    startActivityForResult(intent,RC_SETTINGS_2);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==RC_SETTINGS_1){
+            settingsDialog1.dismiss();
+            openBatterySettings();
+        }
+        else if(requestCode==RC_SETTINGS_2){
+            settingsDialog2.dismiss();
         }
     }
 
-    private void checkAutoStartAndBatterySettings(){
+    private void openAutoStartSettings(){
+        AlertDialog.Builder builder1=new AlertDialog.Builder(MainActivity.this);
+        LayoutInflater inflater=LayoutInflater.from(MainActivity.this);
+        View view=inflater.inflate(R.layout.settings_alert_dialog_1,null);
+        builder1.setView(view);
+        settingsDialog1=builder1.create();
+        settingsDialog1.setCanceledOnTouchOutside(false);
+        settingsDialog1.show();
 
+        TextView btnDeny, btnSettings;
+        btnDeny=view.findViewById(R.id.deny);
+        btnSettings=view.findViewById(R.id.settings);
+
+        btnDeny.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertBuilder=new AlertDialog.Builder(MainActivity.this);
+                alertBuilder.setTitle("Warning!");
+                alertBuilder.setMessage("You will have to manually enable this Setting to ensure proper functioning of the App! Do you want to Continue");
+
+                alertBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        settingsDialog1.dismiss();
+                        openBatterySettings();
+                    }
+                });
+
+                alertBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                AlertDialog alertDialog=alertBuilder.create();
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
+            }
+        });
+
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    boolean settings = true;
+                    Intent intent = new Intent();
+                    String manufacturer = android.os.Build.MANUFACTURER;
+                    if ("xiaomi".equalsIgnoreCase(manufacturer)) {
+                        intent.setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+                    } else if ("oppo".equalsIgnoreCase(manufacturer)) {
+                        intent.setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity"));
+                    } else if ("vivo".equalsIgnoreCase(manufacturer)) {
+                        intent.setComponent(new ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"));
+                    } else if ("Letv".equalsIgnoreCase(manufacturer)) {
+                        intent.setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity"));
+                    } else if ("Honor".equalsIgnoreCase(manufacturer)) {
+                        intent.setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity"));
+                    } else
+                        settings = false;
+
+                    if (settings) {
+                        List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                        if (list.size() > 0) {
+                            startActivityForResult(intent, RC_SETTINGS_1);
+                        }
+                    }
+                    else {
+                        settingsDialog1.dismiss();
+                        openBatterySettings();
+                    }
+                }
+                catch(Exception e){
+                    Log.e("exc", String.valueOf(e));
+                }
+            }
+        });
+    }
+
+    private void checkAutoStartAndBatterySettings(){
+        String manufacturer = android.os.Build.MANUFACTURER;
+        if ("xiaomi".equalsIgnoreCase(manufacturer) || "oppo".equalsIgnoreCase(manufacturer) || "vivo".equalsIgnoreCase(manufacturer) ||
+                    "Letv".equalsIgnoreCase(manufacturer) || "Honor".equalsIgnoreCase(manufacturer)) {
+            openAutoStartSettings();
+        }
+        SharedPreferences sharedPreferences=getSharedPreferences("SettingsData",MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putBoolean("settings",true);
+        editor.apply();
     }
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
