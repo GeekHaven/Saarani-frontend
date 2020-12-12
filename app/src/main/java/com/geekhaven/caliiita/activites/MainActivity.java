@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -325,6 +327,8 @@ public class MainActivity extends AppCompatActivity {
         builder2.setView(view);
         settingsDialog2=builder2.create();
         settingsDialog2.setCanceledOnTouchOutside(false);
+        settingsDialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        settingsDialog2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         PowerManager pm=(PowerManager) getSystemService(POWER_SERVICE);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
@@ -393,6 +397,8 @@ public class MainActivity extends AppCompatActivity {
         builder1.setView(view);
         settingsDialog1=builder1.create();
         settingsDialog1.setCanceledOnTouchOutside(false);
+        settingsDialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        settingsDialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         settingsDialog1.show();
 
         TextView btnDeny, btnSettings;
