@@ -69,6 +69,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -142,11 +143,10 @@ public class MainActivity extends AppCompatActivity {
         imgUser=navigationView.getHeaderView(0).findViewById(R.id.imgNavHeaderUser);
 
         if(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()!=null){
+            String url=FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString().replace("s96-c","s400-c");
             Picasso
                     .get()
-                    .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
-                    .resize(92,92)
-                    .transform(new CropCircleTransformation())
+                    .load(url)
                     .into(imgUser);
         }
 

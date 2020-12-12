@@ -28,6 +28,7 @@ import com.geekhaven.caliiita.adapters.TabAdapter;
 import com.geekhaven.caliiita.database.DatabaseHandler;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -115,11 +116,10 @@ public class ProfileFragment extends Fragment{
         tvUserEmailID.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
         if(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()!=null){
+            String url=FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString().replace("s96-c","s400-c");
             Picasso
                     .get()
-                    .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
-                    .resize(110,110)
-                    .transform(new CropCircleTransformation())
+                    .load(url)
                     .into(imgProfileUserPhoto);
         }
 

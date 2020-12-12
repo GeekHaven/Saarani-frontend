@@ -86,11 +86,10 @@ public class SocietyProfileFragment extends Fragment  {
 
 
         if(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()!=null){
+            String url=FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString().replace("s96-c","s400-c");
             Picasso
                     .get()
-                    .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
-                    .resize(110,110)
-                    .transform(new CropCircleTransformation())
+                    .load(url)
                     .into(imageView);
         }
         String nameo =FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
