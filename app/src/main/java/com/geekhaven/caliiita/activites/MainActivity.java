@@ -204,8 +204,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         SharedPreferences sharedPreferences=getSharedPreferences("SettingsData",MODE_PRIVATE);
-        if(!sharedPreferences.getBoolean("settings",false))
+        if(!sharedPreferences.getBoolean("settings",false)) {
             checkAutoStartAndBatterySettings();
+        }
 
         if(intent.getExtras()!=null&&intent.getExtras().containsKey("Fragment")){
             if(intent.getExtras().getString("Fragment").equals("profile")) {
