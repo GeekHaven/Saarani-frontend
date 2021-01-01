@@ -922,6 +922,8 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                                     intent.putExtra(Intent.EXTRA_EMAIL, subarray);
                                                     intent.putExtra(Intent.EXTRA_SUBJECT,eventName.getText().toString());
                                                     String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
+                                                    String footer ="Sent using CALIIITA. Click on the link to download the app, https://rebrand.ly/caliiita ";
+                                                    body=body + "\n\n" +footer;
                                                     ArrayList<String> body_text=new ArrayList<>();
                                                     body_text.add(body);
                                                     intent.putExtra(Intent.EXTRA_TEXT,body);
@@ -1029,6 +1031,8 @@ public class AddEventActivity extends AppCompatActivity implements EasyPermissio
                                                     intent.putExtra(Intent.EXTRA_EMAIL, subarray);
                                                     intent.putExtra(Intent.EXTRA_SUBJECT,eventName.getText().toString());
                                                     String body = eventDesc.getText().toString() + " at " + eventVenue.getText().toString() + ", " + hourSelect + ":" + minuteSelect;
+                                                    String footer ="Sent using CALIIITA. Click on the link to download the app, https://rebrand.ly/caliiita ";
+                                                    body=body + "\n" + "\n" +footer;
                                                     intent.putExtra(Intent.EXTRA_TEXT, body);
                                                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                                     intent.setType("vnd.android.cursor.dir/email");

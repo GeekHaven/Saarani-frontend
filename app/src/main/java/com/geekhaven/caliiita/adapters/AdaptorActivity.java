@@ -124,10 +124,12 @@ public class AdaptorActivity extends RecyclerView.Adapter<AdaptorActivity.ViewHo
         if(listItem.getMarker().equals("interested") && !isSociety){
             holder.star.setChecked(true);
             holder.star.setTag(star_yellow);
+            holder.going.setTag(tick);
         }
         else if(listItem.getMarker().equals("going") && !isSociety){
             holder.going.setChecked(true);
             holder.going.setTag(tick_yellow);
+            holder.star.setTag(star_img);
             Log.d("set","true");
         }
         else{

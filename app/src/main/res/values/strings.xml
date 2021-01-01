@@ -30,10 +30,6 @@
     <string name="loginActivityGoogleImgDescription">GoogleSignIn</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!--    <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">-->
-    <!--        <item name="android:fontFamily">@font/montserratmedium</item>-->
-    <!--        -->
-    <!--        <item name="android:textSize">18sp</item>-->
-    <!--        <item name="android:textStyle">bold</item>-->
-    <!--    </style>-->
+    <string name="download_url"><![CDATA[<a href="https://play.google.com/store/apps/details?id=com.geekhaven.caliiita">Click here to download the app.</a>]]></string>
+
 </resources>
