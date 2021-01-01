@@ -110,10 +110,12 @@ public class SocietyCardAdaptor extends RecyclerView.Adapter<SocietyCardAdaptor.
         if(listItem.getMarker().equals("interested") && !isSociety){
             holder.interested.setChecked(true);
             holder.interested.setTag(star_yellow);
+            holder.going.setTag(tick);
         }
         else if(listItem.getMarker().equals("going") && !isSociety){
             holder.going.setChecked(true);
             holder.going.setTag(tick_yellow);
+            holder.interested.setTag(star_img);
             Log.d("set","true");
         }
         else{

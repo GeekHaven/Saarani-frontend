@@ -180,7 +180,7 @@ public class EventActivity extends AppCompatActivity {
                 }
                 else{
                     shineButtonInt.setChecked(false);
-                    Snackbar.make(v,"This feature is not available for socities!",Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v,"This feature is not available for societies!",Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -192,7 +192,7 @@ public class EventActivity extends AppCompatActivity {
                 }
                 else{
                     shineButtonInt.setChecked(false);
-                    Snackbar.make(v,"This feature is not available for socities!",Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v,"This feature is not available for societies!",Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -204,7 +204,7 @@ public class EventActivity extends AppCompatActivity {
                 }
                 else{
                     shineButtonGo.setChecked(false);
-                    Snackbar.make(v,"This feature is not available for socities!",Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v,"This feature is not available for societies!",Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -216,7 +216,7 @@ public class EventActivity extends AppCompatActivity {
                 }
                 else{
                     shineButtonGo.setChecked(false);
-                    Snackbar.make(v,"This feature is not available for socities!",Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v,"This feature is not available for societies!",Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -431,11 +431,13 @@ public class EventActivity extends AppCompatActivity {
         going_count.setText(String.valueOf(goingCount));
         if(marker.equals("interested") && !isSociety){
             shineButtonInt.setTag(star_yellow);
+            shineButtonGo.setTag(tick);
             shineButtonInt.setChecked(true);
         }
         else if(marker.equals("going") && !isSociety){
             shineButtonGo.setTag(tick_yellow);
             shineButtonGo.setChecked(true);
+            shineButtonInt.setTag(star_img);
             Log.d("set","true");
         }
         else{
