@@ -3,7 +3,8 @@ The frontend for the common schedule app of IIITA, Caliiita.
 
 College schedules get pretty overwhelming for freshers, also, not forgetting our lost minded batch mates. We often find ourselves missing the performances of our favourite bands during fests or some of the society orientations because the 'gentle reminders' come a little too late. 
 But worry not, for we have the solution to this problem, the CalIIITA app! CalIIITA is a scheduling app that keeps track of all the events that happen in IIITA and helps you manage your time effectively!
-
+<br>
+Download the app from Google Play Store <a href = "https://play.google.com/store/apps/details?id=com.geekhaven.caliiita">here</a>
 
 # Features
 * A common calendar where you can track all the upcoming events
