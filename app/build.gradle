@@ -23,40 +23,39 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.firebase:firebase-analytics:18.0.0'
-    implementation 'com.google.firebase:firebase-auth:20.0.1'
-    implementation 'com.google.firebase:firebase-core:18.0.0'
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
-    implementation 'com.google.firebase:firebase-messaging:21.0.0'
-    implementation 'com.google.firebase:firebase-iid:21.0.0'
-    implementation 'androidx.work:work-runtime:2.4.0'
-    implementation 'com.android.volley:volley:1.1.1'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'pub.devrel:easypermissions:3.0.0'
-    implementation 'com.google.firebase:firebase-storage:19.2.0'
-    implementation 'androidx.navigation:navigation-fragment:2.3.1'
-    implementation 'androidx.navigation:navigation-ui:2.3.1'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'jp.wasabeef:picasso-transformations:2.2.1'
-    implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
-    implementation 'devs.mulham.horizontalcalendar:horizontalcalendar:1.3.4'
-    implementation 'com.wang.avi:library:2.1.3'
-    implementation 'com.tomer:fadingtextview:2.5'
-    implementation 'com.github.castorflex.smoothprogressbar:library-circular:1.3.0'
-    implementation 'com.sackcentury:shinebutton:1.0.0'
-    implementation 'com.ramotion.foldingcell:folding-cell:1.2.3'
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation fileTree(dir: "libs", include: ["*.jar"]),
+            'androidx.appcompat:appcompat:1.2.0',
+            'com.google.firebase:firebase-analytics:18.0.0',
+            'com.google.firebase:firebase-auth:20.0.1',
+            'com.google.firebase:firebase-core:18.0.0',
+            'com.google.android.gms:play-services-auth:19.0.0',
+            'com.google.firebase:firebase-messaging:21.0.0',
+            'com.google.firebase:firebase-iid:21.0.0',
+            'androidx.work:work-runtime:2.4.0',
+            'com.android.volley:volley:1.1.1',
+            'androidx.recyclerview:recyclerview:1.1.0',
+            'androidx.cardview:cardview:1.0.0',
+            'com.google.android.material:material:1.2.1',
+            'pub.devrel:easypermissions:3.0.0',
+            'com.google.firebase:firebase-storage:19.2.0',
+            'androidx.navigation:navigation-fragment:2.3.1',
+            'androidx.navigation:navigation-ui:2.3.1',
+            'androidx.legacy:legacy-support-v4:1.0.0',
+            'androidx.lifecycle:lifecycle-extensions:2.2.0',
+            'com.squareup.picasso:picasso:2.71828',
+            'jp.wasabeef:picasso-transformations:2.2.1',
+            'com.android.support:multidex:1.0.3',
+            'com.github.sundeepk:compact-calendar-view:3.0.0',
+            'devs.mulham.horizontalcalendar:horizontalcalendar:1.3.4',
+            'com.wang.avi:library:2.1.3',
+            'com.tomer:fadingtextview:2.5',
+            'com.github.castorflex.smoothprogressbar:library-circular:1.3.0',
+            'com.sackcentury:shinebutton:1.0.0',
+            'com.ramotion.foldingcell:folding-cell:1.2.3',
+            "androidx.lifecycle:lifecycle-extensions:2.2.0",
+            'de.hdodenhof:circleimageview:3.1.0'
     testImplementation 'junit:junit:4.13.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2',
+            'androidx.test.espresso:espresso-core:3.3.0'
 
 }
